@@ -3,7 +3,7 @@ import profile from '../static/images/profile.PNG'
 function Header() {
   return (
     <div className="container mx-auto">
-      <div className="navbar bg-base-100 px-0">
+      <div className="navbar px-0">
         <div className="flex-1">
           <a
             target="_blank"
@@ -19,17 +19,14 @@ function Header() {
                 Notification
               </a>
             </li>
-            <li tabindex="0">
+            <li tabIndex="0">
               <a target="_blank" className="text-xs">
                 I'm Buying!
                 <FaCaretDown />
               </a>
               <ul className="bg-base-100 dropdown-content w-full p-2">
                 <li className="rounded">
-                  <button
-                    active
-                    className="z-10 bg-white btn btn-active btn-primary hover:bg-white active:btn-primary focus:btn-primary text-xs active"
-                  >
+                  <button className="z-10 bg-white btn btn-active btn-primary hover:bg-white active:btn-primary focus:btn-primary text-xs active">
                     I'm Buying!
                   </button>
                 </li>
@@ -42,12 +39,17 @@ function Header() {
             </li>
             <li>
               <div className="w-20">
-                <img class="mask mask-squircle" src={profile} alt="profile" />
+                <img
+                  className="mask mask-squircle"
+                  src={profile}
+                  alt="profile"
+                />
               </div>
             </li>
           </ul>
         </div>
       </div>
+      <hr />
     </div>
   )
 }
