@@ -1,5 +1,5 @@
 import { FaHeart, FaShare } from 'react-icons/fa'
-import Gallery from '../components/Gallery'
+import PhotoGallery from '../components/PhotoGallery'
 function ItemScreen() {
   return (
     <>
@@ -94,8 +94,8 @@ function ItemScreen() {
               <input type="checkbox" id="my-modal-5" class="modal-toggle" />
               <div class="modal">
                 <div class="modal-box w-11/12 max-w-5xl">
-                  <Gallery />
-                  <div class="modal-action bg">
+                  <PhotoGallery />
+                  <div class="modal-action bg-inherit">
                     <label
                       for="my-modal-5"
                       class="btn btn-sm btn-active btn-ghost"
