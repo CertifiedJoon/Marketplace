@@ -85,20 +85,20 @@ function ItemScreen() {
             <div>
               <div className="bg-transparent absolute bottom-0 left-auto z-40">
                 <label
-                  for="my-modal-5"
+                  htmlFor="my-modal-5"
                   className="rounded rounded-bl-xl bg-white btn btn-xs btn-outline btn-ghost text-gray-500"
                 >
                   Show all photos
                 </label>
               </div>
-              <input type="checkbox" id="my-modal-5" class="modal-toggle" />
-              <div class="modal">
-                <div class="modal-box w-11/12 max-w-5xl">
+              <input type="checkbox" id="my-modal-5" className="modal-toggle" />
+              <div className="modal">
+                <div className="modal-box w-11/12 max-w-5xl">
                   <PhotoGallery />
-                  <div class="modal-action bg-inherit">
+                  <div className="modal-action bg-inherit">
                     <label
-                      for="my-modal-5"
-                      class="btn btn-sm btn-active btn-ghost"
+                      htmlFor="my-modal-5"
+                      className="btn btn-sm btn-active btn-ghost"
                     >
                       Close
                     </label>

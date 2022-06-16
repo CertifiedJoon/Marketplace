@@ -16,6 +16,7 @@ const slides = photos.map(({ src, width, height, images }) => ({
     width: image.width,
   })),
 }))
+
 function PhotoGallery() {
   const [index, setIndex] = useState(-1)
 

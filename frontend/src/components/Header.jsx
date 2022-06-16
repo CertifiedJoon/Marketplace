@@ -3,7 +3,7 @@ import profile from '../static/images/profile.PNG'
 function Header() {
   return (
     <div className="sticky top-0 z-50 py-0">
-      <div className="xl:container xl:mx-auto lg:mx-20 mx-3">
+      <div className="xl:container xl:mx-auto lg:mx-20 mx-3 bg-white">
         <div className="navbar px-0">
           <div className="flex-1">
             <a
@@ -19,7 +19,7 @@ function Header() {
             </a>
           </div>
           <div className="hidden md:block flex-non">
-            <ul className="menu menu-horizontal bg-base-100 rounded-box">
+            <ul className="menu menu-horizontal rounded-box">
               <li>
                 <a target="_blank" className="w-full text-xs">
                   <div className="badge badge-primary text-white">HKU</div>
