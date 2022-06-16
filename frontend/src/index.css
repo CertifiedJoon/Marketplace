@@ -2,8 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --swiper-theme-color: #54bab9;
+  --swiper-navigation-color: #54bab9;
+}
+
 * {
   background-color: rgb(255, 255, 255);
+  font-family: 'Jost', sans-serif;
 }
 
 body {
@@ -20,8 +26,49 @@ code {
     monospace;
 }
 
+h1 {
+  font-size: 2rem;
+  font-weight: 400;
+}
+
+hr.header-divider {
+  border: none;
+  height: 20px;
+  width: 100%;
+  height: 50px;
+  margin-top: 0;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 20px 20px -20px #d7dae0;
+  margin: -50px auto 10px;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* layout */
+.vh20 {
+  height: 20vh;
+}
+
+.vh40 {
+  height: 40vh;
+}
+
+.vh50 {
+  height: 50vh;
+}
+
+.vh60 {
+  height: 60vh;
+}
+
 /* Customizing Swiper Component */
 .swiper-button-next {
+  position: absolute;
+  right: 0px !important;
   background-image: url(./static/images/next.svg);
   background-color: rgba(255, 255, 255, 0.9);
   background-repeat: no-repeat;
@@ -34,6 +81,7 @@ code {
 }
 
 .swiper-button-prev {
+  left: 0px !important;
   background-image: url(./static/images/prev.svg);
   background-color: rgba(255, 255, 255, 0.9);
   background-repeat: no-repeat;
@@ -46,8 +94,15 @@ code {
 }
 
 .swiper-button-next-card {
-  background-image: url(./static/images/circle-right.svg);
-  background-color: rgba(255, 255, 255, 0.9);
+  position: absolute;
+  height: 100%;
+  width: 50%;
+  z-index: 10;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0);
   background-repeat: no-repeat;
   background-size: 100% auto;
   background-position: center;
@@ -58,8 +113,15 @@ code {
 }
 
 .swiper-button-prev-card {
-  background-image: url(./static/images/circle-left.svg);
-  background-color: rgba(255, 255, 255, 0.9);
+  position: absolute;
+  height: 100%;
+  width: 50%;
+  z-index: 10;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0);
   background-repeat: no-repeat;
   background-size: 100% auto;
   background-position: center;
@@ -68,6 +130,25 @@ code {
 .swiper-button-prev-card::after {
   display: none;
 }
+
+.swiper-arrow-card {
+  position: absolute;
+  top: auto;
+  height: 1.5rem;
+  width: 1.5rem;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+/* Item Card */
+
+.item-card button {
+  visibility: hidden;
+}
+
+.item-card:hover button {
+  visibility: visible;
+}
+
 /* Displays */
 .show {
   display: block;
@@ -75,11 +156,4 @@ code {
 
 .hide {
   display: hide;
-}
-
-/* Imgs */
-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }

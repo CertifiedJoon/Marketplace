@@ -27,21 +27,38 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 // Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/navigation'
+import 'swiper/css/pagination'
 
 // import required modules
-import { Navigation } from 'swiper'
+import { Navigation, Pagination } from 'swiper'
 
 function CategoryMenu() {
   return (
-    <div className="container mx-auto my-5">
+    <div className="xl:container xl:mx-auto lg:mx-20 mx-3 my-5">
       <Swiper
         rewind={true}
-        slidesPerView={12}
-        spaceBetween={5}
+        slidesPerView={3}
+        spaceBetween={1}
         loop={true}
         loopFillGroupWithBlank={true}
         navigation={true}
-        modules={[Navigation]}
+        breakpoints={{
+          // when window width is >= 640px
+          640: {
+            slidesPerView: 5,
+          },
+          // when window width is >= 768px
+          768: {
+            slidesPerView: 6,
+          },
+          1024: {
+            slidesPerView: 8,
+          },
+          1280: {
+            slidesPerView: 10,
+          },
+        }}
+        modules={[Navigation, Pagination]}
         className="mySwiper text-center"
       >
         <SwiperSlide>
@@ -194,7 +211,7 @@ function CategoryMenu() {
             <figure>
               <FaBicycle />
             </figure>
-            <div className="card-body py-0 px-1 text-xs">RideButNotCars</div>
+            <div className="card-body py-0 px-1 text-xs">RideButNotCar</div>
           </div>
         </SwiperSlide>
         <SwiperSlide>
