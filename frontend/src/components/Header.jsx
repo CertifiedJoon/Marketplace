@@ -7,31 +7,31 @@ function Header() {
         <div className="navbar px-0">
           <div className="flex-1">
             <a
-              target="_blank"
+              href="/"
               className="btn btn-link normal-case text-xl hover:no-underline px-0"
             >
               Marketplace
             </a>
           </div>
           <div className="show md:hidden">
-            <a target="_blank" className="w-full text-xs">
+            <a href="/" className="w-full text-xs">
               <div className="badge badge-primary text-white">HKU</div>
             </a>
           </div>
           <div className="hidden md:block flex-non">
             <ul className="menu menu-horizontal rounded-box">
               <li>
-                <a target="_blank" className="w-full text-xs">
+                <a href="/" className="w-full text-xs">
                   <div className="badge badge-primary text-white">HKU</div>
                 </a>
               </li>
               <li>
-                <a target="_blank" className="w-full text-xs">
+                <a href="/" className="w-full text-xs">
                   Notification
                 </a>
               </li>
               <li tabIndex="0">
-                <a target="_blank" className="text-xs">
+                <a href="/" className="text-xs">
                   I'm Buying!
                   <FaCaretDown />
                 </a>

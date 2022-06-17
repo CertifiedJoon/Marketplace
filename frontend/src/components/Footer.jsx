@@ -2,7 +2,7 @@ import { FaSearch, FaHeart, FaInbox, FaUser } from 'react-icons/fa'
 
 function Footer() {
   return (
-    <div className="sticky bottom-0 z-50 border-t">
+    <div className="sticky bottom-0 z-50 border-t bg-white">
       <div className="xl:container xl:mx-auto lg:mx-20 mx-3 md:hidden">
         <div className="grid grid-cols-4">
           <div className="card py-1">
@@ -59,12 +59,12 @@ function Footer() {
         <div className="grid grid-cols-3">
           <div className="col-span-2 text-gray-500">
             &copy; Marketplace 2022 &middot;
-            <a href=""> Terms </a>
+            <a href="/"> Terms </a>
             &middot;
-            <a href=""> Privacy</a>
+            <a href="/"> Privacy</a>
           </div>
           <div className="col-span-1 flex justify-end text-gray-500">
-            <a href="">Contact Us</a>
+            <a href="/">Contact Us</a>
           </div>
         </div>
       </div>

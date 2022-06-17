@@ -1,9 +1,10 @@
 import { FaHeart, FaShare } from 'react-icons/fa'
+import LazySwiper from '../components/LazySwiper'
 import PhotoGallery from '../components/PhotoGallery'
 function ItemScreen() {
   return (
     <>
-      <div className="container mx-auto">
+      <div className="xl:container xl:mx-auto lg:mx-20 mx-3">
         <div className="hidden lg:block">
           <div className="grid grid-cols-5 my-4">
             <div className="col-span-4">
@@ -108,7 +109,9 @@ function ItemScreen() {
             </div>
           </div>
         </div>
-        <div className="lg:hidden">tablet or smaller</div>
+        <div className="lg:hidden">
+          <LazySwiper containImg={true} />
+        </div>
       </div>
     </>
   )

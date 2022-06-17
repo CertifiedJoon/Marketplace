@@ -19,8 +19,6 @@ import {
   FaUmbrella,
   FaUserGraduate,
   FaRegAddressBook,
-  FaArrowAltCircleLeft,
-  FaArrowAltCircleRight,
 } from 'react-icons/fa'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
