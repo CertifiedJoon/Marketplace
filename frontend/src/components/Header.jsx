@@ -3,7 +3,7 @@ import profile from '../static/images/profile.PNG'
 function Header() {
   return (
     <div className="sticky top-0 z-50 py-0">
-      <div className="xl:container xl:mx-auto lg:mx-20 mx-3 bg-white">
+      <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3 bg-white">
         <div className="navbar px-0">
           <div className="flex-1">
             <a
@@ -35,7 +35,7 @@ function Header() {
                   I'm Buying!
                   <FaCaretDown />
                 </a>
-                <ul className="bg-base-100 dropdown-content w-full p-2">
+                <ul className="bg-transparent dropdown-content w-full p-2">
                   <li className="rounded">
                     <button className="z-10 bg-white btn btn-active btn-primary hover:bg-white active:btn-primary focus:btn-primary text-xs active">
                       I'm Buying!

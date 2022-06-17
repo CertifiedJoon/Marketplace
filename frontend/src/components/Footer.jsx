@@ -2,8 +2,8 @@ import { FaSearch, FaHeart, FaInbox, FaUser } from 'react-icons/fa'
 
 function Footer() {
   return (
-    <div className="sticky bottom-0 z-50 border-t bg-white">
-      <div className="xl:container xl:mx-auto lg:mx-20 mx-3 md:hidden">
+    <div className="sticky bottom-0 z-40 border-t bg-white">
+      <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3 md:hidden">
         <div className="grid grid-cols-4">
           <div className="card py-1">
             <figure>

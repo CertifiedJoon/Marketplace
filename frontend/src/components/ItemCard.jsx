@@ -14,8 +14,12 @@ function ItemCard() {
     <LazyLoad height={200} once>
       <Link to="/productId">
         <div className="card item-card w-full">
-          <figure className="w-full vh25">
-            <LazySwiper containImg={false} />
+          <figure>
+            <div className="figure-container">
+              <div className="figure">
+                <LazySwiper containImg={false} />
+              </div>
+            </div>
           </figure>
           <div className="py-2 px-0 card-body h-1/2 text-xs">
             <div className="grid grid-cols-3 gap-3">

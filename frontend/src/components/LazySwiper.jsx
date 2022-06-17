@@ -31,32 +31,32 @@ function LazySwiper({ containImg }) {
       >
         <SwiperSlide>
           <img
-            src="https://api.lorem.space/image/car?w=800&h=800&hash=225E6693"
-            className={`swiper-lazy ${containImg ?? 'containImg'}`}
+            src="https://api.lorem.space/image/album?w=800&h=800&hash=225E6693"
+            className={`swiper-lazy ${containImg && 'containImg'}`}
             alt=""
           />
           <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
         </SwiperSlide>
         <SwiperSlide>
           <img
-            src="https://api.lorem.space/image/car?w=800&h=1000&hash=500B67FB"
-            className={`swiper-lazy ${containImg ?? 'containImg'}`}
+            src="https://api.lorem.space/image/movie?w=800&h=1000&hash=500B67FB"
+            className={`swiper-lazy ${containImg && 'containImg'}`}
             alt=""
           />
           <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
         </SwiperSlide>
         <SwiperSlide>
           <img
-            src="https://api.lorem.space/image/car?w=800&h=1600&hash=A89D0DE6"
-            className={`swiper-lazy ${containImg ?? 'containImg'}`}
+            src="https://api.lorem.space/image/book?w=800&h=1600&hash=A89D0DE6"
+            className={`swiper-lazy ${containImg && 'containImg'}`}
             alt=""
           />
           <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
         </SwiperSlide>
         <SwiperSlide>
           <img
-            src="https://api.lorem.space/image/car?w=800&h=300&hash=8B7BCDC2"
-            className={`swiper-lazy ${containImg ?? 'containImg'}`}
+            src="https://api.lorem.space/image/furniture?w=800&h=300&hash=8B7BCDC2"
+            className={`swiper-lazy ${containImg && 'containImg'}`}
             alt=""
           />
           <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>

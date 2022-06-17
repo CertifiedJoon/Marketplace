@@ -32,7 +32,7 @@ import { Navigation, Pagination } from 'swiper'
 
 function CategoryMenu() {
   return (
-    <div className="xl:container xl:mx-auto lg:mx-20 mx-3 my-5">
+    <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3 my-5">
       <Swiper
         rewind={true}
         slidesPerView={3}
