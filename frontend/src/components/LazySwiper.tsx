@@ -1,3 +1,4 @@
+import React from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Lazy } from 'swiper'
 
@@ -9,14 +10,15 @@ import 'swiper/css/navigation'
 import nextSvg from '../static/images/circle-right.svg'
 import prevSvg from '../static/images/circle-left.svg'
 
-function LazySwiper({ containImg }) {
+type Props = {
+  containImg: boolean
+}
+
+function LazySwiper({ containImg }: Props) {
   return (
     <>
       <Swiper
         spaceBetween={30}
-        style={{
-          '--swiper-pagination-color': '#fff',
-        }}
         loop={true}
         lazy={true}
         pagination={{

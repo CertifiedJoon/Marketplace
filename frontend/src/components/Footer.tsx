@@ -1,3 +1,4 @@
+import React from 'react'
 import { FaSearch, FaHeart, FaInbox, FaUser } from 'react-icons/fa'
 
 function Footer() {

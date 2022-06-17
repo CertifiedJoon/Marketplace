@@ -1,3 +1,4 @@
+import React from 'react'
 import CategoryMenu from '../components/CategoryMenu'
 import Card from '../components/ItemCard'
 

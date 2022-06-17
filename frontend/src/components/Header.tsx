@@ -1,5 +1,7 @@
+import React from 'react'
 import { FaCaretDown } from 'react-icons/fa'
-import profile from '../static/images/profile.PNG'
+import profile from '../static/images/profile.png'
+
 function Header() {
   return (
     <div className="sticky top-0 z-50 py-0">
@@ -27,10 +29,10 @@ function Header() {
               </li>
               <li>
                 <a href="/" className="w-full text-xs">
-                  Notification
+                  Messages
                 </a>
               </li>
-              <li tabIndex="0">
+              <li tab-index="0">
                 <a href="/" className="text-xs">
                   I'm Buying!
                   <FaCaretDown />

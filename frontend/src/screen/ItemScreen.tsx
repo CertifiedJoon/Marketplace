@@ -1,7 +1,8 @@
+import React from 'react'
 import { FaHeart, FaShare } from 'react-icons/fa'
 import LazySwiper from '../components/LazySwiper'
 import PhotoGallery from '../components/PhotoGallery'
-import profile from '../static/images/profile.PNG'
+import profile from '../static/images/profile.png'
 
 function ItemScreen() {
   return (
@@ -41,7 +42,7 @@ function ItemScreen() {
               <div
                 className="col-span-3 bg-cover bg-no-repeat bg-center rounded-l-xl"
                 style={{
-                  'background-image': `url(
+                  backgroundImage: `url(
                     'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
                   )`,
                 }}
@@ -51,7 +52,7 @@ function ItemScreen() {
                   <div
                     className="col-span-3 bg-cover bg-no-repeat bg-center"
                     style={{
-                      'background-image': `url(
+                      backgroundImage: `url(
                     'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
                   )`,
                     }}
@@ -59,7 +60,7 @@ function ItemScreen() {
                   <div
                     className="col-span-3 bg-cover bg-no-repeat bg-center"
                     style={{
-                      'background-image': `url(
+                      backgroundImage: `url(
                     'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
                   )`,
                     }}
@@ -71,7 +72,7 @@ function ItemScreen() {
                   <div
                     className="col-span-3 bg-cover bg-no-repeat bg-center rounded-tr-xl"
                     style={{
-                      'background-image': `url(
+                      backgroundImage: `url(
                     'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
                   )`,
                     }}
@@ -79,7 +80,7 @@ function ItemScreen() {
                   <div
                     className="col-span-3 bg-cover bg-no-repeat bg-center rounded-br-xl"
                     style={{
-                      'background-image': `url(
+                      backgroundImage: `url(
                     'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
                   )`,
                     }}
@@ -186,10 +187,10 @@ function ItemScreen() {
                       <div className="stat-desc">21% more than last month</div>
                     </div>
 
-                    <div class="stat">
-                      <div class="stat-figure text-secondary">
-                        <div class="avatar online">
-                          <div class="w-16 rounded-full">
+                    <div className="stat">
+                      <div className="stat-figure text-secondary">
+                        <div className="avatar online">
+                          <div className="w-16 rounded-full">
                             <img
                               src="https://api.lorem.space/image/face?w=128&h=128"
                               alt=""
@@ -197,9 +198,9 @@ function ItemScreen() {
                           </div>
                         </div>
                       </div>
-                      <div class="stat-value">86</div>
-                      <div class="stat-title">Transaction</div>
-                      <div class="stat-desc text-secondary">
+                      <div className="stat-value">86</div>
+                      <div className="stat-title">Transaction</div>
+                      <div className="stat-desc text-secondary">
                         100% Clean Transaction
                       </div>
                     </div>
@@ -208,15 +209,15 @@ function ItemScreen() {
               </div>
             </div>
             <div className="col-span-1">
-              <div className="sticky top-20 z-50">
+              <div className="sticky top-20 z-40">
                 <div
-                  class="card w-full
+                  className="card w-full
                  bg-white border shadow-xl ml-auto"
                 >
-                  <div class="card-body">
+                  <div className="card-body">
                     <div className="grid grid-cols-3">
                       <div className="col-span-2">
-                        <h2 class="card-title">
+                        <h2 className="card-title">
                           <span className="text-gray-500">Listed At</span> $4000
                         </h2>
                       </div>
@@ -224,8 +225,10 @@ function ItemScreen() {
                         <div className="badge badge-secondary">Negotiable</div>
                       </div>
                     </div>
-                    <div class="card-actions justify-stretch">
-                      <button class="btn btn-primary w-full">Chat & Buy</button>
+                    <div className="card-actions justify-stretch">
+                      <button className="btn btn-primary w-full">
+                        Chat & Buy
+                      </button>
                     </div>
                     <div className="grid grid-cols-5 border-b border-gray-300">
                       <div className="col-span-3">
@@ -257,7 +260,7 @@ function ItemScreen() {
           <div
             className="hero min-h-full rounded-2xl"
             style={{
-              'background-image': `url(
+              backgroundImage: `url(
             'https://180dc.org/wp-content/uploads/2015/03/HKU.jpg'
           )`,
             }}
@@ -311,7 +314,7 @@ function ItemScreen() {
                 </div>
               </div>
               <div className="grid grid-cols-4">
-                <div className="col-span-1 justify-self-start py-3 pr-3">
+                <div className="col-span-1 justify-self-start max-h-20 py-3 pr-3">
                   <img
                     src={profile}
                     alt="profile"
@@ -342,11 +345,27 @@ function ItemScreen() {
                   handling — not for beginners!"
                 </p>
               </div>
+              <div className="py-3">
+                <label className="text-sm text-gray-500">Joon's Record</label>
+                <div className="flex stats shadow mt-2">
+                  <div className="stat place-items-center">
+                    <div className="stat-title">Clean Purchase</div>
+                    <div className="stat-value">31K</div>
+                    <div className="stat-desc">100% of Transactions</div>
+                  </div>
+
+                  <div className="stat place-items-center">
+                    <div className="stat-title">Clean Sale</div>
+                    <div className="stat-value text-secondary">4,200</div>
+                    <div className="stat-desc">100% of Transactions</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="sticky bottom-0 z-50 border-t py-3 bg-white">
+      <div className="lg:hidden sticky bottom-0 z-50 border-t py-3 bg-white">
         <div className="grid grid-cols-3 px-3">
           <div className="col-span-2">
             <p>
@@ -355,7 +374,9 @@ function ItemScreen() {
             <div className="badge badge-secondary">Negotiable</div>
           </div>
           <div className="col-span-1">
-            <button class="btn btn-primary btn-md w-full">Chat & Buy</button>
+            <button className="btn btn-primary btn-md w-full">
+              Chat & Buy
+            </button>
           </div>
         </div>
       </div>

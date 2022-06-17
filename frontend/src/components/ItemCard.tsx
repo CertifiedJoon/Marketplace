@@ -1,7 +1,7 @@
 import React from 'react'
 import LazyLoad from 'react-lazyload'
 import { Link } from 'react-router-dom'
-import profile from '../static/images/profile.PNG'
+import profile from '../static/images/profile.png'
 
 import 'swiper/css'
 import 'swiper/css/pagination'
