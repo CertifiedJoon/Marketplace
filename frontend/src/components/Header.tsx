@@ -16,9 +16,26 @@ function Header() {
             </a>
           </div>
           <div className="show md:hidden">
-            <a href="/" className="w-full text-xs">
-              <div className="badge badge-primary text-white">HKU</div>
-            </a>
+            <label
+              htmlFor="my-modal-6"
+              className="btn modal-button btn-primary btn-xs text-white"
+            >
+              HKU
+            </label>
+
+            <input type="checkbox" id="my-modal-6" className="modal-toggle" />
+            <div className="modal modal-bottom sm:modal-middle cursor-pointer">
+              <div className="modal-box">
+                <h3 className="font-bold text-lg">Join A Community!</h3>
+
+                <button className="btn btn-accent inline-block">Join</button>
+                <div className="modal-action inline-block absolute right-6 bottom-6">
+                  <label htmlFor="my-modal-6" className="btn">
+                    Done
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
           <div className="hidden md:block flex-non">
             <ul className="menu menu-horizontal rounded-box">

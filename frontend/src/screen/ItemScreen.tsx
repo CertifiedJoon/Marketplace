@@ -3,10 +3,13 @@ import { FaHeart, FaShare } from 'react-icons/fa'
 import LazySwiper from '../components/LazySwiper'
 import PhotoGallery from '../components/PhotoGallery'
 import profile from '../static/images/profile.png'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 
 function ItemScreen() {
   return (
     <>
+      <Header />
       <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3">
         <div className="hidden lg:block">
           <div className="grid grid-cols-5 my-4">
@@ -380,6 +383,7 @@ function ItemScreen() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   )
 }

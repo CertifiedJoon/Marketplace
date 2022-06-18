@@ -33,7 +33,7 @@ function LazySwiper({ containImg }: Props) {
       >
         <SwiperSlide>
           <img
-            src="https://api.lorem.space/image/album?w=800&h=800&hash=225E6693"
+            src="https://api.lorem.space/image/movie?w=800&h=800&hash=225E6693"
             className={`swiper-lazy ${containImg && 'containImg'}`}
             alt=""
           />

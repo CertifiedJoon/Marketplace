@@ -6,6 +6,7 @@
   background-color: white;
   --swiper-theme-color: #54bab9;
   --swiper-navigation-color: #54bab9;
+  --swiper-pagination-color: #54bab9;
 }
 
 * {
@@ -71,6 +72,10 @@ img {
 
 .vh60 {
   height: 60vh;
+}
+
+.vh90 {
+  height: 90vh;
 }
 
 /* Customizing Swiper Component */
