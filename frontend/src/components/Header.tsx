@@ -1,6 +1,7 @@
 import React from 'react'
 import { FaCaretDown } from 'react-icons/fa'
 import profile from '../static/images/profile.png'
+import SearchBar from './SearchBar'
 
 function Header() {
   return (
@@ -24,11 +25,38 @@ function Header() {
             </label>
 
             <input type="checkbox" id="my-modal-6" className="modal-toggle" />
-            <div className="modal modal-bottom sm:modal-middle cursor-pointer">
-              <div className="modal-box">
+            <div className="modal modal-bottom sm:modal-middle ">
+              <div className="modal-box h-2/3">
                 <h3 className="font-bold text-lg">Join A Community!</h3>
-
-                <button className="btn btn-accent inline-block">Join</button>
+                <div className="my-1">
+                  <SearchBar />
+                </div>
+                <div
+                  className="hero h-2/3 rounded-2xl"
+                  style={{
+                    backgroundImage: `url(
+            'https://180dc.org/wp-content/uploads/2015/03/HKU.jpg'
+          )`,
+                  }}
+                >
+                  <div className="hero-overlay bg-opacity-60 rounded-2xl"></div>
+                  <div className="hero-content text-center text-neutral-content">
+                    <div className="max-w-md">
+                      <h1 className="mb-5 text-5xl font-bold">HKU</h1>
+                      <p className="mb-5">
+                        Provident cupiditate voluptatem et in. Quaerat fugiat ut
+                        assumenda excepturi exercitationem quasi. In deleniti
+                        eaque aut repudiandae et a id nisi.
+                      </p>
+                      <button className="btn btn-primary">
+                        Explore Community
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <button className="btn btn-accent inline-block absolute left-6 bottom-6">
+                  Join
+                </button>
                 <div className="modal-action inline-block absolute right-6 bottom-6">
                   <label htmlFor="my-modal-6" className="btn">
                     Done
@@ -40,9 +68,60 @@ function Header() {
           <div className="hidden md:block flex-non">
             <ul className="menu menu-horizontal rounded-box">
               <li>
-                <a href="/" className="w-full text-xs">
-                  <div className="badge badge-primary text-white">HKU</div>
-                </a>
+                <div className="w-full text-xs">
+                  <label
+                    htmlFor="my-modal-7"
+                    className="btn modal-button btn-primary btn-xs text-white"
+                  >
+                    HKU
+                  </label>
+
+                  <input
+                    type="checkbox"
+                    id="my-modal-7"
+                    className="modal-toggle"
+                  />
+                  <div className="modal modal-bottom sm:modal-middle ">
+                    <div className="modal-box h-2/3">
+                      <h3 className="font-bold text-lg">Join A Community!</h3>
+                      <div className="my-1 text-md">
+                        <SearchBar />
+                      </div>
+                      <div
+                        className="hero h-2/3 rounded-2xl"
+                        style={{
+                          backgroundImage: `url(
+            'https://180dc.org/wp-content/uploads/2015/03/HKU.jpg'
+          )`,
+                        }}
+                      >
+                        <div className="hero-overlay bg-opacity-60 rounded-2xl"></div>
+                        <div className="hero-content text-center text-neutral-content">
+                          <div className="max-w-md">
+                            <h1 className="mb-5 text-5xl font-bold">HKU</h1>
+                            <p className="mb-5">
+                              Provident cupiditate voluptatem et in. Quaerat
+                              fugiat ut assumenda excepturi exercitationem
+                              quasi. In deleniti eaque aut repudiandae et a id
+                              nisi.
+                            </p>
+                            <button className="btn btn-primary">
+                              Explore Community
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <button className="btn btn-accent inline-block absolute left-6 bottom-6">
+                        Join
+                      </button>
+                      <div className="modal-action inline-block absolute right-6 bottom-6">
+                        <label htmlFor="my-modal-7" className="btn">
+                          Done
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </li>
               <li>
                 <a href="/" className="w-full text-xs">
