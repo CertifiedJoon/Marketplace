@@ -19,6 +19,7 @@ import {
   FaUmbrella,
   FaUserGraduate,
   FaRegAddressBook,
+  FaBoxOpen,
 } from 'react-icons/fa'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
@@ -62,10 +63,18 @@ function CategoryMenu() {
         <SwiperSlide>
           <div className="card py-1">
             <figure>
+              <FaBoxOpen />
+            </figure>
+            <div className="card-body py-0 px-1 text-xs">All</div>
+            <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+          </div>
+        </SwiperSlide>
+        <SwiperSlide>
+          <div className="card py-1">
+            <figure>
               <FaGlassCheers />
             </figure>
             <div className="card-body py-0 px-1 text-xs">Event</div>
-            <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
           </div>
         </SwiperSlide>
         <SwiperSlide>

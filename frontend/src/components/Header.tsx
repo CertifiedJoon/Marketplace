@@ -3,7 +3,11 @@ import { FaCaretDown } from 'react-icons/fa'
 import profile from '../static/images/profile.png'
 import SearchBar from './SearchBar'
 
-function Header() {
+type Props = {
+  sell?: boolean
+}
+
+function Header({ sell = false }: Props) {
   return (
     <div className="sticky top-0 z-50 py-0">
       <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3 bg-white">
@@ -11,7 +15,9 @@ function Header() {
           <div className="flex-1">
             <a
               href="/"
-              className="btn btn-link normal-case text-xl hover:no-underline px-0"
+              className={`btn btn-link normal-case text-xl hover:no-underline px-0 ${
+                sell ? 'text-secondary' : ''
+              }`}
             >
               Marketplace
             </a>
@@ -19,7 +25,9 @@ function Header() {
           <div className="show md:hidden">
             <label
               htmlFor="my-modal-6"
-              className="btn modal-button btn-primary btn-xs text-white"
+              className={`btn modal-button btn-xs text-white ${
+                sell ? 'btn-secondary' : 'btn-primary'
+              }`}
             >
               HKU
             </label>
@@ -71,7 +79,9 @@ function Header() {
                 <div className="w-full text-xs">
                   <label
                     htmlFor="my-modal-7"
-                    className="btn modal-button btn-primary btn-xs text-white"
+                    className={`btn modal-button btn-xs text-white ${
+                      sell ? 'btn-secondary' : 'btn-primary'
+                    }`}
                   >
                     HKU
                   </label>

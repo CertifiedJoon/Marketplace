@@ -15,6 +15,7 @@ function App() {
         <main></main>
         <Routes>
           <Route path="/" element={<HomeScreen />}></Route>
+          <Route path="/userId/sell" element={<HomeScreen sell />}></Route>
           <Route path="/productId" element={<ItemScreen />}></Route>
           <Route path="/login" element={<LoginScreen />}></Route>
           <Route path="/signup" element={<SignupScreen />}></Route>

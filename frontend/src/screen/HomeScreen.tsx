@@ -4,10 +4,14 @@ import Card from '../components/ItemCard'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 
-function HomeScreen() {
+type Props = {
+  sell?: boolean
+}
+
+function HomeScreen({ sell = false }: Props) {
   return (
     <>
-      <Header />
+      <Header sell={sell} />
       <CategoryMenu />
       <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3">
         <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
