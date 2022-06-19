@@ -6,7 +6,41 @@ import profile from '../static/images/profile.png'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 
-function ItemScreen() {
+type Props = {
+  itemType: string
+}
+
+function EventScreen({ itemType }: Props) {
+  // eslint-disable-next-line
+  const itemLabels = {
+    product: {
+      subHeading: "I am selling because I've graduated Hogwarts!",
+      detailLabels: ['Bought On', 'Brand', 'Condition', 'Frequency of Use'],
+      userType: 'Seller',
+    },
+    note: {
+      subHeading: 'Notes for MATH1853',
+      detailLabels: [
+        'Written For',
+        'Written during',
+        'Condition',
+        'Grade Recieved',
+        'Number of Copies Sold',
+      ],
+      userType: 'Seller',
+    },
+    event: {
+      subHeading: 'Bi-weekly Quidditch Training',
+      detailLabels: [
+        'Event Date',
+        'Location',
+        'Event Capacity',
+        'Joining Condition',
+      ],
+      userType: 'host',
+    },
+  }
+
   return (
     <>
       <Header />
@@ -15,7 +49,7 @@ function ItemScreen() {
           <div className="grid grid-cols-5 my-4">
             <div className="col-span-4">
               <h1>
-                <strong>Nimbus 2000 Stolen From Set</strong>
+                <strong>Quidditch Practice</strong>
               </h1>
             </div>
             <div className="col-span-1">
@@ -46,7 +80,7 @@ function ItemScreen() {
                 className="col-span-3 bg-cover bg-no-repeat bg-center rounded-l-xl"
                 style={{
                   backgroundImage: `url(
-                    'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
+                    'https://api.lorem.space/image/house?w=800&h=800&hash=8B7BCDC2'
                   )`,
                 }}
               ></div>
@@ -56,7 +90,7 @@ function ItemScreen() {
                     className="col-span-3 bg-cover bg-no-repeat bg-center"
                     style={{
                       backgroundImage: `url(
-                    'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
+                    'https://api.lorem.space/image/house?w=800&h=800&hash=8B7BCDC2'
                   )`,
                     }}
                   ></div>
@@ -64,7 +98,7 @@ function ItemScreen() {
                     className="col-span-3 bg-cover bg-no-repeat bg-center"
                     style={{
                       backgroundImage: `url(
-                    'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
+                    'https://api.lorem.space/image/house?w=800&h=800&hash=8B7BCDC2'
                   )`,
                     }}
                   ></div>
@@ -76,7 +110,7 @@ function ItemScreen() {
                     className="col-span-3 bg-cover bg-no-repeat bg-center rounded-tr-xl"
                     style={{
                       backgroundImage: `url(
-                    'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
+                    'https://api.lorem.space/image/house?w=800&h=800&hash=8B7BCDC2'
                   )`,
                     }}
                   ></div>
@@ -84,7 +118,7 @@ function ItemScreen() {
                     className="col-span-3 bg-cover bg-no-repeat bg-center rounded-br-xl"
                     style={{
                       backgroundImage: `url(
-                    'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
+                    'https://api.lorem.space/image/house?w=800&h=800&hash=8B7BCDC2'
                   )`,
                     }}
                   ></div>
@@ -125,11 +159,11 @@ function ItemScreen() {
                     <div className="col-span-2 justify-start">
                       <div>
                         <h1 className="w-full text-2xl">
-                          Nimbus Full Option 2007
+                          Gryffindor Quidditch Practice
                         </h1>
                       </div>
                       <div className="w-full my-1 text-lg text-gray-500">
-                        I am selling because I've graduated Hogwarts!
+                        A bi-weekly practice.
                       </div>
                     </div>
                     <div className="col-span-1 justify-content-end">
@@ -142,68 +176,67 @@ function ItemScreen() {
                   </div>
                 </div>
                 <div className="row-span-2 py-5">
-                  <label className="text-sm text-gray-500">Bought On</label>
+                  <label className="text-sm text-gray-500">Event Date</label>
                   <p className="mb-1">25th, December, 1982</p>
-                  <label className="text-sm text-gray-500">Brand</label>
-                  <p className="mb-1">The Nimbus Broom Racing Company</p>
-                  <label className="text-sm text-gray-500">Condition</label>
-                  <p className="mb-1">Almost Unusable</p>
+                  <label className="text-sm text-gray-500">Location</label>
+                  <p className="mb-1">Hogwarts Quidditch Stadium</p>
                   <label className="text-sm text-gray-500">
-                    Frequency of Use
+                    Event Capacity
                   </label>
-                  <p className="mb-1">
-                    Used every week during Quidditch Training.
-                  </p>
+                  <p className="mb-1">50</p>
+                  <label className="text-sm text-gray-500">Condition</label>
+                  <p className="mb-1">You must be gryffindor.</p>
                 </div>
                 <div className="row-span-2 py-5">
                   <label className="text-lg text-gray-500 mb-2">
                     Description
                   </label>
                   <p>
-                    "One of the Nimbus Racing Broom Company's most successful
-                    models. Highly reliable with good speed and exceptional
-                    handling — not for beginners!"
+                    "Quidditch, the most popular sport in the magical world –
+                    highly dangerous, very exciting and played on broomsticks."
                   </p>
                   <p>
-                    The Nimbus 2000 was a broomstick produced by the Nimbus
-                    Racing Broom Company as part of their successful line of
-                    racing brooms. At the time of its release in 1991, it was
-                    the fastest broomstick in production. The Nimbus 2000 easily
-                    outperformed its competitors on the Quidditch pitch until it
-                    was replaced as the top broomstick by the Nimbus 2001.
+                    The object of the game was to score more points than your
+                    opponents. Each goal was worth ten points and catching the
+                    Golden Snitch was worth one-hundred and fifty points. The
+                    game ended when the Snitch was caught or an agreement was
+                    reached between the captains of both teams. Some games could
+                    go on for many days if the Snitch was not caught (the
+                    record, according to Quidditch Through the Ages, was six
+                    months, although no one caught the Snitch).
                   </p>
                 </div>
                 <div className="row-span-2 py-5">
                   <label className="text-lg text-gray-500 mb-5">
-                    Seller Description &nbsp;
+                    Host Description &nbsp;
                     <div
                       className="tooltip tooltip-info"
-                      data-tip="100% Clean Transactions"
+                      data-tip="Hosted 100 people"
                     >
                       <div className="badge badge-info badge-outline mr-1">
                         <FaHandSparkles />
-                        &nbsp;Clean
+                        &nbsp;Celebrity
                       </div>
                     </div>
                     <div
                       className="tooltip tooltip-success"
-                      data-tip="Sold and Bought 10 items"
+                      data-tip="Hosted 10 events"
                     >
                       <div className="badge badge-success badge-outline mr-1">
                         <FaMedal />
-                        &nbsp;PowerUser
+                        &nbsp;PowerHost
                       </div>
                     </div>
                   </label>
                   <div className="stats shadow">
                     <div className="stat">
-                      <div className="stat-title">Items Bought</div>
+                      <div className="stat-title">Events Hosted</div>
                       <div className="stat-value text-primary">25.6K</div>
                       <div className="stat-desc">21% more than last month</div>
                     </div>
 
                     <div className="stat">
-                      <div className="stat-title">Items Sold</div>
+                      <div className="stat-title">People Hosted</div>
                       <div className="stat-value text-secondary">2.6M</div>
                       <div className="stat-desc">21% more than last month</div>
                     </div>
@@ -220,9 +253,9 @@ function ItemScreen() {
                         </div>
                       </div>
                       <div className="stat-value">86</div>
-                      <div className="stat-title">Transaction</div>
+                      <div className="stat-title">Events Rated At</div>
                       <div className="stat-desc text-secondary">
-                        100% Clean Transaction
+                        100% Clean Events
                       </div>
                     </div>
                   </div>
@@ -239,30 +272,30 @@ function ItemScreen() {
                     <div className="grid grid-cols-3">
                       <div className="col-span-2">
                         <h2 className="card-title">
-                          <span className="text-gray-500">Listed At</span> $4000
+                          <span className="text-gray-500">Joining Fee</span> $4
                         </h2>
                       </div>
                       <div className="col-span-1">
-                        <div className="badge badge-secondary">Negotiable</div>
+                        <div className="badge badge-secondary">
+                          Unnegotiable
+                        </div>
                       </div>
                     </div>
                     <div className="card-actions justify-stretch">
-                      <button className="btn btn-primary w-full">
-                        Chat & Buy
-                      </button>
+                      <button className="btn btn-primary w-full">Join</button>
                     </div>
                     <div className="grid grid-cols-5 border-b border-gray-300">
                       <div className="col-span-3">
-                        <p className="underline">Product Price</p>
+                        <p className="underline">Event Fee</p>
                       </div>
                       <div className="col-span-2 justify-self-end">
-                        <p className="mb-1">$4000</p>
+                        <p className="mb-1">$4</p>
                       </div>
                       <div className="col-span-3">
                         <p className="underline">Marketplace Fee</p>
                       </div>
                       <div className="col-span-2 justify-self-end">
-                        <p className="mb-1">$10</p>
+                        <p className="mb-1">$0</p>
                       </div>
                     </div>
                     <div className="grid grid-cols-5">
@@ -270,7 +303,7 @@ function ItemScreen() {
                         <strong className="underline">Total</strong>
                       </div>
                       <div className="col-span-2 justify-self-end">
-                        <strong className="mb-1">$4010</strong>
+                        <strong className="mb-1">$4</strong>
                       </div>
                     </div>
                   </div>
@@ -306,12 +339,14 @@ function ItemScreen() {
           </div>
           <div className="mx-3 py-3">
             <h3 className="text-2xl my-3">
-              <strong>Nimbus 2000 Taken From Set</strong>
+              <strong>Quidditch Practice</strong>
             </h3>
             <div className="divide-y divide-gray-300">
               <div className="grid grid-cols-5">
                 <div className="col-span-3">
-                  <p className="text-sm text-gray-500">Nimbus 2000</p>
+                  <p className="text-sm text-gray-500">
+                    Gryffindor Quidditch Practice
+                  </p>
                 </div>
                 <div className="col-span-2 justify-self-end">
                   <button className="btn btn-xs rounded btn-ghost text-xs px-0">
@@ -343,60 +378,67 @@ function ItemScreen() {
                   />
                 </div>
                 <div className="col-span-3 justify-self-end text-md py-3 text-gray-500">
-                  I am selling because I've graduated Hogwarts!
+                  Bi-weekly practice.
                 </div>
               </div>
               <div className="py-3">
-                <label className="text-sm text-gray-500">Bought On</label>
+                <label className="text-sm text-gray-500">Event Date</label>
                 <p className="mb-1">25th, December, 1982</p>
-                <label className="text-sm text-gray-500">Brand</label>
-                <p className="mb-1">The Nimbus Broom Racing Company</p>
+                <label className="text-sm text-gray-500">Location</label>
+                <p className="mb-1">Hogwarts Quidditch Stadium</p>
+                <label className="text-sm text-gray-500">Event Capacity</label>
+                <p className="mb-1">50</p>
                 <label className="text-sm text-gray-500">Condition</label>
-                <p className="mb-1">Almost Unusable</p>
-                <label className="text-sm text-gray-500">
-                  Frequency of Use
+                <p className="mb-1">You must be gryffindor.</p>
+                <label className="text-lg text-gray-500 mb-2">
+                  Description
                 </label>
-                <p className="mb-1">
-                  Used every week during Quidditch Training.
-                </p>
-                <label className="text-sm text-gray-500">Description</label>
                 <p>
-                  "One of the Nimbus Racing Broom Company's most successful
-                  models. Highly reliable with good speed and exceptional
-                  handling — not for beginners!"
+                  "Quidditch, the most popular sport in the magical world –
+                  highly dangerous, very exciting and played on broomsticks."
+                </p>
+                <p>
+                  The object of the game was to score more points than your
+                  opponents. Each goal was worth ten points and catching the
+                  Golden Snitch was worth one-hundred and fifty points. The game
+                  ended when the Snitch was caught or an agreement was reached
+                  between the captains of both teams. Some games could go on for
+                  many days if the Snitch was not caught (the record, according
+                  to Quidditch Through the Ages, was six months, although no one
+                  caught the Snitch).
                 </p>
               </div>
               <div className="py-3">
                 <label className="text-sm text-gray-500">
-                  Joon's Record &nbsp;
+                  Host Description &nbsp;
                   <div
                     className="tooltip tooltip-info"
-                    data-tip="100% Clean Transactions"
+                    data-tip="Hosted 100 people"
                   >
                     <div className="badge badge-info badge-outline mr-1">
                       <FaHandSparkles />
-                      &nbsp;Clean
+                      &nbsp;Celebrity
                     </div>
                   </div>
                   <div
                     className="tooltip tooltip-success"
-                    data-tip="Sold and Bought 10 items"
+                    data-tip="Hosted 10 events"
                   >
                     <div className="badge badge-success badge-outline mr-1">
                       <FaMedal />
-                      &nbsp;PowerUser
+                      &nbsp;PowerHost
                     </div>
                   </div>
                 </label>
                 <div className="flex stats shadow mt-2">
                   <div className="stat place-items-center">
-                    <div className="stat-title">Clean Purchase</div>
+                    <div className="stat-title">Events Hosted</div>
                     <div className="stat-value">31K</div>
                     <div className="stat-desc">100% of Transactions</div>
                   </div>
 
                   <div className="stat place-items-center">
-                    <div className="stat-title">Clean Sale</div>
+                    <div className="stat-title">People Hosted</div>
                     <div className="stat-value text-secondary">4,200</div>
                     <div className="stat-desc">100% of Transactions</div>
                   </div>
@@ -410,13 +452,13 @@ function ItemScreen() {
         <div className="grid grid-cols-3 px-3">
           <div className="col-span-2">
             <p>
-              <span className="text-gray-500">Listed At</span> $4000
+              <span className="text-gray-500">Joining Fee</span> $4
             </p>
-            <div className="badge badge-secondary">Negotiable</div>
+            <div className="badge badge-secondary">Unnegotiable</div>
           </div>
           <div className="col-span-1">
             <button className="btn btn-primary btn-md w-full">
-              Chat & Buy
+              Chat & Join
             </button>
           </div>
         </div>
@@ -426,4 +468,4 @@ function ItemScreen() {
   )
 }
 
-export default ItemScreen
+export default EventScreen

@@ -44,7 +44,7 @@ function SearchBar() {
       options={groupedOptions}
       formatGroupLabel={formatGroupLabel}
       defaultMenuIsOpen
-      closeMenuOnSelect={false}
+      closeMenuOnSelect
     />
   )
 }

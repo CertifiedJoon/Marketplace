@@ -8,6 +8,7 @@ import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 import 'swiper/css/lazy'
 import LazySwiper from './LazySwiper'
+import { FaHandSparkles } from 'react-icons/fa'
 
 function ItemCard() {
   return (
@@ -36,12 +37,20 @@ function ItemCard() {
                   $2000
                 </div>
               </div>
-              <div className="col-span-1 justify-end py-1 pl-6 xl:pl-3">
+              <div className="col-span-1 relative justify-end py-1 pl-6 xl:pl-3">
                 <img
                   src={profile}
                   alt="profile"
                   className="mask mask-squircle"
                 />
+                <div
+                  className="tooltip tooltip-info absolute top-0 right-0"
+                  data-tip="100% Clean Transactions"
+                >
+                  <div className="badge badge-info badge-md xl:badge-xs mr-1">
+                    <FaHandSparkles />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

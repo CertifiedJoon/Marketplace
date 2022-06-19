@@ -143,14 +143,6 @@ function CategoryMenu() {
         <SwiperSlide>
           <div className="card py-1">
             <figure>
-              <FaDumbbell />
-            </figure>
-            <div className="card-body py-0 px-1 text-xs">Fitness</div>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div className="card py-1">
-            <figure>
               <FaQuidditch />
             </figure>
             <div className="card-body py-0 px-1 text-xs">FaQuidditch</div>

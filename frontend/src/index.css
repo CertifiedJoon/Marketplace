@@ -6,7 +6,7 @@
   background-color: white;
   --swiper-theme-color: #54bab9;
   --swiper-navigation-color: #54bab9;
-  --swiper-pagination-color: #54bab9;
+  --swiper-pagination-color: rgba(0, 229, 255, 0.19);
 }
 
 * {
