@@ -11,15 +11,21 @@ type Props = {
 }
 
 function EventScreen({ itemType }: Props) {
+  interface Label {
+    itemType: string
+    detailLabels: Array<string>
+    userType: string
+  }
+
   // eslint-disable-next-line
-  const itemLabels = {
-    product: {
-      subHeading: "I am selling because I've graduated Hogwarts!",
+  const itemLabels: Array<Label> = [
+    {
+      itemType: 'product',
       detailLabels: ['Bought On', 'Brand', 'Condition', 'Frequency of Use'],
       userType: 'Seller',
     },
-    note: {
-      subHeading: 'Notes for MATH1853',
+    {
+      itemType: 'note',
       detailLabels: [
         'Written For',
         'Written during',
@@ -29,8 +35,8 @@ function EventScreen({ itemType }: Props) {
       ],
       userType: 'Seller',
     },
-    event: {
-      subHeading: 'Bi-weekly Quidditch Training',
+    {
+      itemType: 'event',
       detailLabels: [
         'Event Date',
         'Location',
@@ -39,6 +45,14 @@ function EventScreen({ itemType }: Props) {
       ],
       userType: 'host',
     },
+  ]
+  let label: Label
+
+  for (let x in itemLabels) {
+    if (itemLabels[x].itemType === itemType) {
+      // eslint-disable-next-line
+      label = itemLabels[x]
+    }
   }
 
   return (

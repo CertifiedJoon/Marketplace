@@ -6,6 +6,9 @@ module.exports = {
     },
   ],
   theme: {
+    placeholderColor: {
+      accent: '#D89313',
+    },
     container: {
       padding: {
         DEFAULT: '1rem',

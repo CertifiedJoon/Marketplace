@@ -1,41 +1,53 @@
 import React from 'react'
-import { FaHandSparkles, FaHeart, FaMedal, FaShare } from 'react-icons/fa'
+import {
+  FaHandSparkles,
+  FaHeart,
+  FaMedal,
+  FaShare,
+  FaInfoCircle,
+  FaUpload,
+} from 'react-icons/fa'
 import LazySwiper from '../components/LazySwiper'
 import PhotoGallery from '../components/PhotoGallery'
 import profile from '../static/images/profile.png'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 
-function ItemScreen() {
+function ItemUploadScreen() {
   return (
     <>
-      <Header />
+      <Header sell />
       <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3">
         <div className="hidden lg:block">
+          <div className="alert alert-info shadow-lg">
+            <div>
+              <FaInfoCircle />
+              <span>
+                <span className="underline">
+                  This page is exactly what the buyers will see!
+                </span>{' '}
+                Upload your item by filling out the details instead of yellow
+                texts and buttons.
+              </span>
+            </div>
+          </div>
           <div className="grid grid-cols-5 my-4">
             <div className="col-span-4">
-              <h1>
-                <strong>Nimbus 2000 Stolen From Set</strong>
-              </h1>
+              <input
+                type="text"
+                placeholder="Fill In Item Heading"
+                className="input input-ghost input-md placeholder-accent item-input-2xl w-full"
+              />
             </div>
-            <div className="col-span-1">
-              <div className="grid grid-cols-2 gap-0">
-                <button className="btn rounded btn-ghost text-xs px-0">
-                  <FaHeart
-                    style={{
-                      backgroundColor: 'rgba(0, 0, 0, 0)',
-                      color: 'hsl(var(--sf))',
-                    }}
-                  />
-                  &nbsp;Save
-                </button>
-                <button className="btn rounded btn-ghost text-xs px-0">
-                  <FaShare
+            <div className="col-span-1 grid justify-item-stretch">
+              <div className="justify-self-end">
+                <button className="btn rounded btn-primary rounded-full text-xs px-3">
+                  <FaUpload
                     style={{
                       backgroundColor: 'rgba(0, 0, 0, 0)',
                     }}
                   />
-                  &nbsp;Share
+                  &nbsp;Upload
                 </button>
               </div>
             </div>
@@ -43,51 +55,86 @@ function ItemScreen() {
           <div className="vh50 relative">
             <div className="grid grid-cols-5 gap-2 h-full">
               <div
-                className="col-span-3 bg-cover bg-no-repeat bg-center rounded-l-xl"
+                className="col-span-3 bg-cover bg-no-repeat bg-center rounded-l-xl relative"
                 style={{
                   backgroundImage: `url(
                     'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
                   )`,
                 }}
-              ></div>
+              >
+                <button className="btn glass absolute top-1 left-1">
+                  <input
+                    type="file"
+                    className="text-black file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-white-50 file:text-accent"
+                  />
+                </button>
+              </div>
               <div className="col-span-1">
                 <div className="grid grid-rows-2 gap-2 h-full">
                   <div
-                    className="col-span-3 bg-cover bg-no-repeat bg-center"
+                    className="col-span-3 bg-cover bg-no-repeat bg-center relative"
                     style={{
                       backgroundImage: `url(
                     'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
                   )`,
                     }}
-                  ></div>
+                  >
+                    <button className="btn glass btn-sm w-1/2 absolute top-1 left-1">
+                      <input
+                        type="file"
+                        className="text-black file:input-xs file:py-1 file:px-1 file:rounded-full file:border-0 file:text-xs file:bg-white-50 file:text-accent"
+                      />
+                    </button>
+                  </div>
                   <div
-                    className="col-span-3 bg-cover bg-no-repeat bg-center"
+                    className="col-span-3 bg-cover bg-no-repeat bg-center relative"
                     style={{
                       backgroundImage: `url(
                     'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
                   )`,
                     }}
-                  ></div>
+                  >
+                    <button className="btn glass btn-sm w-1/2 absolute top-1 left-1">
+                      <input
+                        type="file"
+                        className="text-black file:input-xs file:py-1 file:px-1 file:rounded-full file:border-0 file:text-xs file:bg-white-50 file:text-accent"
+                      />
+                    </button>
+                  </div>
                 </div>
               </div>
               <div className="col-span-1">
                 <div className="grid grid-rows-2 gap-2 h-full">
                   <div
-                    className="col-span-3 bg-cover bg-no-repeat bg-center rounded-tr-xl"
+                    className="col-span-3 bg-cover bg-no-repeat bg-center rounded-tr-xl relative"
                     style={{
                       backgroundImage: `url(
                     'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
                   )`,
                     }}
-                  ></div>
+                  >
+                    <button className="btn glass btn-sm w-1/2 absolute top-1 left-1">
+                      <input
+                        type="file"
+                        className="text-black file:input-xs file:py-1 file:px-1 file:rounded-full file:border-0 file:text-xs file:bg-white-50 file:text-accent"
+                      />
+                    </button>
+                  </div>
                   <div
-                    className="col-span-3 bg-cover bg-no-repeat bg-center rounded-br-xl"
+                    className="col-span-3 bg-cover bg-no-repeat bg-center rounded-br-xl relative"
                     style={{
                       backgroundImage: `url(
                     'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
                   )`,
                     }}
-                  ></div>
+                  >
+                    <button className="btn glass btn-sm w-1/2 absolute top-1 left-1">
+                      <input
+                        type="file"
+                        className="text-black file:input-xs file:py-1 file:px-1 file:rounded-full file:border-0 file:text-xs file:bg-white-50 file:text-accent"
+                      />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -119,17 +166,23 @@ function ItemScreen() {
           <div className="grid grid-cols-3 my-5  border-b border-gray-300">
             <div className="col-span-2 pr-5">
               <div className="grid grid-rows-7 divide-y divide-gray-300">
-                <div className="row-span-1 py-5">
+                <div className="row-span-1">
                   {/* One liner Description & reason for sale & profile pic */}
                   <div className="grid grid-cols-3 gap-3">
-                    <div className="col-span-2 justify-start">
+                    <div className="col-span-2">
                       <div>
-                        <h1 className="w-full text-2xl">
-                          Nimbus Full Option 2007
-                        </h1>
+                        <input
+                          type="text"
+                          placeholder="Fill In Item SubHeading"
+                          className="input input-ghost input-md placeholder-accent item-input-xl w-full max-w-xs"
+                        />
                       </div>
-                      <div className="w-full my-1 text-lg text-gray-500">
-                        I am selling because I've graduated Hogwarts!
+                      <div className="w-full">
+                        <input
+                          type="text"
+                          placeholder="Fill In Your Reason For Sale"
+                          className="input input-ghost input-sm placeholder-accent placeholder-opacity-50 item-input-lg w-full max-w-xs mb-1 ml-3"
+                        />
                       </div>
                     </div>
                     <div className="col-span-1 justify-content-end">
@@ -142,36 +195,53 @@ function ItemScreen() {
                   </div>
                 </div>
                 <div className="row-span-2 py-5">
-                  <label className="text-sm text-gray-500">Bought On</label>
-                  <p className="mb-1">25th, December, 1982</p>
-                  <label className="text-sm text-gray-500">Brand</label>
-                  <p className="mb-1">The Nimbus Broom Racing Company</p>
-                  <label className="text-sm text-gray-500">Condition</label>
-                  <p className="mb-1">Almost Unusable</p>
-                  <label className="text-sm text-gray-500">
-                    Frequency of Use
-                  </label>
-                  <p className="mb-1">
-                    Used every week during Quidditch Training.
-                  </p>
+                  <div>
+                    <label className="text-sm text-gray-500 block">
+                      Bought On
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Fill in Product Branding."
+                      className="input input-ghost input-xs placeholder-accent item-input-base w-full mb-1 "
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-500 block">Brand</label>
+                    <input
+                      type="text"
+                      placeholder="Fill in approx. Timing of Purchase."
+                      className="input input-ghost input-xs placeholder-accent item-input-base w-full mb-1 "
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-500 block">
+                      Condition
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Describe Condition in One sentence. Be Creative!"
+                      className="input input-ghost input-xs placeholder-accent item-input-base w-full mb-1 "
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-500 block">
+                      Frequency of Use
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Fill in frequency of use. eg) Once a week for a year."
+                      className="input input-ghost input-xs placeholder-accent item-input-base w-full mb-1 "
+                    />
+                  </div>
                 </div>
                 <div className="row-span-2 py-5">
-                  <label className="text-lg text-gray-500 mb-2">
+                  <label className="text-lg text-gray-500 mb-2 block">
                     Description
                   </label>
-                  <p>
-                    "One of the Nimbus Racing Broom Company's most successful
-                    models. Highly reliable with good speed and exceptional
-                    handling — not for beginners!"
-                  </p>
-                  <p>
-                    The Nimbus 2000 was a broomstick produced by the Nimbus
-                    Racing Broom Company as part of their successful line of
-                    racing brooms. At the time of its release in 1991, it was
-                    the fastest broomstick in production. The Nimbus 2000 easily
-                    outperformed its competitors on the Quidditch pitch until it
-                    was replaced as the top broomstick by the Nimbus 2001.
-                  </p>
+                  <textarea
+                    className="textarea textarea-ghost placeholder-accent item-input-base w-full h-40"
+                    placeholder="Describe your listing."
+                  ></textarea>
                 </div>
                 <div className="row-span-2 py-5">
                   <label className="text-lg text-gray-500 mb-5">
@@ -239,11 +309,24 @@ function ItemScreen() {
                     <div className="grid grid-cols-3">
                       <div className="col-span-2">
                         <h2 className="card-title">
-                          <span className="text-gray-500">Listed At</span> $4000
+                          <span className="text-gray-500">Listed At</span>
+                          <input
+                            type="text"
+                            placeholder="Price"
+                            className="input input-ghost input-xs placeholder-accent item-input-base w-5/12"
+                          />
                         </h2>
                       </div>
                       <div className="col-span-1">
-                        <div className="badge badge-secondary">Negotiable</div>
+                        <label className="swap">
+                          <input type="checkbox" />
+                          <div className="swap-off badge badge-accent badge-lg">
+                            Negotiable
+                          </div>
+                          <div className="swap-on badge badge-error badge-lg">
+                            Unnegotiable
+                          </div>
+                        </label>
                       </div>
                     </div>
                     <div className="card-actions justify-stretch">
@@ -301,23 +384,45 @@ function ItemScreen() {
           </div>
         </div>
         <div className="lg:hidden">
+          <div className="alert alert-info shadow-lg mb-2">
+            <div className="grid grid-cols-8">
+              <div className="col-span-1">
+                <FaInfoCircle />
+              </div>
+              <div className="col-span-7">
+                <span>
+                  <span className="underline">
+                    This page is exactly what the buyers will see!
+                  </span>{' '}
+                  Upload your item by filling out the details instead of yellow
+                  texts and buttons.
+                </span>
+              </div>
+            </div>
+          </div>
           <div className="vh40 relative">
             <LazySwiper containImg={true} />
+            <button className="btn glass btn-sm w-1/2 z-40 absolute top-1 left-1">
+              <input
+                type="file"
+                className="text-black file:input-xs file:py-1 file:px-1 file:rounded-full file:border-0 file:text-xs file:bg-white-50 file:text-accent-focus"
+              />
+            </button>
             <div className="bg-transparent absolute bottom-0 left-auto z-40">
               <label
-                htmlFor="my-modal-2"
+                htmlFor="my-modal-1"
                 className="rounded rounded-bl-xl bg-white btn btn-xs btn-outline btn-ghost text-gray-500"
               >
                 Show all photos
               </label>
             </div>
-            <input type="checkbox" id="my-modal-2" className="modal-toggle" />
+            <input type="checkbox" id="my-modal-1" className="modal-toggle" />
             <div className="modal">
               <div className="modal-box w-11/12 max-w-5xl">
                 <PhotoGallery />
                 <div className="modal-action bg-inherit">
                   <label
-                    htmlFor="my-modal-2"
+                    htmlFor="my-modal-1"
                     className="btn btn-sm btn-active btn-ghost"
                   >
                     Close
@@ -327,11 +432,18 @@ function ItemScreen() {
             </div>
           </div>
           <div className="mx-3 py-3">
-            <h3 className="text-2xl my-3">
-              <strong>Nimbus 2000 Taken From Set</strong>
-            </h3>
+            <input
+              type="text"
+              placeholder="Item Heading"
+              className="input input-ghost font-bold input-md placeholder-accent item-input-2xl placeholder:font-bold w-full"
+            />
             <div className="divide-y divide-gray-300">
-              <p className="text-sm text-gray-500 mb-1">Nimbus 2000</p>
+              <input
+                type="text"
+                placeholder="Item Sub-heading"
+                className="input input-ghost input-sm text-gray-500 placeholder-accent placeholder-opacity-50 item-input-base w-full max-w-xs mb-1 ml-3"
+              />
+
               <div className="grid grid-cols-4">
                 <div className="col-span-1 justify-self-start max-h-20 py-3 pr-3">
                   <img
@@ -340,29 +452,46 @@ function ItemScreen() {
                     className="mask mask-squircle"
                   />
                 </div>
-                <div className="col-span-3 justify-self-end text-md py-3 text-gray-500">
-                  I am selling because I've graduated Hogwarts!
+                <div className="col-span-3 justify-self-end w-full py-3">
+                  <input
+                    type="text"
+                    placeholder="Reason For Sale"
+                    className="input input-ghost input-sm text-right text-gray-500 placeholder-accent placeholder-opacity-50 item-input-base w-full mb-1 ml-3"
+                  />
                 </div>
               </div>
               <div className="py-3">
                 <label className="text-sm text-gray-500">Bought On</label>
-                <p className="mb-1">25th, December, 1982</p>
+                <input
+                  type="text"
+                  placeholder="Fill in approx. Timing of Purchase."
+                  className="input input-ghost input-xs placeholder-accent item-input-base w-full mb-1 "
+                />
                 <label className="text-sm text-gray-500">Brand</label>
-                <p className="mb-1">The Nimbus Broom Racing Company</p>
+                <input
+                  type="text"
+                  placeholder="Fill in Product Branding"
+                  className="input input-ghost input-xs placeholder-accent item-input-base w-full mb-1 "
+                />
                 <label className="text-sm text-gray-500">Condition</label>
-                <p className="mb-1">Almost Unusable</p>
+                <input
+                  type="text"
+                  placeholder="Condition in One sentence. Be Creative!"
+                  className="input input-ghost input-xs placeholder-accent item-input-base w-full mb-1 "
+                />
                 <label className="text-sm text-gray-500">
                   Frequency of Use
                 </label>
-                <p className="mb-1">
-                  Used every week during Quidditch Training.
-                </p>
+                <input
+                  type="text"
+                  placeholder="eg) Once a week for a year."
+                  className="input input-ghost input-xs placeholder-accent item-input-base w-full mb-1 "
+                />
                 <label className="text-sm text-gray-500">Description</label>
-                <p>
-                  "One of the Nimbus Racing Broom Company's most successful
-                  models. Highly reliable with good speed and exceptional
-                  handling — not for beginners!"
-                </p>
+                <textarea
+                  className="textarea textarea-ghost placeholder-accent item-input-base w-full h-40"
+                  placeholder="Describe your listing."
+                ></textarea>
               </div>
               <div className="py-3">
                 <label className="text-sm text-gray-500">
@@ -408,29 +537,49 @@ function ItemScreen() {
         <div className="grid grid-cols-3 px-3">
           <div className="col-span-2">
             <p>
-              <span className="text-gray-500">Listed At</span> $4000
+              <span className="text-gray-500">Listed At</span>
+              <input
+                type="text"
+                placeholder="Price"
+                className="input input-ghost input-xs placeholder-accent item-input-base w-5/12"
+              />
             </p>
-            <div className="badge badge-secondary">Negotiable</div>
-            <button className="btn btn-xs rounded btn-ghost text-sm">
-              <FaHeart
-                style={{
-                  backgroundColor: 'rgba(0, 0, 0, 0)',
-                  color: 'hsl(var(--sf))',
-                }}
-              />
-            </button>
-            &nbsp;
-            <button className="btn btn-xs rounded btn-ghost text-sm">
-              <FaShare
-                style={{
-                  backgroundColor: 'rgba(0, 0, 0, 0)',
-                }}
-              />
-            </button>
+            <div className="mt-1">
+              <label className="swap">
+                <input type="checkbox" />
+                <div className="swap-off badge badge-accent badge-md">
+                  Negotiable
+                </div>
+                <div className="swap-on badge badge-error badge-md">
+                  Unnegotiable
+                </div>
+              </label>
+              <button className="btn btn-xs rounded btn-ghost text-sm">
+                <FaHeart
+                  style={{
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    color: 'hsl(var(--sf))',
+                  }}
+                />
+              </button>
+              &nbsp;
+              <button className="btn btn-xs rounded btn-ghost text-sm">
+                <FaShare
+                  style={{
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                  }}
+                />
+              </button>
+            </div>
           </div>
           <div className="col-span-1">
             <button className="btn btn-primary btn-md w-full">
-              Chat & Buy
+              <FaUpload
+                style={{
+                  backgroundColor: 'rgba(0, 0, 0, 0)',
+                }}
+              />
+              &nbsp;Upload
             </button>
           </div>
         </div>
@@ -439,4 +588,4 @@ function ItemScreen() {
   )
 }
 
-export default ItemScreen
+export default ItemUploadScreen
