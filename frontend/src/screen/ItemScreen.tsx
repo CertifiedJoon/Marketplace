@@ -5,8 +5,19 @@ import PhotoGallery from '../components/PhotoGallery'
 import profile from '../static/images/profile.png'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import { Link } from 'react-router-dom'
 
 function ItemScreen() {
+  /* 
+    Frontend worklist:
+    1. All links should be wrapped with react Link
+    2. Save and share button must do its functions
+    3. Labels & product details must be taken from a item state (redux)
+    4. Gallery and Swiper must be take files from a item state (redux)
+    5. Community hero must be taken from a community state (redux)
+    6. Seller Description must be taken from a item state (redux)
+    7. Price must be calculated by state management (redux)
+  */
   return (
     <>
       <Header />
@@ -133,11 +144,13 @@ function ItemScreen() {
                       </div>
                     </div>
                     <div className="col-span-1 justify-content-end">
-                      <img
-                        src={profile}
-                        alt="profile"
-                        className="w-1/2 mask mask-squircle ml-auto"
-                      />
+                      <Link to="/public-profile/userId">
+                        <img
+                          src={profile}
+                          alt="profile"
+                          className="w-1/2 mask mask-squircle ml-auto"
+                        />
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -247,9 +260,11 @@ function ItemScreen() {
                       </div>
                     </div>
                     <div className="card-actions justify-stretch">
-                      <button className="btn btn-primary w-full">
-                        Chat & Buy
-                      </button>
+                      <Link to="/message/chatId" className="w-full">
+                        <button className="btn btn-primary w-full">
+                          Chat & Buy
+                        </button>
+                      </Link>
                     </div>
                     <div className="grid grid-cols-5 border-b border-gray-300">
                       <div className="col-span-3">
@@ -295,11 +310,16 @@ function ItemScreen() {
                   assumenda excepturi exercitationem quasi. In deleniti eaque
                   aut repudiandae et a id nisi.
                 </p>
-                <button className="btn btn-primary">Explore Community</button>
+                <Link to="/">
+                  <button className="btn btn-primary">Explore Community</button>
+                </Link>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Mobile */}
+
         <div className="lg:hidden">
           <div className="vh40 relative">
             <LazySwiper containImg={true} />
@@ -334,11 +354,13 @@ function ItemScreen() {
               <p className="text-sm text-gray-500 mb-1">Nimbus 2000</p>
               <div className="grid grid-cols-4">
                 <div className="col-span-1 justify-self-start max-h-20 py-3 pr-3">
-                  <img
-                    src={profile}
-                    alt="profile"
-                    className="mask mask-squircle"
-                  />
+                  <Link to="/public-profile/userId">
+                    <img
+                      src={profile}
+                      alt="profile"
+                      className="mask mask-squircle"
+                    />
+                  </Link>
                 </div>
                 <div className="col-span-3 justify-self-end text-md py-3 text-gray-500">
                   I am selling because I've graduated Hogwarts!
@@ -429,12 +451,15 @@ function ItemScreen() {
             </button>
           </div>
           <div className="col-span-1">
-            <button className="btn btn-primary btn-md w-full">
-              Chat & Buy
-            </button>
+            <Link to="/message/chatId">
+              <button className="btn btn-primary btn-md w-full">
+                Chat & Buy
+              </button>
+            </Link>
           </div>
         </div>
       </div>
+      <Footer />
     </>
   )
 }

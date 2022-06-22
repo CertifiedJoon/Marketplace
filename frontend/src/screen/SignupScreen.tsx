@@ -1,8 +1,14 @@
 import React from 'react'
 import { FaApple } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
 import googleIcon from '../static/images/google.png'
 
 function SignupScreen() {
+  /* 
+  Frontend Worklist 
+    1. Store sign up data to a user state (redux)
+    2. Link Wrap [Done]
+  */
   return (
     <>
       <div className="lg:mx-auto lg:w-1/3 ">
@@ -72,7 +78,7 @@ function SignupScreen() {
             </button>
           </div>
           <div className="text-center my-auto text-gray-500 underline">
-            Back to login
+            <Link to="/login">Back to login</Link>
           </div>
         </div>
       </div>

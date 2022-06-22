@@ -4,7 +4,13 @@ import Header from '../components/Header'
 import { FaMedal, FaHandSparkles } from 'react-icons/fa'
 
 import Profile from '../static/images/profile.png'
+import { Link } from 'react-router-dom'
 function ProfileScreen() {
+  /*
+    Frontend Worklist:
+    1. Link Wrap [Done]
+    2. Profile data pulled from a user state (redux)
+  */
   return (
     <>
       <Header />
@@ -68,25 +74,39 @@ function ProfileScreen() {
               <div className="row-span-6 my-3">
                 <ul className="menu bg-base-100 rounded-box w-full my-3">
                   <li>
-                    <div>Profile</div>
+                    <Link to="/profile-edit">
+                      <div>Profile</div>
+                    </Link>
                   </li>
                   <li>
-                    <div>Messages</div>
+                    <Link to="/messages">
+                      <div>Messages</div>
+                    </Link>
                   </li>
                   <li>
-                    <div>Purchase History</div>
+                    <Link to="/wishlist">
+                      <div>Wishlist</div>
+                    </Link>
                   </li>
                   <li>
-                    <div>Sales History</div>
+                    <Link to="/purchase-history">
+                      <div>Purchase History</div>
+                    </Link>
                   </li>
                   <li>
-                    <div>Communities</div>
+                    <Link to="/sales-history">
+                      <div>Sales History</div>
+                    </Link>
                   </li>
                   <li>
-                    <div>Settings</div>
+                    <Link to="/communities">
+                      <div>Communities</div>
+                    </Link>
                   </li>
                   <li>
-                    <div>Verify Identity</div>
+                    <Link to="/settings">
+                      <div>Settings</div>
+                    </Link>
                   </li>
                 </ul>
               </div>

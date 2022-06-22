@@ -8,7 +8,8 @@ import SignupScreen from './screen/SignupScreen'
 import ProfileScreen from './screen/ProfileScreen'
 import EventScreen from './screen/EventScreen'
 import ItemUploadScreen from './screen/ItemUploadScreen'
-
+import 'react-toastify/dist/ReactToastify.min.css'
+import SavedScreen from './screen/SavedScreen'
 function App() {
   return (
     <>
@@ -16,11 +17,10 @@ function App() {
         <main></main>
         <Routes>
           <Route path="/" element={<HomeScreen />}></Route>
-          <Route path="/userId/sell" element={<HomeScreen sell />}></Route>
-          <Route
-            path="/userId/sell/upload"
-            element={<ItemUploadScreen />}
-          ></Route>
+          <Route path="/wishlist" element={<SavedScreen />}></Route>
+          <Route path="/explore/itemType" element={<HomeScreen />}></Route>
+          <Route path="/sell" element={<HomeScreen sell />}></Route>
+          <Route path="/sell/upload" element={<ItemUploadScreen />}></Route>
           <Route path="/productId" element={<ItemScreen />}></Route>
           <Route path="/login" element={<LoginScreen />}></Route>
           <Route path="/signup" element={<SignupScreen />}></Route>

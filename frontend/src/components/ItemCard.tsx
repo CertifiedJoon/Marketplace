@@ -9,10 +9,11 @@ import 'swiper/css/navigation'
 import 'swiper/css/lazy'
 import LazySwiper from './LazySwiper'
 import { FaHandSparkles } from 'react-icons/fa'
+import PlaceholderCard from './PlaceholderCard'
 
 function ItemCard() {
   return (
-    <LazyLoad height={200} once>
+    <LazyLoad height={200} once offset={-100} placeholder={<PlaceholderCard />}>
       <Link to="/productId">
         <div className="card item-card w-full">
           <figure>

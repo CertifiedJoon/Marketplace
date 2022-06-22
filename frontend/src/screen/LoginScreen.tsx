@@ -1,7 +1,13 @@
 import React from 'react'
 import { FaApple, FaAt } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
 import googleIcon from '../static/images/google.png'
 function LoginScreen() {
+  /* 
+  Frontend Worklist 
+    1. Store login data to a user state (redux)
+    2. Link Wrap [Done]
+  */
   return (
     <>
       {/* Tablet or bigger */}
@@ -33,9 +39,13 @@ function LoginScreen() {
           <div className="text-center">
             <button className="btn w-2/3 btn-block btn-accent">Login</button>
             <p className="text-center text-gray-500 mt-2">
-              <span className="underline">Can't Login</span>
+              <span className="underline">
+                <Link to="/reset-password">Can't Login</Link>
+              </span>
               &nbsp;&nbsp;&nbsp;&nbsp;
-              <span className="underline">Sign Up</span>
+              <span className="underline">
+                <Link to="/signup">Sign Up</Link>
+              </span>
             </p>
           </div>
           <div className="text-center mb-auto">
@@ -61,7 +71,7 @@ function LoginScreen() {
             </button>
           </div>
           <div className="text-center my-auto text-gray-500 underline">
-            Continue without login
+            <Link to="/">Continue without login</Link>
           </div>
         </div>
       </div>
@@ -106,12 +116,16 @@ function LoginScreen() {
             </div>
           </button>
         </div>
-        <div className="text-center text-gray-300">Can't login?</div>
+        <div className="text-center text-gray-300">
+          <Link to="/reset-password">Can't login?</Link>
+        </div>
         <div className="mx-auto">
-          <button className="btn glass">Sign Up</button>
+          <Link to="/signup">
+            <button className="btn glass">Sign Up</button>
+          </Link>
         </div>
         <div className="text-center my-auto text-gray-500 underline">
-          Continue without login
+          <Link to="/">Continue without login</Link>
         </div>
       </div>
     </>

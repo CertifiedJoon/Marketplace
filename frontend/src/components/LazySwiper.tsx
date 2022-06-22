@@ -33,7 +33,7 @@ function LazySwiper({ containImg }: Props) {
       >
         <SwiperSlide>
           <img
-            src="https://api.lorem.space/image/movie?w=800&h=800&hash=225E6693"
+            src="https://api.lorem.space/image/movie?w=800&h=800"
             className={`swiper-lazy ${containImg && 'containImg'}`}
             alt=""
           />
@@ -41,7 +41,7 @@ function LazySwiper({ containImg }: Props) {
         </SwiperSlide>
         <SwiperSlide>
           <img
-            src="https://api.lorem.space/image/movie?w=800&h=1000&hash=500B67FB"
+            src="https://api.lorem.space/image/movie?w=800&h=1000"
             className={`swiper-lazy ${containImg && 'containImg'}`}
             alt=""
           />
@@ -49,7 +49,7 @@ function LazySwiper({ containImg }: Props) {
         </SwiperSlide>
         <SwiperSlide>
           <img
-            src="https://api.lorem.space/image/book?w=800&h=1600&hash=A89D0DE6"
+            src="https://api.lorem.space/image/book?w=800&h=1600"
             className={`swiper-lazy ${containImg && 'containImg'}`}
             alt=""
           />
@@ -57,7 +57,7 @@ function LazySwiper({ containImg }: Props) {
         </SwiperSlide>
         <SwiperSlide>
           <img
-            src="https://api.lorem.space/image/furniture?w=800&h=300&hash=8B7BCDC2"
+            src="https://api.lorem.space/image/furniture?w=800&h=300"
             className={`swiper-lazy ${containImg && 'containImg'}`}
             alt=""
           />

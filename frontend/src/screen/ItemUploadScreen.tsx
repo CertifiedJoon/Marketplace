@@ -14,6 +14,13 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 
 function ItemUploadScreen() {
+  /*
+    Frontend Worklist
+    1. Set up react-useState for the input values (useState)
+    1. Create async logic for upload (async)
+    2. Set up state management for upload (redux)
+    3. Set up Fee Calculation from state (redux)
+  */
   return (
     <>
       <Header sell />
@@ -584,6 +591,7 @@ function ItemUploadScreen() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   )
 }

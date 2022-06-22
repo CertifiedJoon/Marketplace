@@ -1,5 +1,6 @@
 import React from 'react'
 import { FaCaretDown } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
 import profile from '../static/images/profile.png'
 import SearchBar from './SearchBar'
 
@@ -8,19 +9,21 @@ type Props = {
 }
 
 function Header({ sell = false }: Props) {
+  // Link Wrapped
   return (
     <div className="sticky top-0 z-50 py-0">
       <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3 bg-white">
         <div className="navbar px-0">
           <div className="flex-1">
-            <a
-              href="/"
-              className={`btn btn-link normal-case text-xl hover:no-underline px-0 ${
-                sell ? 'text-secondary' : ''
-              }`}
-            >
-              Marketplace
-            </a>
+            <Link to="/">
+              <p
+                className={`btn btn-link normal-case text-xl hover:no-underline px-0 ${
+                  sell ? 'text-secondary' : ''
+                }`}
+              >
+                Marketplace
+              </p>
+            </Link>
           </div>
           <div className="show md:hidden">
             <label
@@ -134,15 +137,15 @@ function Header({ sell = false }: Props) {
                 </div>
               </li>
               <li>
-                <a href="/" className="w-full text-xs">
-                  Messages
-                </a>
+                <Link to="/userId/message">
+                  <p className="w-full text-xs">Messages</p>
+                </Link>
               </li>
               <li tab-index="0">
-                <a href="/" className="text-xs">
+                <p className="text-xs">
                   I'm Buying!
                   <FaCaretDown />
-                </a>
+                </p>
                 <ul className="bg-transparent dropdown-content w-full p-2">
                   <li className="rounded">
                     <button className="z-10 bg-white btn btn-active btn-primary hover:bg-white active:btn-primary focus:btn-primary text-xs active">
@@ -158,11 +161,13 @@ function Header({ sell = false }: Props) {
               </li>
               <li>
                 <div className="w-20">
-                  <img
-                    className="mask mask-squircle"
-                    src={profile}
-                    alt="profile"
-                  />
+                  <Link to="/profile">
+                    <img
+                      className="mask mask-squircle"
+                      src={profile}
+                      alt="profile"
+                    />
+                  </Link>
                 </div>
               </li>
             </ul>

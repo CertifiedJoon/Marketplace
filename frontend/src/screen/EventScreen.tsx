@@ -1,59 +1,37 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaHandSparkles, FaHeart, FaMedal, FaShare } from 'react-icons/fa'
 import LazySwiper from '../components/LazySwiper'
 import PhotoGallery from '../components/PhotoGallery'
 import profile from '../static/images/profile.png'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import { toast } from 'react-toastify'
+import { Link } from 'react-router-dom'
 
 type Props = {
   itemType: string
 }
 
 function EventScreen({ itemType }: Props) {
-  interface Label {
-    itemType: string
-    detailLabels: Array<string>
-    userType: string
+  /*
+    Frontend Worklist:
+    1. When Redux is set up, migrate this page to ItemScreen for dynamic rendering
+  */
+
+  const [copySuccess, setCopySuccess] = useState(false)
+
+  const handleShare = async () => {
+    await navigator.clipboard.writeText(window.location.href)
+    setCopySuccess(true)
   }
 
-  // eslint-disable-next-line
-  const itemLabels: Array<Label> = [
-    {
-      itemType: 'product',
-      detailLabels: ['Bought On', 'Brand', 'Condition', 'Frequency of Use'],
-      userType: 'Seller',
-    },
-    {
-      itemType: 'note',
-      detailLabels: [
-        'Written For',
-        'Written during',
-        'Condition',
-        'Grade Recieved',
-        'Number of Copies Sold',
-      ],
-      userType: 'Seller',
-    },
-    {
-      itemType: 'event',
-      detailLabels: [
-        'Event Date',
-        'Location',
-        'Event Capacity',
-        'Joining Condition',
-      ],
-      userType: 'host',
-    },
-  ]
-  let label: Label
-
-  for (let x in itemLabels) {
-    if (itemLabels[x].itemType === itemType) {
-      // eslint-disable-next-line
-      label = itemLabels[x]
-    }
+  const handleLike = () => {
+    toast.success('Item saved.')
   }
+
+  useEffect(() => {
+    if (copySuccess === true) toast.success('Link copied.')
+  }, [copySuccess])
 
   return (
     <>
@@ -68,7 +46,10 @@ function EventScreen({ itemType }: Props) {
             </div>
             <div className="col-span-1">
               <div className="grid grid-cols-2 gap-0">
-                <button className="btn rounded btn-ghost text-xs px-0">
+                <button
+                  className="btn rounded btn-ghost text-xs px-0"
+                  onClick={handleLike}
+                >
                   <FaHeart
                     style={{
                       backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -77,7 +58,10 @@ function EventScreen({ itemType }: Props) {
                   />
                   &nbsp;Save
                 </button>
-                <button className="btn rounded btn-ghost text-xs px-0">
+                <button
+                  className="btn rounded btn-ghost text-xs px-0"
+                  onClick={handleShare}
+                >
                   <FaShare
                     style={{
                       backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -181,11 +165,13 @@ function EventScreen({ itemType }: Props) {
                       </div>
                     </div>
                     <div className="col-span-1 justify-content-end">
-                      <img
-                        src={profile}
-                        alt="profile"
-                        className="w-1/2 mask mask-squircle ml-auto"
-                      />
+                      <Link to="/public-profile/userId">
+                        <img
+                          src={profile}
+                          alt="profile"
+                          className="w-1/2 mask mask-squircle ml-auto"
+                        />
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -342,7 +328,9 @@ function EventScreen({ itemType }: Props) {
                   assumenda excepturi exercitationem quasi. In deleniti eaque
                   aut repudiandae et a id nisi.
                 </p>
-                <button className="btn btn-primary">Explore Community</button>
+                <Link to="/">
+                  <button className="btn btn-primary">Explore Community</button>
+                </Link>
               </div>
             </div>
           </div>
@@ -363,7 +351,10 @@ function EventScreen({ itemType }: Props) {
                   </p>
                 </div>
                 <div className="col-span-2 justify-self-end">
-                  <button className="btn btn-xs rounded btn-ghost text-xs px-0">
+                  <button
+                    className="btn btn-xs rounded btn-ghost text-xs px-0"
+                    onClick={handleLike}
+                  >
                     <FaHeart
                       style={{
                         backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -373,7 +364,10 @@ function EventScreen({ itemType }: Props) {
                     &nbsp;Save
                   </button>
                   &nbsp;
-                  <button className="btn btn-xs rounded btn-ghost text-xs px-0">
+                  <button
+                    className="btn btn-xs rounded btn-ghost text-xs px-0"
+                    onClick={handleShare}
+                  >
                     <FaShare
                       style={{
                         backgroundColor: 'rgba(0, 0, 0, 0)',
