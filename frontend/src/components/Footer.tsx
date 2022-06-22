@@ -69,7 +69,7 @@ function Footer() {
           </Link>
         </div>
       </div>
-      <div className="xl:container xl:mx-auto lg:mx-20 mx-3 hidden md:block">
+      <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3 bg-white hidden md:block">
         <div className="grid grid-cols-3">
           <div className="col-span-2 text-gray-500">
             &copy; Marketplace 2022 &middot;
