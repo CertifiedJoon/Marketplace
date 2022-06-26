@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { FaShare } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
+import { FaArrowLeft, FaShare } from 'react-icons/fa'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import Footer from '../components/Footer'
@@ -8,6 +8,7 @@ import Header from '../components/Header'
 import profile from '../static/images/profile.png'
 
 function SavedScreen() {
+  const navigate = useNavigate()
   const [copySuccess, setCopySuccess] = useState(false)
 
   const handleShare = async () => {
@@ -18,9 +19,21 @@ function SavedScreen() {
   useEffect(() => {
     if (copySuccess === true) toast.success('Link copied.')
   }, [copySuccess])
+
   return (
     <>
-      <Header />
+      <div className="hidden md:block">
+        <Header />
+      </div>
+
+      <div className="md:hidden sticky top-0 bg-white z-50 relative">
+        <div className="absolute left-6 top-3">
+          <button onClick={() => navigate(-1)}>
+            <FaArrowLeft />
+          </button>
+        </div>
+        <h3 className="font-bold border-b text-center py-2 mx-20">Wishlist</h3>
+      </div>
 
       {/* Mobile */}
       <div className="md:hidden">

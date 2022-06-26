@@ -161,7 +161,7 @@ function Header({ sell = false }: Props) {
               </li>
               <li>
                 <div className="w-20">
-                  <Link to="/profile">
+                  <Link to="/mypage">
                     <img
                       className="mask mask-squircle"
                       src={profile}

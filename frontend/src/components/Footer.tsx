@@ -22,7 +22,7 @@ function Footer() {
               </div>
             </div>
           </Link>
-          <Link to="/wishlist">
+          <Link to="/wishlist/userId">
             <div className="card py-1">
               <figure>
                 <FaHeart
@@ -52,7 +52,7 @@ function Footer() {
               </div>
             </div>
           </Link>
-          <Link to="/profile">
+          <Link to="/mypage">
             <div className="card py-1">
               <figure>
                 <FaUser
@@ -63,7 +63,7 @@ function Footer() {
                 />
               </figure>
               <div className="card-body py-0 px-1 text-xs text-center">
-                Profile
+                My Page
               </div>
             </div>
           </Link>

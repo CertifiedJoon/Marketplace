@@ -37,13 +37,17 @@ const formatGroupLabel = (data: GroupedOption) => (
   </div>
 )
 
-function SearchBar() {
+type Props = {
+  defaultOpen?: boolean
+}
+
+function SearchBar({ defaultOpen = true }: Props) {
   return (
     <Select<UniOption | StateOption, false, GroupedOption>
       defaultValue={uniOptions[0]}
       options={groupedOptions}
       formatGroupLabel={formatGroupLabel}
-      defaultMenuIsOpen
+      defaultMenuIsOpen={defaultOpen}
       closeMenuOnSelect
     />
   )

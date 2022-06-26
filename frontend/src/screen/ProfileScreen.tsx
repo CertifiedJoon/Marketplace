@@ -1,114 +1,440 @@
-import React from 'react'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
-import { FaMedal, FaHandSparkles } from 'react-icons/fa'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
-import Profile from '../static/images/profile.png'
-import { Link } from 'react-router-dom'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
+import profile from '../static/images/profile.png'
+import {
+  FaArrowLeft,
+  FaHandSparkles,
+  FaInfoCircle,
+  FaMedal,
+  FaPencilAlt,
+} from 'react-icons/fa'
+import SearchBar from '../components/SearchBar'
+
 function ProfileScreen() {
-  /*
-    Frontend Worklist:
-    1. Link Wrap [Done]
-    2. Profile data pulled from a user state (redux)
-  */
+  const navigate = useNavigate()
+  const [editStatus, setEditStatus] = useState(false)
+
+  const saveProfile = () => {
+    console.log('Profile Saved')
+  }
+
+  const handleClick = () => {
+    if (editStatus === false) {
+      setEditStatus(true)
+    } else if (editStatus === true) {
+      saveProfile()
+      setEditStatus(false)
+    }
+  }
+
   return (
     <>
-      <Header />
-      <div className="md:mx-auto md:w-1/3 mx-6">
-        <div className="grid grid-rows-6 divide-y divide-gray-300 justify-items-stretch">
-          <div className="row-span-1 py-6">
-            <div className="grid grid-cols-3 justify-tiems-stretch">
+      <div className="hidden md:block">
+        <Header />
+      </div>
+
+      <div className="md:hidden sticky top-0 bg-white z-50 relative">
+        <div className="absolute left-6 top-3">
+          <button onClick={() => navigate(-1)}>
+            <FaArrowLeft />
+          </button>
+        </div>
+        <div className="absolute right-6 py-2">
+          <button
+            className="btn btn-ghost rounded-sm btn-xs"
+            onClick={handleClick}
+          >
+            {editStatus ? 'Save' : 'Edit'}
+          </button>
+        </div>
+        <h3 className="font-bold border-b text-center py-2 mx-20">Profile</h3>
+      </div>
+
+      {/* Mobile */}
+      <div className="md:hidden mx-3">
+        <div className="grid grid-cols-3 justify-tiems-stretch mx-auto py-5 border-b border-gray-300">
+          <div className="col-span-1 justify-self-end">
+            <div className="avatar px-2">
+              <div className="w-full max-w-40 rounded-full">
+                <img src={profile} alt="" />
+              </div>
+            </div>
+          </div>
+          <div className="col-span-2 flex flex-cols items-center">
+            <div className="grid grid-rows ml-3">
+              <input
+                type="text"
+                placeholder="Name"
+                value="Joonyoung Moon"
+                className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent item-input-xl w-full disabled:text-black disabled:input-ghost disabled:border-none"
+                disabled={!editStatus}
+                onChange={() => {}}
+              />
+              <input
+                type="text"
+                placeholder="E-mail"
+                value="marketplace@gmail.com"
+                className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent item-input-lg w-full disabled:text-black disabled:input-ghost disabled:border-none"
+                disabled={!editStatus}
+                onChange={() => {}}
+              />
+              <Link to="/edit-password">
+                <h3 className="btn btn-ghost btn-outline btn-xs rounded-sm w-2/3 ">
+                  Edit Password
+                </h3>
+              </Link>
+            </div>
+          </div>
+        </div>
+        <div className="border-b border-gray-300 py-5">
+          <div className="flex items-center justify-start">
+            <SearchBar defaultOpen={false} />
+            <div
+              className="tooltip tooltip-info z-30"
+              data-tip="Introduce yourself to each community"
+            >
+              <FaInfoCircle className="ml-1 text-lg text-info" />
+            </div>
+          </div>
+          <label className="text-lg text-gray-500">One word nickname:</label>
+          <input
+            type="text"
+            placeholder="E-mail"
+            value="Joon"
+            className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent text-lg w-full disabled:text-black disabled:input-ghost disabled:border-none"
+            disabled={!editStatus}
+            onChange={() => {}}
+          />
+          <label className="text-lg text-gray-500">
+            Introduce yourself to your community:
+          </label>
+          <textarea
+            className="p-0 rounded-none textarea textarea-ghost text-accent placeholder-accent w-full text-lg h-60 rounded-sm disabled:text-black disabled:textarea-ghost disabled:border-none"
+            value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
+            interdum lacus id urna aliquam placerat. In ultricies odio non
+            interdum molestie. Etiam et volutpat sem. Vivamus ac consequat nunc,
+            quis mollis justo. Morbi venenatis ex eu imperdiet tristique.
+            Maecenas sollicitudin viverra fringilla. Etiam imperdiet lacinia
+            magna, nec porttitor libero tempus et. Nunc eu ligula ac orci
+            posuere pellentesque eu eget mauris. Praesent convallis nisi ac urna
+            vulputate, eget viverra lectus mattis. Quisque id mi eget magna
+            finibus semper ut eget dolor. Sed sodales dignissim magna, id
+            feugiat nibh placerat interdum. Nunc nec lacus mollis magna placerat
+            laoreet non et mauris."
+            placeholder="Describe your listing."
+            disabled={!editStatus}
+            onChange={() => {}}
+          ></textarea>
+        </div>
+        <div className="py-5">
+          <div>
+            <label className="text-md text-gray-500">Badge Earned</label>
+            <div className="flex mt-2">
+              <div
+                className="tooltip tooltip-info"
+                data-tip="100% Clean Transactions"
+              >
+                <div className="badge badge-lg badge-info badge-outline mr-3">
+                  <FaHandSparkles />
+                  &nbsp;Clean
+                </div>
+              </div>
+              <div
+                className="tooltip tooltip-success"
+                data-tip="Sold and Bought 10 items"
+              >
+                <div className="badge badge-lg badge-success badge-outline mr-3">
+                  <FaMedal />
+                  &nbsp;PowerUser
+                </div>
+              </div>
+            </div>
+            <label className="text-md text-gray-500">Badge Progress</label>
+            <div>
+              <div
+                className="tooltip tooltip-secondary"
+                data-tip="Sold and Bought 10 items"
+              >
+                <div className="badge badge-secondary badge-outline">
+                  <FaMedal />
+                  &nbsp;PowerHost
+                </div>
+              </div>
+              <p className="inline ml-3">7 / 10 Events Hosted</p>
+              <progress
+                className="progress progress-secondary h-4 w-full"
+                value="70"
+                max="100"
+              ></progress>
+            </div>
+            <div>
+              <div
+                className="tooltip tooltip-accent"
+                data-tip="Sold and Bought 10 items"
+              >
+                <div className="badge badge-accent badge-outline">
+                  <FaMedal />
+                  &nbsp;Celebrity
+                </div>
+              </div>
+              <p className="inline ml-3">20 / 100 Peaple Hosted</p>
+              <progress
+                className="progress progress-accent h-4 w-full"
+                value="20"
+                max="100"
+              ></progress>
+            </div>
+            <div>
+              <div
+                className="tooltip tooltip-primary"
+                data-tip="Sold and Bought 10 items"
+              >
+                <div className="badge badge-primary badge-outline">
+                  <FaMedal />
+                  &nbsp;PowerUser
+                </div>
+              </div>
+              <p className="inline ml-3">10 / 10 Items Sold</p>
+              <progress
+                className="progress progress-primary h-4 w-full"
+                value="100"
+                max="100"
+              ></progress>
+            </div>
+            <div>
+              <div
+                className="tooltip tooltip-info"
+                data-tip="Sold and Bought 10 items"
+              >
+                <div className="badge badge-info badge-outline">
+                  <FaMedal />
+                  &nbsp;Clean
+                </div>
+              </div>
+              <p className="inline ml-3">102 / 102 Clean Transactions</p>
+              <progress
+                className="progress progress-info h-4 w-full"
+                value="100"
+                max="100"
+              ></progress>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Tablet or bigger */}
+
+      <div className="2xl:container 2xl:mx-auto lg:mx-10 md:mx-3 hidden md:block">
+        <div className="grid grid-cols-3 min-h-content my-5">
+          <div className="col-span-1 mr-6 border-r border-gray-300">
+            <div className="sticky top-1/2 z-50">
+              <div className="flex flex-col justify-center">
+                <div>
+                  <div className="text-center mt-5">
+                    <h1 className="font-bold">Your Profile</h1>
+                  </div>
+                  <div className="text-center">
+                    <button
+                      className="btn rounded btn-ghost text-xs"
+                      onClick={handleClick}
+                    >
+                      <FaPencilAlt
+                        style={{
+                          backgroundColor: 'rgba(0, 0, 0, 0)',
+                        }}
+                      />
+                      &nbsp;{editStatus ? 'Save' : 'Edit'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col-span-2 min-h-screen mx-10">
+            <div className="grid grid-cols-3 justify-tiems-stretch mx-auto pb-5 border-b border-gray-300">
               <div className="col-span-1 justify-self-end">
                 <div className="avatar">
                   <div className="w-2/3 rounded-full">
-                    <img src={Profile} alt="" />
+                    <img src={profile} alt="" />
                   </div>
                 </div>
               </div>
               <div className="col-span-2">
                 <div className="grid grid-rows-2 h-full">
                   <div className="self-end">
-                    <h3 className="text-xl lg:text-2xl">Joonyoung Moon</h3>
+                    <input
+                      type="text"
+                      placeholder="Name"
+                      value="Joonyoung Moon"
+                      className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent item-input-2xl w-full disabled:text-black disabled:input-ghost disabled:border-none"
+                      disabled={!editStatus}
+                      onChange={() => {}}
+                    />
                   </div>
-                  <div className="self-end lg:self-center">
-                    <div
-                      className="tooltip tooltip-info"
-                      data-tip="100% Clean Transactions"
-                    >
-                      <div className="badge badge-info badge-outline mr-1">
-                        <FaHandSparkles />
-                        &nbsp;Clean
-                      </div>
-                    </div>
-                    <div
-                      className="tooltip tooltip-success"
-                      data-tip="Sold and Bought 10 items"
-                    >
-                      <div className="badge badge-success badge-outline mr-1">
-                        <FaMedal />
-                        &nbsp;PowerUser
-                      </div>
+                  <div className="grid grid-cols-2">
+                    <input
+                      type="text"
+                      placeholder="Name"
+                      value="marketplace@gmail.com"
+                      className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent item-input-lg w-full disabled:text-black disabled:input-ghost disabled:border-none"
+                      disabled={!editStatus}
+                      onChange={() => {}}
+                    />
+                    <div className="justify-self-end">
+                      <Link to="/edit-password">
+                        <h3 className="btn btn-ghost btn-xs rounded-sm justify-self-end w-2/3">
+                          Edit Password
+                        </h3>
+                      </Link>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="row-span-4">
-            <div className="grid grid-rows-10 h-2/3 mx-3 divide-y divide-gray-300">
-              <div className="pt-3 row-spwn-4">
-                <label className="text-sm text-gray-500">Your Record</label>
-                <div className="flex stats shadow mt-2">
-                  <div className="stat place-items-center">
-                    <div className="stat-title">Clean Purchase</div>
-                    <div className="stat-value">31K</div>
-                    <div className="stat-desc">100% of Transactions</div>
-                  </div>
-                  <div className="stat place-items-center">
-                    <div className="stat-title">Clean Sale</div>
-                    <div className="stat-value text-secondary">4,200</div>
-                    <div className="stat-desc">100% of Transactions</div>
+            <div className="border-b border-gray-300 py-5">
+              <div className="grid grid-cols-5">
+                <div className="col-span-2">
+                  <label className="text-lg text-gray-500">
+                    One word nickname:
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="E-mail"
+                    value="Joon"
+                    className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent text-lg w-full disabled:text-black disabled:input-ghost disabled:border-none"
+                    disabled={!editStatus}
+                    onChange={() => {}}
+                  />
+                </div>
+                <div className="col-span-3">
+                  <div className="flex items-center justify-end">
+                    <div
+                      className="tooltip tooltip-info z-30"
+                      data-tip="Introduce yourself to each community"
+                    >
+                      <FaInfoCircle className="mr-1 text-lg text-info" />
+                    </div>
+                    <SearchBar defaultOpen={false} />
                   </div>
                 </div>
               </div>
-              <div className="row-span-6 my-3">
-                <ul className="menu bg-base-100 rounded-box w-full my-3">
-                  <li>
-                    <Link to="/profile-edit">
-                      <div>Profile</div>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/messages">
-                      <div>Messages</div>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/wishlist">
-                      <div>Wishlist</div>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/purchase-history">
-                      <div>Purchase History</div>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/sales-history">
-                      <div>Sales History</div>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/communities">
-                      <div>Communities</div>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/settings">
-                      <div>Settings</div>
-                    </Link>
-                  </li>
-                </ul>
+
+              <label className="text-lg text-gray-500">
+                Introduce yourself to your community:
+              </label>
+              <textarea
+                className="p-0 textarea textarea-ghost text-accent placeholder-accent w-full text-lg h-60 rounded-sm disabled:text-black disabled:textarea-ghost disabled:border-none"
+                value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
+            interdum lacus id urna aliquam placerat. In ultricies odio non
+            interdum molestie. Etiam et volutpat sem. Vivamus ac consequat nunc,
+            quis mollis justo. Morbi venenatis ex eu imperdiet tristique.
+            Maecenas sollicitudin viverra fringilla. Etiam imperdiet lacinia
+            magna, nec porttitor libero tempus et. Nunc eu ligula ac orci
+            posuere pellentesque eu eget mauris. Praesent convallis nisi ac urna
+            vulputate, eget viverra lectus mattis. Quisque id mi eget magna
+            finibus semper ut eget dolor. Sed sodales dignissim magna, id
+            feugiat nibh placerat interdum. Nunc nec lacus mollis magna placerat
+            laoreet non et mauris."
+                placeholder="Describe your listing."
+                disabled={!editStatus}
+                onChange={() => {}}
+              ></textarea>
+            </div>
+            <div className="py-5">
+              <div>
+                <label className="text-md text-gray-500">Badge Earned</label>
+                <div className="flex mt-2">
+                  <div
+                    className="tooltip tooltip-info"
+                    data-tip="100% Clean Transactions"
+                  >
+                    <div className="badge badge-lg badge-info badge-outline mr-3">
+                      <FaHandSparkles />
+                      &nbsp;Clean
+                    </div>
+                  </div>
+                  <div
+                    className="tooltip tooltip-success"
+                    data-tip="Sold and Bought 10 items"
+                  >
+                    <div className="badge badge-lg badge-success badge-outline mr-3">
+                      <FaMedal />
+                      &nbsp;PowerUser
+                    </div>
+                  </div>
+                </div>
+                <label className="text-md text-gray-500">Badge Progress</label>
+                <div>
+                  <progress
+                    className="progress progress-secondary h-4 w-56"
+                    value="70"
+                    max="100"
+                  ></progress>
+                  <p className="inline ml-3">7 / 10 Events Hosted</p>
+                  <div
+                    className="tooltip tooltip-secondary"
+                    data-tip="Sold and Bought 10 items"
+                  >
+                    <div className="badge badge-secondary badge-outline ml-3">
+                      <FaMedal />
+                      &nbsp;PowerHost
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <progress
+                    className="progress progress-accent h-4 w-56"
+                    value="20"
+                    max="100"
+                  ></progress>
+                  <p className="inline ml-3">20 / 100 Peaple Hosted</p>
+                  <div
+                    className="tooltip tooltip-accent"
+                    data-tip="Sold and Bought 10 items"
+                  >
+                    <div className="badge badge-accent badge-outline ml-3">
+                      <FaMedal />
+                      &nbsp;Celebrity
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <progress
+                    className="progress progress-primary h-4 w-56"
+                    value="100"
+                    max="100"
+                  ></progress>
+                  <p className="inline ml-3">10 / 10 Items Sold</p>
+                  <div
+                    className="tooltip tooltip-primary"
+                    data-tip="Sold and Bought 10 items"
+                  >
+                    <div className="badge badge-primary badge-outline ml-3">
+                      <FaMedal />
+                      &nbsp;PowerUser
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <progress
+                    className="progress progress-info h-4 w-56"
+                    value="100"
+                    max="100"
+                  ></progress>
+                  <p className="inline ml-3">102 / 102 Clean Transactions</p>
+                  <div
+                    className="tooltip tooltip-info"
+                    data-tip="Sold and Bought 10 items"
+                  >
+                    <div className="badge badge-info badge-outline ml-3">
+                      <FaMedal />
+                      &nbsp;Clean
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

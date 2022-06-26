@@ -6,6 +6,7 @@ import profile from '../static/images/profile.png'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { Link } from 'react-router-dom'
+import PublicProfile from '../components/PublicProfile'
 
 function ItemScreen() {
   /* 
@@ -22,6 +23,171 @@ function ItemScreen() {
     <>
       <Header />
       <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3">
+        {/* Mobile */}
+
+        <div className="lg:hidden">
+          <div className="vh40 relative">
+            <LazySwiper containImg={true} />
+            <div className="bg-transparent absolute bottom-0 left-auto z-40">
+              <label
+                htmlFor="my-modal-2"
+                className="rounded rounded-bl-xl bg-white btn btn-xs btn-outline btn-ghost text-gray-500"
+              >
+                Show all photos
+              </label>
+            </div>
+            <input type="checkbox" id="my-modal-2" className="modal-toggle" />
+            <div className="modal">
+              <div className="modal-box w-11/12 max-w-5xl">
+                <PhotoGallery />
+                <div className="modal-action bg-inherit">
+                  <label
+                    htmlFor="my-modal-2"
+                    className="btn btn-sm btn-active btn-ghost"
+                  >
+                    Close
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mx-3 py-3">
+            <h3 className="text-2xl my-3">
+              <strong>Nimbus 2000 Taken From Set</strong>
+            </h3>
+            <div className="divide-y divide-gray-300">
+              <p className="text-sm text-gray-500 mb-1">Nimbus 2000</p>
+              <div className="grid grid-cols-4">
+                <div className="col-span-1 justify-self-start max-h-20 py-3 pr-3">
+                  <label
+                    htmlFor="my-modal-profile-mobile"
+                    className="btn modal-button btn-ghost btn-square btn-lg"
+                  >
+                    <img
+                      src={profile}
+                      alt="profile"
+                      className="mask mask-squircle"
+                    />
+                  </label>
+
+                  <input
+                    type="checkbox"
+                    id="my-modal-profile-mobile"
+                    className="modal-toggle"
+                  />
+                  <div className="modal modal-bottom">
+                    <div className="modal-box">
+                      <PublicProfile />
+                      <div className="modal-action">
+                        <label
+                          htmlFor="my-modal-profile-mobile"
+                          className="btn btn-primary"
+                        >
+                          Close
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-span-3 justify-self-end text-md py-3 text-gray-500">
+                  I am selling because I've graduated Hogwarts!
+                </div>
+              </div>
+              <div className="py-3">
+                <label className="text-sm text-gray-500">Bought On</label>
+                <p className="mb-1">25th, December, 1982</p>
+                <label className="text-sm text-gray-500">Brand</label>
+                <p className="mb-1">The Nimbus Broom Racing Company</p>
+                <label className="text-sm text-gray-500">Condition</label>
+                <p className="mb-1">Almost Unusable</p>
+                <label className="text-sm text-gray-500">
+                  Frequency of Use
+                </label>
+                <p className="mb-1">
+                  Used every week during Quidditch Training.
+                </p>
+                <label className="text-sm text-gray-500">Description</label>
+                <p>
+                  "One of the Nimbus Racing Broom Company's most successful
+                  models. Highly reliable with good speed and exceptional
+                  handling — not for beginners!"
+                </p>
+              </div>
+              <div className="py-3">
+                <label className="text-sm text-gray-500">
+                  Joon's Record &nbsp;
+                  <div
+                    className="tooltip tooltip-info"
+                    data-tip="100% Clean Transactions"
+                  >
+                    <div className="badge badge-info badge-outline mr-1">
+                      <FaHandSparkles />
+                      &nbsp;Clean
+                    </div>
+                  </div>
+                  <div
+                    className="tooltip tooltip-success"
+                    data-tip="Sold and Bought 10 items"
+                  >
+                    <div className="badge badge-success badge-outline mr-1">
+                      <FaMedal />
+                      &nbsp;PowerUser
+                    </div>
+                  </div>
+                </label>
+                <div className="flex stats shadow mt-2">
+                  <div className="stat place-items-center">
+                    <div className="stat-title">Clean Purchase</div>
+                    <div className="stat-value">31K</div>
+                    <div className="stat-desc">100% of Transactions</div>
+                  </div>
+
+                  <div className="stat place-items-center">
+                    <div className="stat-title">Clean Sale</div>
+                    <div className="stat-value text-secondary">4,200</div>
+                    <div className="stat-desc">100% of Transactions</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="lg:hidden sticky bottom-0 z-50 border-t py-3 bg-white">
+          <div className="grid grid-cols-3 px-3">
+            <div className="col-span-2">
+              <p>
+                <span className="text-gray-500">Listed At</span> $4000
+              </p>
+              <div className="badge badge-secondary">Negotiable</div>
+              <button className="btn btn-xs rounded btn-ghost text-sm">
+                <FaHeart
+                  style={{
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    color: 'hsl(var(--sf))',
+                  }}
+                />
+              </button>
+              &nbsp;
+              <button className="btn btn-xs rounded btn-ghost text-sm">
+                <FaShare
+                  style={{
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                  }}
+                />
+              </button>
+            </div>
+            <div className="col-span-1">
+              <Link to="/message/chatId">
+                <button className="btn btn-primary btn-md w-full">
+                  Chat & Buy
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Laptop */}
+
         <div className="hidden lg:block">
           <div className="grid grid-cols-5 my-4">
             <div className="col-span-4">
@@ -58,7 +224,7 @@ function ItemScreen() {
                 style={{
                   backgroundImage: `url(
                     'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
-                  )`,
+                    )`,
                 }}
               ></div>
               <div className="col-span-1">
@@ -67,16 +233,16 @@ function ItemScreen() {
                     className="col-span-3 bg-cover bg-no-repeat bg-center"
                     style={{
                       backgroundImage: `url(
-                    'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
-                  )`,
+                      'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
+                      )`,
                     }}
                   ></div>
                   <div
                     className="col-span-3 bg-cover bg-no-repeat bg-center"
                     style={{
                       backgroundImage: `url(
-                    'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
-                  )`,
+                      'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
+                      )`,
                     }}
                   ></div>
                 </div>
@@ -87,16 +253,16 @@ function ItemScreen() {
                     className="col-span-3 bg-cover bg-no-repeat bg-center rounded-tr-xl"
                     style={{
                       backgroundImage: `url(
-                    'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
-                  )`,
+                      'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
+                      )`,
                     }}
                   ></div>
                   <div
                     className="col-span-3 bg-cover bg-no-repeat bg-center rounded-br-xl"
                     style={{
                       backgroundImage: `url(
-                    'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
-                  )`,
+                      'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
+                      )`,
                     }}
                   ></div>
                 </div>
@@ -144,13 +310,11 @@ function ItemScreen() {
                       </div>
                     </div>
                     <div className="col-span-1 justify-content-end">
-                      <Link to="/public-profile/userId">
-                        <img
-                          src={profile}
-                          alt="profile"
-                          className="w-1/2 mask mask-squircle ml-auto"
-                        />
-                      </Link>
+                      <img
+                        src={profile}
+                        alt="profile"
+                        className="w-1/2 mask mask-squircle ml-auto"
+                      />
                     </div>
                   </div>
                 </div>
@@ -225,10 +389,35 @@ function ItemScreen() {
                       <div className="stat-figure text-secondary">
                         <div className="avatar online">
                           <div className="w-16 rounded-full">
-                            <img
-                              src="https://api.lorem.space/image/face?w=128&h=128"
-                              alt=""
+                            <label
+                              htmlFor="my-modal-profile"
+                              className="btn modal-button btn-ghost btn-square btn-lg"
+                            >
+                              <img
+                                src={profile}
+                                alt="profile"
+                                className="mask mask-circle"
+                              />
+                            </label>
+
+                            <input
+                              type="checkbox"
+                              id="my-modal-profile"
+                              className="modal-toggle"
                             />
+                            <div className="modal modal-middle">
+                              <div className="modal-box">
+                                <PublicProfile />
+                                <div className="modal-action">
+                                  <label
+                                    htmlFor="my-modal-profile"
+                                    className="btn btn-primary"
+                                  >
+                                    Close
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -246,7 +435,7 @@ function ItemScreen() {
               <div className="sticky top-20 z-40">
                 <div
                   className="card w-full
-                 bg-white border shadow-xl ml-auto"
+                bg-white border shadow-xl ml-auto"
                 >
                   <div className="card-body">
                     <div className="grid grid-cols-3">
@@ -297,8 +486,8 @@ function ItemScreen() {
             className="hero min-h-full rounded-2xl"
             style={{
               backgroundImage: `url(
-            'https://180dc.org/wp-content/uploads/2015/03/HKU.jpg'
-          )`,
+              'https://180dc.org/wp-content/uploads/2015/03/HKU.jpg'
+              )`,
             }}
           >
             <div className="hero-overlay bg-opacity-60 rounded-2xl"></div>
@@ -315,147 +504,6 @@ function ItemScreen() {
                 </Link>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Mobile */}
-
-        <div className="lg:hidden">
-          <div className="vh40 relative">
-            <LazySwiper containImg={true} />
-            <div className="bg-transparent absolute bottom-0 left-auto z-40">
-              <label
-                htmlFor="my-modal-2"
-                className="rounded rounded-bl-xl bg-white btn btn-xs btn-outline btn-ghost text-gray-500"
-              >
-                Show all photos
-              </label>
-            </div>
-            <input type="checkbox" id="my-modal-2" className="modal-toggle" />
-            <div className="modal">
-              <div className="modal-box w-11/12 max-w-5xl">
-                <PhotoGallery />
-                <div className="modal-action bg-inherit">
-                  <label
-                    htmlFor="my-modal-2"
-                    className="btn btn-sm btn-active btn-ghost"
-                  >
-                    Close
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mx-3 py-3">
-            <h3 className="text-2xl my-3">
-              <strong>Nimbus 2000 Taken From Set</strong>
-            </h3>
-            <div className="divide-y divide-gray-300">
-              <p className="text-sm text-gray-500 mb-1">Nimbus 2000</p>
-              <div className="grid grid-cols-4">
-                <div className="col-span-1 justify-self-start max-h-20 py-3 pr-3">
-                  <Link to="/public-profile/userId">
-                    <img
-                      src={profile}
-                      alt="profile"
-                      className="mask mask-squircle"
-                    />
-                  </Link>
-                </div>
-                <div className="col-span-3 justify-self-end text-md py-3 text-gray-500">
-                  I am selling because I've graduated Hogwarts!
-                </div>
-              </div>
-              <div className="py-3">
-                <label className="text-sm text-gray-500">Bought On</label>
-                <p className="mb-1">25th, December, 1982</p>
-                <label className="text-sm text-gray-500">Brand</label>
-                <p className="mb-1">The Nimbus Broom Racing Company</p>
-                <label className="text-sm text-gray-500">Condition</label>
-                <p className="mb-1">Almost Unusable</p>
-                <label className="text-sm text-gray-500">
-                  Frequency of Use
-                </label>
-                <p className="mb-1">
-                  Used every week during Quidditch Training.
-                </p>
-                <label className="text-sm text-gray-500">Description</label>
-                <p>
-                  "One of the Nimbus Racing Broom Company's most successful
-                  models. Highly reliable with good speed and exceptional
-                  handling — not for beginners!"
-                </p>
-              </div>
-              <div className="py-3">
-                <label className="text-sm text-gray-500">
-                  Joon's Record &nbsp;
-                  <div
-                    className="tooltip tooltip-info"
-                    data-tip="100% Clean Transactions"
-                  >
-                    <div className="badge badge-info badge-outline mr-1">
-                      <FaHandSparkles />
-                      &nbsp;Clean
-                    </div>
-                  </div>
-                  <div
-                    className="tooltip tooltip-success"
-                    data-tip="Sold and Bought 10 items"
-                  >
-                    <div className="badge badge-success badge-outline mr-1">
-                      <FaMedal />
-                      &nbsp;PowerUser
-                    </div>
-                  </div>
-                </label>
-                <div className="flex stats shadow mt-2">
-                  <div className="stat place-items-center">
-                    <div className="stat-title">Clean Purchase</div>
-                    <div className="stat-value">31K</div>
-                    <div className="stat-desc">100% of Transactions</div>
-                  </div>
-
-                  <div className="stat place-items-center">
-                    <div className="stat-title">Clean Sale</div>
-                    <div className="stat-value text-secondary">4,200</div>
-                    <div className="stat-desc">100% of Transactions</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="lg:hidden sticky bottom-0 z-50 border-t py-3 bg-white">
-        <div className="grid grid-cols-3 px-3">
-          <div className="col-span-2">
-            <p>
-              <span className="text-gray-500">Listed At</span> $4000
-            </p>
-            <div className="badge badge-secondary">Negotiable</div>
-            <button className="btn btn-xs rounded btn-ghost text-sm">
-              <FaHeart
-                style={{
-                  backgroundColor: 'rgba(0, 0, 0, 0)',
-                  color: 'hsl(var(--sf))',
-                }}
-              />
-            </button>
-            &nbsp;
-            <button className="btn btn-xs rounded btn-ghost text-sm">
-              <FaShare
-                style={{
-                  backgroundColor: 'rgba(0, 0, 0, 0)',
-                }}
-              />
-            </button>
-          </div>
-          <div className="col-span-1">
-            <Link to="/message/chatId">
-              <button className="btn btn-primary btn-md w-full">
-                Chat & Buy
-              </button>
-            </Link>
           </div>
         </div>
       </div>
