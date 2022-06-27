@@ -14,6 +14,7 @@ import HistoryScreen from './screen/HistoryScreen'
 import OrderDetailScreen from './screen/OrderDetailScreen'
 import ProfileScreen from './screen/ProfileScreen'
 import ItemUploadScreen from './screen/ItemUploadScreen'
+import PaymentMethodScreen from './screen/PaymentMethodScreen'
 import 'react-toastify/dist/ReactToastify.min.css'
 
 function App() {
@@ -40,6 +41,10 @@ function App() {
           <Route path="/profile" element={<ProfileScreen />}></Route>
           <Route path="/purchase-history" element={<HistoryScreen />}></Route>
           <Route path="/sale-history" element={<HistoryScreen sell />}></Route>
+          <Route
+            path="/payment-method"
+            element={<PaymentMethodScreen />}
+          ></Route>
           <Route path="/order/orderId" element={<OrderDetailScreen />}></Route>
         </Routes>
       </Router>

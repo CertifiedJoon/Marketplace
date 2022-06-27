@@ -105,6 +105,11 @@ function MyPageScreen() {
                       <div>Communities</div>
                     </Link>
                   </li>
+                  <li>
+                    <Link to="/payment-method">
+                      <div>Payment Method</div>
+                    </Link>
+                  </li>
                   {/* <li>
                     <Link to="/settings">
                       <div>Settings</div>
