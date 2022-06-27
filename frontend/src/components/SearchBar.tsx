@@ -39,10 +39,19 @@ const formatGroupLabel = (data: GroupedOption) => (
 
 type Props = {
   defaultOpen?: boolean
+  joined?: boolean
 }
 
-function SearchBar({ defaultOpen = true }: Props) {
-  return (
+function SearchBar({ defaultOpen = true, joined = true }: Props) {
+  return joined ? (
+    <Select
+      defaultValue={uniOptions[0]}
+      name="Your Communities"
+      options={uniOptions}
+      defaultMenuIsOpen={defaultOpen}
+      closeMenuOnSelect
+    />
+  ) : (
     <Select<UniOption | StateOption, false, GroupedOption>
       defaultValue={uniOptions[0]}
       options={groupedOptions}

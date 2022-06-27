@@ -2,6 +2,14 @@ import React from 'react'
 import { FaHandSparkles, FaMedal } from 'react-icons/fa'
 
 function PublicProfile() {
+  const followEvent = () => {
+    console.log('Event followed')
+  }
+
+  const followItem = () => {
+    console.log('Item followed')
+  }
+
   return (
     <div className="w-full">
       <div className="flex stats shadow  mt-2">
@@ -47,6 +55,14 @@ function PublicProfile() {
             </div>
           </div>
         </div>
+      </div>
+      <div className="my-3 flex rounded rounded-2xl shadow min-h-content">
+        <button className="grow btn btn-ghost btn-xs m-1" onClick={followItem}>
+          Follow for Items
+        </button>
+        <button className="grow btn btn-ghost btn-xs m-1" onClick={followEvent}>
+          Follow for Events
+        </button>
       </div>
     </div>
   )

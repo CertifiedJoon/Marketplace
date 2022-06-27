@@ -499,7 +499,7 @@ function ItemScreen() {
                   assumenda excepturi exercitationem quasi. In deleniti eaque
                   aut repudiandae et a id nisi.
                 </p>
-                <Link to="/">
+                <Link to="/community/communityId">
                   <button className="btn btn-primary">Explore Community</button>
                 </Link>
               </div>

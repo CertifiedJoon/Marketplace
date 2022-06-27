@@ -38,7 +38,7 @@ function Header({ sell = false }: Props) {
             <input type="checkbox" id="my-modal-6" className="modal-toggle" />
             <div className="modal modal-bottom sm:modal-middle ">
               <div className="modal-box h-2/3">
-                <h3 className="font-bold text-lg">Join A Community!</h3>
+                <h3 className="font-bold text-lg">Jump to another Community</h3>
                 <div className="my-1">
                   <SearchBar />
                 </div>
@@ -59,18 +59,22 @@ function Header({ sell = false }: Props) {
                         assumenda excepturi exercitationem quasi. In deleniti
                         eaque aut repudiandae et a id nisi.
                       </p>
-                      <button className="btn btn-primary">
-                        Explore Community
-                      </button>
+                      <Link to="/community/communityId">
+                        <button className="btn btn-primary">
+                          Explore Community
+                        </button>
+                      </Link>
                     </div>
                   </div>
                 </div>
-                <button className="btn btn-accent inline-block absolute left-6 bottom-6">
-                  Join
-                </button>
+                <Link to="/communities/join">
+                  <button className="btn btn-accent inline-block absolute left-6 bottom-6">
+                    Join A New Community
+                  </button>
+                </Link>
                 <div className="modal-action inline-block absolute right-6 bottom-6">
                   <label htmlFor="my-modal-6" className="btn">
-                    Done
+                    Jump
                   </label>
                 </div>
               </div>
@@ -96,7 +100,9 @@ function Header({ sell = false }: Props) {
                   />
                   <div className="modal modal-bottom sm:modal-middle ">
                     <div className="modal-box h-2/3">
-                      <h3 className="font-bold text-lg">Join A Community!</h3>
+                      <h3 className="font-bold text-lg">
+                        Jump to another Community
+                      </h3>
                       <div className="my-1 text-md">
                         <SearchBar />
                       </div>
@@ -118,18 +124,22 @@ function Header({ sell = false }: Props) {
                               quasi. In deleniti eaque aut repudiandae et a id
                               nisi.
                             </p>
-                            <button className="btn btn-primary">
-                              Explore Community
-                            </button>
+                            <Link to="/community/communityId">
+                              <button className="btn btn-primary">
+                                Explore Community
+                              </button>
+                            </Link>
                           </div>
                         </div>
                       </div>
-                      <button className="btn btn-accent inline-block absolute left-6 bottom-6">
-                        Join
-                      </button>
+                      <Link to="/communities/join">
+                        <button className="btn btn-accent inline-block absolute left-6 bottom-6">
+                          Join A New Community
+                        </button>
+                      </Link>
                       <div className="modal-action inline-block absolute right-6 bottom-6">
                         <label htmlFor="my-modal-7" className="btn">
-                          Done
+                          Jump
                         </label>
                       </div>
                     </div>
