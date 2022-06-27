@@ -1,6 +1,6 @@
-import React, { CSSProperties } from 'react'
+import React, { CSSProperties, useState } from 'react'
 
-import Select from 'react-select'
+import Select, { SingleValue } from 'react-select'
 import {
   uniOptions,
   groupedOptions,
@@ -40,21 +40,36 @@ const formatGroupLabel = (data: GroupedOption) => (
 type Props = {
   defaultOpen?: boolean
   joined?: boolean
+  onChangeFunction: (selected: string) => void
 }
 
-function SearchBar({ defaultOpen = true, joined = true }: Props) {
+function SearchBar({
+  defaultOpen = true,
+  joined = true,
+  onChangeFunction,
+}: Props) {
+  const [selectedOption, setSelectedOption] =
+    useState<SingleValue<UniOption>>(null)
+
+  const handleChange = (value: UniOption | null) => {
+    setSelectedOption(value)
+    if (value) {
+      onChangeFunction(value.value)
+    }
+  }
   return joined ? (
     <Select
-      defaultValue={uniOptions[0]}
+      value={selectedOption}
       name="Your Communities"
       options={uniOptions}
+      onChange={handleChange}
       defaultMenuIsOpen={defaultOpen}
       closeMenuOnSelect
     />
   ) : (
     <Select<UniOption | StateOption, false, GroupedOption>
-      defaultValue={uniOptions[0]}
       options={groupedOptions}
+      onChange={(newValue) => handleChange(newValue)}
       formatGroupLabel={formatGroupLabel}
       defaultMenuIsOpen={defaultOpen}
       closeMenuOnSelect

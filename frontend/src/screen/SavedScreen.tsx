@@ -139,7 +139,7 @@ function SavedScreen() {
               <div className="hero-content flex-col lg:flex-row">
                 <img
                   src="https://api.lorem.space/image/movie?w=800&h=1400"
-                  className="mask mask-hexagon max-w-xs rounded-lg shadow-2xl"
+                  className="mask mask-hexagon min-w-xs max-w-xs rounded-lg shadow-2xl"
                   alt="img"
                 />
                 <div>
@@ -149,7 +149,9 @@ function SavedScreen() {
                     Quaerat fugiat ut assumenda excepturi exercitationem quasi.
                     In deleniti eaque aut repudiandae et a id nisi.
                   </p>
-                  <button className="btn btn-primary">Chat & Buy</button>
+                  <Link to="/message/chatId">
+                    <button className="btn btn-primary">Chat & Buy</button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -157,7 +159,7 @@ function SavedScreen() {
               <div className="hero-content flex-col lg:flex-row-reverse">
                 <img
                   src="https://api.lorem.space/image/movie?w=260&h=400"
-                  className="mask mask-hexagon max-w-xs rounded-lg shadow-2xl"
+                  className="mask mask-hexagon min-w-xs max-w-xs rounded-lg shadow-2xl"
                   alt="img"
                 />
                 <div>
@@ -167,15 +169,17 @@ function SavedScreen() {
                     Quaerat fugiat ut assumenda excepturi exercitationem quasi.
                     In deleniti eaque aut repudiandae et a id nisi.
                   </p>
-                  <button className="btn btn-primary">Chat and Buy</button>
+                  <Link to="/message/chatId">
+                    <button className="btn btn-primary">Chat and Buy</button>
+                  </Link>
                 </div>
               </div>
             </div>
             <div className="hero min-h-content">
               <div className="hero-content flex-col lg:flex-row">
                 <img
-                  src="https://api.lorem.space/image/movie?w=260&h=400"
-                  className="mask mask-hexagon max-w-xs rounded-lg shadow-2xl"
+                  src="https://api.lorem.space/image/movie?w=1260&h=1400"
+                  className="mask mask-hexagon min-w-xs max-w-xs rounded-lg shadow-2xl"
                   alt="img"
                 />
                 <div>
@@ -185,7 +189,9 @@ function SavedScreen() {
                     Quaerat fugiat ut assumenda excepturi exercitationem quasi.
                     In deleniti eaque aut repudiandae et a id nisi.
                   </p>
-                  <button className="btn btn-primary">Join</button>
+                  <Link to="/signup/eventId">
+                    <button className="btn btn-primary">Join</button>
+                  </Link>
                 </div>
               </div>
             </div>

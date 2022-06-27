@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import profile from '../static/images/profile.png'
@@ -11,12 +10,10 @@ import {
   FaMedal,
   FaPencilAlt,
 } from 'react-icons/fa'
-import SearchBar from '../components/SearchBar'
 
 function ProfileScreen() {
   const navigate = useNavigate()
   const [editStatus, setEditStatus] = useState(false)
-
   const saveProfile = () => {
     console.log('Profile Saved')
   }
@@ -90,15 +87,6 @@ function ProfileScreen() {
           </div>
         </div>
         <div className="border-b border-gray-300 py-5">
-          <div className="flex items-center justify-start">
-            <SearchBar defaultOpen={false} />
-            <div
-              className="tooltip tooltip-info z-30"
-              data-tip="Introduce yourself to each community"
-            >
-              <FaInfoCircle className="ml-1 text-lg text-info" />
-            </div>
-          </div>
           <label className="text-lg text-gray-500">One word nickname:</label>
           <input
             type="text"
@@ -309,21 +297,17 @@ function ProfileScreen() {
                     onChange={() => {}}
                   />
                 </div>
-                <div className="col-span-3">
-                  <div className="flex items-center justify-end">
-                    <div
-                      className="tooltip tooltip-info z-30"
-                      data-tip="Introduce yourself to each community"
-                    >
-                      <FaInfoCircle className="mr-1 text-lg text-info" />
-                    </div>
-                    <SearchBar defaultOpen={false} />
-                  </div>
-                </div>
+                <div className="col-span-3"></div>
               </div>
 
               <label className="text-lg text-gray-500">
                 Introduce yourself to your community:
+                <div
+                  className="tooltip tooltip-info z-30 inline-block ml-5 mt-1"
+                  data-tip="Your Introduction must be different for each community"
+                >
+                  <FaInfoCircle className="text-lg text-info" />
+                </div>
               </label>
               <textarea
                 className="p-0 textarea textarea-ghost text-accent placeholder-accent w-full text-lg h-60 rounded-sm disabled:text-black disabled:textarea-ghost disabled:border-none"

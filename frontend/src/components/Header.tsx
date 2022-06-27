@@ -1,6 +1,14 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { FaCaretDown } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
+
+import { useAppSelector, useAppDispatch } from '../app/hook'
+import {
+  selectCommunityKey,
+  selectSaleMode,
+  setCommunityKey,
+  setSaleMode,
+} from '../features/header/headerSlice'
 import profile from '../static/images/profile.png'
 import SearchBar from './SearchBar'
 
@@ -10,6 +18,28 @@ type Props = {
 
 function Header({ sell = false }: Props) {
   // Link Wrapped
+  const dispatch = useAppDispatch()
+  const saleMode = useAppSelector(selectSaleMode)
+  const communityKey = useAppSelector(selectCommunityKey)
+
+  const [selectedKey, setSelectedKey] = useState('All')
+
+  useEffect(() => {
+    if (sell) {
+      dispatch(setSaleMode(true))
+    }
+  }, [sell, dispatch])
+
+  const handleCommunityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.checked) {
+      dispatch(setCommunityKey(selectedKey))
+    }
+  }
+
+  const handleCommunitySelect = (selected: string) => {
+    setSelectedKey(selected)
+  }
+
   return (
     <div className="sticky top-0 z-50 py-0">
       <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3 bg-white">
@@ -18,7 +48,7 @@ function Header({ sell = false }: Props) {
             <Link to="/">
               <p
                 className={`btn btn-link normal-case text-xl hover:no-underline px-0 ${
-                  sell ? 'text-secondary' : ''
+                  saleMode ? 'text-secondary' : ''
                 }`}
               >
                 Marketplace
@@ -29,7 +59,7 @@ function Header({ sell = false }: Props) {
             <label
               htmlFor="my-modal-6"
               className={`btn modal-button btn-xs text-white ${
-                sell ? 'btn-secondary' : 'btn-primary'
+                saleMode ? 'btn-secondary' : 'btn-primary'
               }`}
             >
               HKU
@@ -40,7 +70,7 @@ function Header({ sell = false }: Props) {
               <div className="modal-box h-2/3">
                 <h3 className="font-bold text-lg">Jump to another Community</h3>
                 <div className="my-1">
-                  <SearchBar />
+                  <SearchBar onChangeFunction={handleCommunitySelect} />
                 </div>
                 <div
                   className="hero h-2/3 rounded-2xl"
@@ -87,16 +117,19 @@ function Header({ sell = false }: Props) {
                   <label
                     htmlFor="my-modal-7"
                     className={`btn modal-button btn-xs text-white ${
-                      sell ? 'btn-secondary' : 'btn-primary'
+                      saleMode ? 'btn-secondary' : 'btn-primary'
                     }`}
                   >
-                    HKU
+                    {communityKey}
                   </label>
 
                   <input
                     type="checkbox"
                     id="my-modal-7"
                     className="modal-toggle"
+                    onChange={(e) => {
+                      handleCommunityChange(e)
+                    }}
                   />
                   <div className="modal modal-bottom sm:modal-middle ">
                     <div className="modal-box h-2/3">
@@ -104,7 +137,7 @@ function Header({ sell = false }: Props) {
                         Jump to another Community
                       </h3>
                       <div className="my-1 text-md">
-                        <SearchBar />
+                        <SearchBar onChangeFunction={handleCommunitySelect} />
                       </div>
                       <div
                         className="hero h-2/3 rounded-2xl"
@@ -153,17 +186,23 @@ function Header({ sell = false }: Props) {
               </li>
               <li tab-index="0">
                 <p className="text-xs">
-                  I'm Buying!
+                  {saleMode ? "I'm Selling!" : "I'm Buying!"}
                   <FaCaretDown />
                 </p>
                 <ul className="bg-transparent dropdown-content w-full p-2">
                   <li className="rounded">
-                    <button className="z-10 bg-white btn btn-active btn-primary hover:bg-white active:btn-primary focus:btn-primary text-xs active">
+                    <button
+                      className="z-10 bg-white btn btn-ghost hover:bg-white active:btn-primary focus:btn-primary text-xs"
+                      onClick={() => dispatch(setSaleMode(false))}
+                    >
                       I'm Buying!
                     </button>
                   </li>
                   <li className="rounded">
-                    <button className="z-10 bg-white btn btn-ghost hover:bg-white active:btn-secondary focus:btn-secondary text-xs">
+                    <button
+                      className="z-10 bg-white btn btn-ghost hover:bg-white active:btn-secondary focus:btn-secondary text-xs"
+                      onClick={() => dispatch(setSaleMode(true))}
+                    >
                       I'm Selling!
                     </button>
                   </li>
