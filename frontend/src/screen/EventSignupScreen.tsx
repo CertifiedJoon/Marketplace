@@ -7,10 +7,7 @@ function EventSignupScreen() {
     <>
       <Header />
       <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3">
-        {/* Mobile */}
-        <div className="lg:hidden"></div>
-        {/* Laptop or bigger */}
-        <div className="hidden lg:block">
+        <div>
           <div
             className="hero max-h-96"
             style={{
@@ -20,10 +17,10 @@ function EventSignupScreen() {
             <div className="hero-overlay bg-opacity-60"></div>
             <div className="hero-content text-center text-neutral-content">
               <div className="max-w-md">
-                <h1 className="mb-5 text-5xl text-accent font-bold">
+                <h1 className="mb-5 text-5xl text-secondary font-bold">
                   HKU Quidditch Practice
                 </h1>
-                <p className="mb-5 text-accent">
+                <p className="mb-5 text-secondary">
                   Event Description : Provident cupiditate voluptatem et in.
                   Quaerat fugiat ut assumenda excepturi exercitationem quasi. In
                   deleniti eaque aut repudiandae et a id nisi.
@@ -32,6 +29,7 @@ function EventSignupScreen() {
             </div>
           </div>
         </div>
+        <div></div>
       </div>
       <Footer />
     </>
