@@ -18,6 +18,7 @@ import PaymentMethodScreen from './screen/PaymentMethodScreen'
 import 'react-toastify/dist/ReactToastify.min.css'
 import CommunityScreen from './screen/CommunityScreen'
 import CreateSignupScreen from './screen/CreateSignupScreen'
+import EventManageScreen from './screen/EventManageScreen'
 
 function App() {
   return (
@@ -45,6 +46,10 @@ function App() {
           <Route
             path="/event/create-signup"
             element={<CreateSignupScreen />}
+          ></Route>
+          <Route
+            path="/event/manage/eventId"
+            element={<EventManageScreen />}
           ></Route>
           <Route path="/mypage" element={<MyPageScreen />}></Route>
           <Route path="/profile" element={<ProfileScreen />}></Route>
