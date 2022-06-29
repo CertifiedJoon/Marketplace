@@ -17,10 +17,12 @@ function CustomInput({ inputDetail }: Props) {
     <div>
       {inputDetail.inputType === 'Text' && (
         <>
-          <div className="bg-base-100 rounded-xl min-h-content my-3 w-full max-w-sm">
+          <div className="bg-base-100 rounded-xl min-h-content my-3 w-full">
             <div className="form-control">
               <label className="label pb-1">
-                <span className="label-text text-sm">{inputDetail.label}</span>
+                <span className="label-text font-bold text-sm">
+                  {inputDetail.label}
+                </span>
               </label>
               <input
                 type="text"
@@ -33,10 +35,12 @@ function CustomInput({ inputDetail }: Props) {
       )}
       {inputDetail.inputType === 'Email' && (
         <>
-          <div className="bg-base-100 rounded-xl min-h-content my-3 w-full max-w-sm">
+          <div className="bg-base-100 rounded-xl min-h-content my-3 w-full">
             <div className="form-control">
               <label className="label pb-1">
-                <span className="label-text text-sm">{inputDetail.label}</span>
+                <span className="label-text font-bold text-sm">
+                  {inputDetail.label}
+                </span>
               </label>
               <input
                 type="email"
@@ -49,10 +53,12 @@ function CustomInput({ inputDetail }: Props) {
       )}
       {inputDetail.inputType === 'PassCode' && (
         <>
-          <div className="bg-base-100 rounded-xl min-h-content my-3 w-full max-w-sm">
+          <div className="bg-base-100 rounded-xl min-h-content my-3 w-full">
             <div className="form-control">
               <label className="label pb-1">
-                <span className="label-text text-sm">{inputDetail.label}</span>
+                <span className="label-text font-bold text-sm">
+                  {inputDetail.label}
+                </span>
               </label>
               <input
                 type="password"
@@ -65,7 +71,7 @@ function CustomInput({ inputDetail }: Props) {
       )}
       {inputDetail.inputType === 'Checkbox' && (
         <>
-          <div className="bg-base-100 rounded-xl min-h-content my-3 w-full max-w-sm">
+          <div className="bg-base-100 rounded-xl min-h-content my-3 w-full">
             <div className="form-control">
               <label className="label pb-1">
                 <span className="label-text text-sm font-bold">
@@ -84,7 +90,7 @@ function CustomInput({ inputDetail }: Props) {
       )}
       {inputDetail.inputType === 'Toggle' && (
         <>
-          <div className="bg-base-100 rounded-xl min-h-content my-3  w-full max-w-sm">
+          <div className="bg-base-100 rounded-xl min-h-content my-3  w-full">
             <div className="form-control">
               <label className="label cursor-pointer">
                 <span className="label-text font-bold">
@@ -98,7 +104,7 @@ function CustomInput({ inputDetail }: Props) {
       )}
       {inputDetail.inputType === 'Radio' && (
         <>
-          <div className="bg-base-100 rounded-xl min-h-content my-3  w-full max-w-sm">
+          <div className="bg-base-100 rounded-xl min-h-content my-3  w-full">
             <label className="label pb-1">
               <span className="label-text text-sm font-bold">
                 {inputDetail.label}
@@ -113,7 +119,6 @@ function CustomInput({ inputDetail }: Props) {
                   type="radio"
                   name="radio-custom"
                   className="radio checked:bg-red-500"
-                  checked
                 />
               </label>
             </div>
@@ -126,7 +131,6 @@ function CustomInput({ inputDetail }: Props) {
                   type="radio"
                   name="radio-custom"
                   className="radio checked:bg-blue-500"
-                  checked
                 />
               </label>
             </div>
@@ -135,7 +139,7 @@ function CustomInput({ inputDetail }: Props) {
       )}
       {inputDetail.inputType === 'Select' && (
         <>
-          <div className="bg-base-100 rounded-xl min-h-content my-3 w-full max-w-sm">
+          <div className="bg-base-100 rounded-xl min-h-content my-3 w-full">
             <div className="form-control">
               <label className="label">
                 <span className="label-text font-bold">

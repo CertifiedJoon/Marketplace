@@ -127,13 +127,13 @@ function CreateSignupScreen() {
             />
           </button>
           <div className="mb-5">
-            <div className="my-5 rounded-2xl bg-green-100 min-h-content">
+            <div className="my-5 rounded-2xl bg-blue-100 min-h-content">
               <div className="flex justify-center">
                 <div className="w-full max-w-md">
                   {inputList.map((input, i) => (
                     <>
                       <div className="grid grid-cols-10">
-                        <div className="col-span-9">
+                        <div className="col-span-9 w-full max-w-sm">
                           <CustomInput key={i} inputDetail={input} />
                         </div>
                         <div className="col-span-1 text-secondary flex items-center">
