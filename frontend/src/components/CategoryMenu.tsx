@@ -7,7 +7,6 @@ import {
   FaQuidditch,
   FaBath,
   FaTshirt,
-  FaTaxi,
   FaAirFreshener,
   FaBicycle,
   FaPaw,
@@ -32,7 +31,11 @@ import 'swiper/css/pagination'
 // import required modules
 import { Navigation, Pagination } from 'swiper'
 
-function CategoryMenu() {
+type Props = {
+  activeType: string | undefined
+}
+
+function CategoryMenu({ activeType }: Props) {
   return (
     <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3 my-5">
       <Swiper
@@ -68,7 +71,9 @@ function CategoryMenu() {
                 <FaBoxOpen />
               </figure>
               <div className="card-body py-0 px-1 text-xs">All</div>
-              <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              {activeType === 'all' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>
@@ -79,16 +84,22 @@ function CategoryMenu() {
                 <FaGlassCheers />
               </figure>
               <div className="card-body py-0 px-1 text-xs">Event</div>
+              {activeType === 'event' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>
         <SwiperSlide>
-          <Link to="/explore/stationary">
+          <Link to="/explore/stationery">
             <div className="card py-1">
               <figure>
                 <FaPencilAlt />
               </figure>
               <div className="card-body py-0 px-1 text-xs">Stationery</div>
+              {activeType === 'stationery' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>
@@ -99,6 +110,9 @@ function CategoryMenu() {
                 <FaRegAddressBook />
               </figure>
               <div className="card-body py-0 px-1 text-xs">Note</div>
+              {activeType === 'note' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>
@@ -109,6 +123,9 @@ function CategoryMenu() {
                 <FaBook />
               </figure>
               <div className="card-body py-0 px-1 text-xs">Book</div>
+              {activeType === 'book' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>
@@ -119,6 +136,9 @@ function CategoryMenu() {
                 <FaUserGraduate />
               </figure>
               <div className="card-body py-0 px-1 text-xs">Tutoring</div>
+              {activeType === 'tutoring' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>
@@ -129,6 +149,9 @@ function CategoryMenu() {
                 <FaTshirt />
               </figure>
               <div className="card-body py-0 px-1 text-xs">Clothing</div>
+              {activeType === 'clothing' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>
@@ -139,6 +162,9 @@ function CategoryMenu() {
                 <FaShoePrints />
               </figure>
               <div className="card-body py-0 px-1 text-xs">Shoes</div>
+              {activeType === 'shoes' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>
@@ -149,6 +175,9 @@ function CategoryMenu() {
                 <FaAirFreshener />
               </figure>
               <div className="card-body py-0 px-1 text-xs">Accessary</div>
+              {activeType === 'accessary' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>
@@ -159,6 +188,9 @@ function CategoryMenu() {
                 <FaBasketballBall />
               </figure>
               <div className="card-body py-0 px-1 text-xs">Sports</div>
+              {activeType === 'sports' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>
@@ -169,6 +201,9 @@ function CategoryMenu() {
                 <FaDumbbell />
               </figure>
               <div className="card-body py-0 px-1 text-xs">Fitness</div>
+              {activeType === 'fitness' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>
@@ -178,7 +213,10 @@ function CategoryMenu() {
               <figure>
                 <FaQuidditch />
               </figure>
-              <div className="card-body py-0 px-1 text-xs">FaQuidditch</div>
+              <div className="card-body py-0 px-1 text-xs">Quidditch</div>
+              {activeType === 'quidditch' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>
@@ -189,26 +227,35 @@ function CategoryMenu() {
                 <FaUmbrella />
               </figure>
               <div className="card-body py-0 px-1 text-xs">Umbrella</div>
+              {activeType === 'umbrella' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>
         <SwiperSlide>
-          <Link to="/explore/bath">
+          <Link to="/explore/bath-cosmetics">
             <div className="card py-1">
               <figure>
                 <FaBath />
               </figure>
               <div className="card-body py-0 px-1 text-xs">Bath/Cosmetics</div>
+              {activeType === 'bath-cosmetics' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>
         <SwiperSlide>
-          <Link to="/explore/IKIA">
+          <Link to="/explore/ikia">
             <div className="card py-1">
               <figure>
                 <FaCouch />
               </figure>
               <div className="card-body py-0 px-1 text-xs">IKIA</div>
+              {activeType === 'ikia' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>
@@ -219,6 +266,9 @@ function CategoryMenu() {
                 <FaPlane />
               </figure>
               <div className="card-body py-0 px-1 text-xs">Travel</div>
+              {activeType === 'travel' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>
@@ -229,16 +279,9 @@ function CategoryMenu() {
                 <FaLaptop />
               </figure>
               <div className="card-body py-0 px-1 text-xs">Electronics</div>
-            </div>
-          </Link>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Link to="/explore/cars">
-            <div className="card py-1">
-              <figure>
-                <FaTaxi />
-              </figure>
-              <div className="card-body py-0 px-1 text-xs">Cars</div>
+              {activeType === 'electronics' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>
@@ -249,6 +292,9 @@ function CategoryMenu() {
                 <FaBicycle />
               </figure>
               <div className="card-body py-0 px-1 text-xs">RideButNotCar</div>
+              {activeType === 'ridebutnotcar' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>
@@ -259,6 +305,9 @@ function CategoryMenu() {
                 <FaPaw />
               </figure>
               <div className="card-body py-0 px-1 text-xs">Pet</div>
+              {activeType === 'pet' && (
+                <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
+              )}
             </div>
           </Link>
         </SwiperSlide>

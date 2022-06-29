@@ -1,4 +1,5 @@
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import CategoryMenu from '../components/CategoryMenu'
 import Card from '../components/ItemCard'
 import Header from '../components/Header'
@@ -6,10 +7,9 @@ import Footer from '../components/Footer'
 
 type Props = {
   sell?: boolean
-  itemType?: string
 }
 
-function HomeScreen({ sell = false, itemType = 'all' }: Props) {
+function HomeScreen({ sell = false }: Props) {
   /* 
       Frontend worklist:
       1. All links should be wrapped with react Link
@@ -21,10 +21,17 @@ function HomeScreen({ sell = false, itemType = 'all' }: Props) {
       7. Cards should be displayed based on a file (async)
       8. Cards must be filtered through category menu (async)
     */
+  const params = useParams()
+  console.log(params.itemType)
   return (
     <>
       <Header sell={sell} />
-      <CategoryMenu />
+      {params.itemType !== undefined ? (
+        <CategoryMenu activeType={params.itemType} />
+      ) : (
+        <CategoryMenu activeType="all" />
+      )}
+
       <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3">
         <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
           <Card />

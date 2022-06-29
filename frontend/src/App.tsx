@@ -30,9 +30,9 @@ function App() {
         <main></main>
         <Routes>
           <Route path="/" element={<HomeScreen />}></Route>
+          <Route path="/explore/:itemType" element={<HomeScreen />}></Route>
           <Route path="*" element={<NoMatchScreen />}></Route>
           <Route path="/wishlist/userId" element={<SavedScreen />}></Route>
-          <Route path="/explore/itemType" element={<HomeScreen />}></Route>
           <Route path="/productId" element={<ItemScreen />}></Route>
           <Route path="/sell" element={<HomeScreen sell />}></Route>
           <Route path="/sell/upload" element={<ItemUploadScreen />}></Route>

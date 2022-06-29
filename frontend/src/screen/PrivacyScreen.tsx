@@ -5,7 +5,7 @@ function PrivacyScreen() {
   return (
     <div className="min-h-screen">
       <Header />
-      <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3 min-h-content bg-base-100 rounded-2xl shadow">
+      <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3 min-h-content">
         <h1 className="text-center font-bold text-5xl">Privacy Policy</h1>
         <div className="mx-2 my-2">
           <p>

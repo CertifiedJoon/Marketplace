@@ -1,13 +1,22 @@
 import React from 'react'
 import { FaApple, FaAt } from 'react-icons/fa'
+import { useForm, SubmitHandler } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import googleIcon from '../static/images/google.png'
+
+interface IFormInput {
+  email: string
+  password: string
+}
+
 function LoginScreen() {
   /* 
   Frontend Worklist 
     1. Store login data to a user state (redux)
     2. Link Wrap [Done]
   */
+  const { register, handleSubmit } = useForm<IFormInput>()
+  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data)
   return (
     <>
       {/* Tablet or bigger */}
@@ -20,24 +29,31 @@ function LoginScreen() {
               A community based second-hand market.
             </h3>
           </div>
-          <div className="text-center my-auto grid grid-rows-2">
-            <div>
-              <input
-                type="text"
-                placeholder="Email"
-                className="input input-bordered border-b-0 input-accent input-md rounded-t-xl rounded-b-none w-2/3 focus:outline-none"
-              />
-            </div>
-            <div>
-              <input
-                type="text"
-                placeholder="Password"
-                className="input input-bordered input-accent input-md rounded-b-xl rounded-t-none w-2/3 focus:outline-none"
-              />
-            </div>
-          </div>
-          <div className="text-center">
-            <button className="btn w-2/3 btn-block btn-accent">Login</button>
+          <div className="text-center my-auto row-span-2">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Email"
+                  className="input input-bordered border-b-0 input-accent input-md rounded-t-xl rounded-b-none w-2/3 focus:outline-none"
+                  {...register('email', { required: true })}
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Password"
+                  className="input input-bordered input-accent input-md rounded-b-xl rounded-t-none w-2/3 focus:outline-none"
+                  {...register('password', { required: true })}
+                />
+              </div>
+              <button
+                type="submit"
+                className="my-10 btn w-2/3 btn-block btn-accent"
+              >
+                Login
+              </button>
+            </form>
             <p className="text-center text-gray-500 mt-2">
               <span className="underline">
                 <Link to="/reset-password">Can't Login</Link>

@@ -1,14 +1,8 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import {
-  FaArrowLeft,
-  FaEllipsisH,
-  FaInfoCircle,
-  FaPencilAlt,
-} from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
+import { FaArrowLeft, FaEllipsisH } from 'react-icons/fa'
 
 import mcSvg from '../static/images/mc_symbol.svg'
-import profile from '../static/images/profile.png'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 
@@ -20,6 +14,7 @@ function PaymentMethodScreen() {
     console.log('Profile Saved')
   }
 
+  //eslint-disable-next-line
   const handleClick = () => {
     if (editStatus === false) {
       setEditStatus(true)
