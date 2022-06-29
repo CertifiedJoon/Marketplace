@@ -227,7 +227,7 @@ function EventSignupScreen() {
                               </label>
                               <select
                                 className="select select-bordered rounded-xl rounded-t-none"
-                                value={inputDetail.label}
+                                {...register(inputDetail.label)}
                               >
                                 {inputDetail.selectOptions.map((option, i) => (
                                   <option value={option} key={i}>

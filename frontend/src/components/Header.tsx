@@ -57,19 +57,26 @@ function Header({ sell = false }: Props) {
           </div>
           <div className="show md:hidden">
             <label
-              htmlFor="my-modal-6"
+              htmlFor="my-modal-7"
               className={`btn modal-button btn-xs text-white ${
                 saleMode ? 'btn-secondary' : 'btn-primary'
               }`}
             >
-              HKU
+              {communityKey}
             </label>
 
-            <input type="checkbox" id="my-modal-6" className="modal-toggle" />
+            <input
+              type="checkbox"
+              id="my-modal-7"
+              className="modal-toggle"
+              onChange={(e) => {
+                handleCommunityChange(e)
+              }}
+            />
             <div className="modal modal-bottom sm:modal-middle ">
               <div className="modal-box h-2/3">
                 <h3 className="font-bold text-lg">Jump to another Community</h3>
-                <div className="my-1">
+                <div className="my-1 text-md">
                   <SearchBar onChangeFunction={handleCommunitySelect} />
                 </div>
                 <div
@@ -103,7 +110,7 @@ function Header({ sell = false }: Props) {
                   </button>
                 </Link>
                 <div className="modal-action inline-block absolute right-6 bottom-6">
-                  <label htmlFor="my-modal-6" className="btn">
+                  <label htmlFor="my-modal-7" className="btn">
                     Jump
                   </label>
                 </div>

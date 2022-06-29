@@ -19,6 +19,9 @@ import 'react-toastify/dist/ReactToastify.min.css'
 import CommunityScreen from './screen/CommunityScreen'
 import CreateSignupScreen from './screen/CreateSignupScreen'
 import EventManageScreen from './screen/EventManageScreen'
+import ItemEditScreen from './screen/ItemEditScreen'
+import TermsScreen from './screen/TermsScreen'
+import PrivacyScreen from './screen/PrivacyScreen'
 
 function App() {
   return (
@@ -33,6 +36,7 @@ function App() {
           <Route path="/productId" element={<ItemScreen />}></Route>
           <Route path="/sell" element={<HomeScreen sell />}></Route>
           <Route path="/sell/upload" element={<ItemUploadScreen />}></Route>
+          <Route path="/sell/edit/itemId" element={<ItemEditScreen />}></Route>
           <Route
             path="/eventId"
             element={<EventScreen itemType="event" />}
@@ -64,6 +68,8 @@ function App() {
             element={<PaymentMethodScreen />}
           ></Route>
           <Route path="/order/orderId" element={<OrderDetailScreen />}></Route>
+          <Route path="/terms" element={<TermsScreen />}></Route>
+          <Route path="/privacy" element={<PrivacyScreen />}></Route>
         </Routes>
       </Router>
       <ToastContainer />

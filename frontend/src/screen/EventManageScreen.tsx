@@ -50,8 +50,8 @@ function EventManageScreen() {
             </div>
           </div>
           <div className="my-5">
-            <div className="grid grid-cols-3 w-full">
-              <div className="px-3">
+            <div className="flex flex-wrap sm:grid sm:grid-cols-3 sm:w-full">
+              <div className="px-3 w-full my-1">
                 <button
                   className="btn btn-block btn-outline rounded-none"
                   onClick={handleSendInvitation}
@@ -59,7 +59,7 @@ function EventManageScreen() {
                   Send Invitation
                 </button>
               </div>
-              <div className="px-3">
+              <div className="px-3 w-full my-1">
                 <button
                   className="btn btn-block btn-outline rounded-none"
                   onClick={handleMessageAll}
@@ -67,7 +67,7 @@ function EventManageScreen() {
                   Send a message to all members
                 </button>
               </div>
-              <div className="px-3">
+              <div className="px-3 w-full my-1">
                 <button
                   className="btn btn-block btn-outline rounded-none"
                   onClick={handleDownloadCell}
@@ -80,43 +80,43 @@ function EventManageScreen() {
           <div className="my-5">
             <h1 className="text-center font-bold text-5xl my-2">Statistics</h1>
             <div className="flex flex-wrap">
-              <div className="stats shadow mx-3 my-3">
+              <div className="stats shadow mx-3 my-3 w-full sm:max-w-fit">
                 <div className="stat">
                   <div className="stat-title">Total Members Joined</div>
                   <div className="stat-value">89,400</div>
                 </div>
               </div>
-              <div className="stats shadow mx-3 my-3">
+              <div className="stats shadow mx-3 my-3 w-full sm:max-w-fit">
                 <div className="stat">
                   <div className="stat-title">Female</div>
                   <div className="stat-value">39,400</div>
                 </div>
               </div>
-              <div className="stats shadow mx-3 my-3">
+              <div className="stats shadow mx-3 my-3 w-full sm:max-w-fit">
                 <div className="stat">
                   <div className="stat-title">Male</div>
                   <div className="stat-value">40,000</div>
                 </div>
               </div>
-              <div className="stats shadow mx-3 my-3">
+              <div className="stats shadow mx-3 my-3 w-full sm:max-w-fit">
                 <div className="stat">
                   <div className="stat-title">Vegetarian</div>
                   <div className="stat-value">9,400</div>
                 </div>
               </div>
-              <div className="stats shadow mx-3 my-3">
+              <div className="stats shadow mx-3 my-3 w-full sm:max-w-fit">
                 <div className="stat">
                   <div className="stat-title">Beef</div>
                   <div className="stat-value">40,000</div>
                 </div>
               </div>
-              <div className="stats shadow mx-3 my-3">
+              <div className="stats shadow mx-3 my-3 w-full sm:max-w-fit">
                 <div className="stat">
                   <div className="stat-title">Chicken</div>
                   <div className="stat-value">40,000</div>
                 </div>
               </div>
-              <div className="stats shadow mx-3 my-3">
+              <div className="stats shadow mx-3 my-3 w-full sm:max-w-fit">
                 <div className="stat">
                   <div className="stat-title">Total Ticket Sales</div>
                   <div className="stat-value">$40,000</div>
