@@ -26,6 +26,8 @@ import CommunityJoinScreen from './screen/CommunityJoinScreen'
 import EventHostScreen from './screen/EventHostScreen'
 import MyCommunityScreen from './screen/MyCommunityScreen'
 import ScrollToTop from './components/ScrollToTop'
+import MyEventScreen from './screen/MyEventScreen'
+import EventDetail from './screen/EventDetail'
 
 function App() {
   return (
@@ -74,6 +76,15 @@ function App() {
           <Route
             path="/community/my-communities"
             element={<MyCommunityScreen />}
+          ></Route>
+          <Route path="/my-events" element={<MyEventScreen />}></Route>
+          <Route
+            path="/event-history/eventId"
+            element={<EventDetail />}
+          ></Route>
+          <Route
+            path="/hosting-history/eventId"
+            element={<EventDetail host />}
           ></Route>
           <Route path="/purchase-history" element={<HistoryScreen />}></Route>
           <Route path="/sale-history" element={<HistoryScreen sell />}></Route>
