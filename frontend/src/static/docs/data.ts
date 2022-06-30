@@ -40,12 +40,12 @@ export interface UniOption {
 
 export const uniOptions: readonly UniOption[] = [
   { value: 'HKU', label: 'The University of Hong Kong', memCnt: 1000 },
-  { value: 'CUHK', label: 'The Chinese University of Hong Kong', memCnt: 500 },
   {
     value: 'HKUST',
-    label: 'Hong Kong University of Science of Technology',
-    memCnt: 200,
+    label: 'Hong Kong University of Science and Technology',
+    memCnt: 500,
   },
+  { value: 'CUHK', label: 'The Chinese University of Hong Kong', memCnt: 500 },
   {
     value: 'PolyU',
     label: 'The Hong Kong Polytechnic University',

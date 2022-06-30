@@ -22,7 +22,6 @@ function HomeScreen({ sell = false }: Props) {
       8. Cards must be filtered through category menu (async)
     */
   const params = useParams()
-  console.log(params.itemType)
   return (
     <>
       <Header sell={sell} />

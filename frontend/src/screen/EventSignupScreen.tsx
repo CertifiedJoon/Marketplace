@@ -13,6 +13,10 @@ function EventSignupScreen() {
     {
       inputType: 'Text',
       label: 'Name',
+      info: 'Name must be all caps',
+      lengthRange: [0, 50],
+      range: [0, 100],
+      pattern: '',
       checkboxOptions: [],
       radioOptions: [],
       selectOptions: [],
@@ -20,6 +24,10 @@ function EventSignupScreen() {
     {
       inputType: 'Toggle',
       label: 'Vegan',
+      info: 'Check if you are vegan',
+      lengthRange: [0, 50],
+      range: [0, 100],
+      pattern: '',
       checkboxOptions: [],
       radioOptions: [],
       selectOptions: [],
@@ -27,13 +35,21 @@ function EventSignupScreen() {
     {
       inputType: 'Radio',
       label: 'Gender',
+      info: 'Choose either of two',
+      lengthRange: [0, 50],
+      range: [0, 100],
+      pattern: '',
       checkboxOptions: [],
-      radioOptions: ['Female', 'male'],
+      radioOptions: ['Female', 'Male'],
       selectOptions: [],
     },
     {
       inputType: 'Checkbox',
       label: 'Allergies',
+      info: 'Choose at least 2',
+      lengthRange: [0, 50],
+      range: [0, 100],
+      pattern: '',
       checkboxOptions: ['Nuts', 'Fish', 'Dust', 'Red Meat'],
       radioOptions: [],
       selectOptions: [],
@@ -41,9 +57,24 @@ function EventSignupScreen() {
     {
       inputType: 'Select',
       label: 'Dish',
+      info: 'Choose a dish',
+      lengthRange: [0, 50],
+      range: [0, 100],
+      pattern: '',
       checkboxOptions: [],
       radioOptions: [],
       selectOptions: ['Beef', 'Chicken', 'Lamb'],
+    },
+    {
+      inputType: 'PassCode',
+      label: 'Secret PassCode',
+      info: 'Passcode is renewed everyweek, invite-only',
+      lengthRange: [0, 50],
+      range: [0, 100],
+      pattern: 'liverpool',
+      checkboxOptions: [],
+      radioOptions: [],
+      selectOptions: [],
     },
   ]
 
@@ -84,7 +115,6 @@ function EventSignupScreen() {
                   {inputList.map((inputDetail, i) => (
                     <div key={i}>
                       <CustomInput
-                        key={i}
                         inputDetail={inputDetail}
                         register={register}
                       />

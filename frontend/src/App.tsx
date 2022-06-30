@@ -7,21 +7,22 @@ import LoginScreen from './screen/LoginScreen'
 import SignupScreen from './screen/SignupScreen'
 import MyPageScreen from './screen/MyPageScreen'
 import EventScreen from './screen/EventScreen'
-import SavedScreen from './screen/SavedScreen'
+import SavedScreen from './screen/MySavedScreen'
 import NoMatchScreen from './screen/NoMatchScreen'
 import EventSignupScreen from './screen/EventSignupScreen'
-import HistoryScreen from './screen/HistoryScreen'
-import OrderDetailScreen from './screen/OrderDetailScreen'
-import ProfileScreen from './screen/ProfileScreen'
+import HistoryScreen from './screen/MyHistoryScreen'
+import OrderDetailScreen from './screen/MyOrderDetailScreen'
+import ProfileScreen from './screen/MyProfileScreen'
 import ItemUploadScreen from './screen/ItemUploadScreen'
-import PaymentMethodScreen from './screen/PaymentMethodScreen'
+import PaymentMethodScreen from './screen/MyPaymentMethodScreen'
 import 'react-toastify/dist/ReactToastify.min.css'
 import CommunityScreen from './screen/CommunityScreen'
-import CreateSignupScreen from './screen/CreateSignupScreen'
+import CreateSignupScreen from './screen/EventCreateSignupScreen'
 import EventManageScreen from './screen/EventManageScreen'
 import ItemEditScreen from './screen/ItemEditScreen'
 import TermsScreen from './screen/TermsScreen'
 import PrivacyScreen from './screen/PrivacyScreen'
+import CommunityJoinScreen from './screen/CommunityJoinScreen'
 
 function App() {
   return (
@@ -60,6 +61,10 @@ function App() {
           <Route
             path="/community/communityId"
             element={<CommunityScreen />}
+          ></Route>
+          <Route
+            path="/community/join"
+            element={<CommunityJoinScreen />}
           ></Route>
           <Route path="/purchase-history" element={<HistoryScreen />}></Route>
           <Route path="/sale-history" element={<HistoryScreen sell />}></Route>

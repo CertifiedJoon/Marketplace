@@ -57,7 +57,7 @@ function Header({ sell = false }: Props) {
           </div>
           <div className="show md:hidden">
             <label
-              htmlFor="my-modal-7"
+              htmlFor="header-mobile-modal"
               className={`btn modal-button btn-xs text-white ${
                 saleMode ? 'btn-secondary' : 'btn-primary'
               }`}
@@ -67,7 +67,7 @@ function Header({ sell = false }: Props) {
 
             <input
               type="checkbox"
-              id="my-modal-7"
+              id="header-modal-mobile"
               className="modal-toggle"
               onChange={(e) => {
                 handleCommunityChange(e)
@@ -104,13 +104,13 @@ function Header({ sell = false }: Props) {
                     </div>
                   </div>
                 </div>
-                <Link to="/communities/join">
+                <Link to="/community/join">
                   <button className="btn btn-accent inline-block absolute left-6 bottom-6">
                     Join A New Community
                   </button>
                 </Link>
                 <div className="modal-action inline-block absolute right-6 bottom-6">
-                  <label htmlFor="my-modal-7" className="btn">
+                  <label htmlFor="header-modal-mobile" className="btn">
                     Jump
                   </label>
                 </div>
@@ -122,7 +122,7 @@ function Header({ sell = false }: Props) {
               <li>
                 <div className="w-full text-xs">
                   <label
-                    htmlFor="my-modal-7"
+                    htmlFor="header-modal"
                     className={`btn modal-button btn-xs text-white ${
                       saleMode ? 'btn-secondary' : 'btn-primary'
                     }`}
@@ -132,7 +132,7 @@ function Header({ sell = false }: Props) {
 
                   <input
                     type="checkbox"
-                    id="my-modal-7"
+                    id="header-modal"
                     className="modal-toggle"
                     onChange={(e) => {
                       handleCommunityChange(e)
@@ -172,13 +172,13 @@ function Header({ sell = false }: Props) {
                           </div>
                         </div>
                       </div>
-                      <Link to="/communities/join">
+                      <Link to="/community/join">
                         <button className="btn btn-accent inline-block absolute left-6 bottom-6">
                           Join A New Community
                         </button>
                       </Link>
                       <div className="modal-action inline-block absolute right-6 bottom-6">
-                        <label htmlFor="my-modal-7" className="btn">
+                        <label htmlFor="header-modal" className="btn">
                           Jump
                         </label>
                       </div>

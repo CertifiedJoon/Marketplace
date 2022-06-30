@@ -6,7 +6,7 @@ import {
   FaTimesCircle,
   FaUpload,
 } from 'react-icons/fa'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 import CustomInput from '../components/CustomInput'
 import Footer from '../components/Footer'
@@ -15,9 +15,14 @@ import Header from '../components/Header'
 interface IFormInput {
   [key: string]: any
 }
+
 interface Input {
   inputType: string
   label: string
+  info: string
+  lengthRange: Array<number>
+  range: Array<number>
+  pattern: string
   checkboxOptions: Array<string>
   radioOptions: Array<string>
   selectOptions: Array<string>
@@ -25,22 +30,44 @@ interface Input {
 
 function CreateSignupScreen() {
   const [createMode, setCreateMode] = useState(false)
+  const [inputList, setInputList] = useState<Array<Input>>([])
+
+  const [heading, setHeading] = useState('')
+  const [description, setDescription] = useState('')
+  const [thumbnail, setThumbnail] = useState('')
   const [inputType, setInputType] = useState('Text')
   const [quantity, setQuantity] = useState(0)
   const [label, setLabel] = useState('')
-  const [inputList, setInputList] = useState<Array<Input>>([])
+  const [info, setInfo] = useState('')
+  const [minLength, setMinLength] = useState(0)
+  const [maxLength, setMaxLength] = useState(100)
+  const [min, setMin] = useState(0)
+  const [max, setMax] = useState(1000)
+  const [pattern, setPattern] = useState('')
   const [checkboxOptions, setCheckboxOptions] = useState<Array<string>>([])
   const [radioOptions, setRadioOptions] = useState<Array<string>>(['', ''])
   const [selectOptions, setSelectOptions] = useState<Array<string>>([])
 
-  const { register, handleSubmit } = useForm<IFormInput>()
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data)
+  const { register } = useForm<IFormInput>()
+
+  const handleCreate = () => {
+    console.log({
+      heading,
+      description,
+      thumbnail,
+      inputList,
+    })
+  }
 
   const handleCheck = (checked: boolean) => {
     if (checked === false) {
       const newInput = {
         inputType,
-        label,
+        label: label === '' ? '_' : label,
+        info,
+        lengthRange: [Math.floor(minLength), Math.ceil(maxLength)],
+        range: [Math.floor(min), Math.ceil(max)],
+        pattern,
         checkboxOptions,
         radioOptions,
         selectOptions,
@@ -50,6 +77,12 @@ function CreateSignupScreen() {
       setInputType('Text')
       setQuantity(0)
       setLabel('')
+      setInfo('')
+      setMinLength(0)
+      setMaxLength(100)
+      setMin(0)
+      setMax(1000)
+      setPattern('')
       setCheckboxOptions([])
       setRadioOptions(['', ''])
       setSelectOptions([])
@@ -90,7 +123,7 @@ function CreateSignupScreen() {
   return (
     <>
       <Header />
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form>
         <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3">
           <div className="min-h-screen">
             <div className="relative hidden md:block">
@@ -98,7 +131,7 @@ function CreateSignupScreen() {
                 Create Event Sign-up Form
               </h1>
               <button
-                type="submit"
+                onClick={handleCreate}
                 className="btn-ghost rounded absolute top-2 right-0"
               >
                 <div className="flex h-8 items-center px-2">
@@ -128,12 +161,12 @@ function CreateSignupScreen() {
                   <textarea
                     className="textarea textarea-ghost text-center text-secondary placeholder-accent text-5xl font-bold w-full"
                     placeholder="Event Heading"
-                    {...register('eventHeading', { required: true })}
+                    onChange={(e) => setHeading(e.target.value)}
                   ></textarea>
                   <textarea
                     className="textarea textarea-ghost text-center placeholder-accent item-input-base w-full h-40"
                     placeholder="Describe your Event"
-                    {...register('eventDescription', { required: true })}
+                    onChange={(e) => setDescription(e.target.value)}
                   ></textarea>
                 </div>
               </div>
@@ -151,11 +184,11 @@ function CreateSignupScreen() {
       file:bg-violet-50 file:text-violet-700
       hover:file:bg-violet-100
     "
-                {...register('backgroundImage', { required: true })}
+                onChange={(e) => setThumbnail(e.target.value)}
               />
             </div>
             <div className="my-5">
-              <div className="my-5 rounded-2xl bg-green-100 min-h-content">
+              <div className="my-5 rounded-2xl min-h-content">
                 <div className="flex justify-center">
                   <div className="w-full max-w-md">
                     {inputList.map((input, i) => (
@@ -208,44 +241,175 @@ function CreateSignupScreen() {
                       <option>Text</option>
                       <option>Email</option>
                       <option>PassCode</option>
-                      <option>TextArea</option>
                       <option>Checkbox</option>
                       <option>Toggle</option>
                       <option>Radio</option>
                       <option>Select</option>
                     </select>
                   </div>
-                  <div className="flex justify-center my-5">
-                    <input
-                      type="text"
-                      placeholder={`Enter ${inputType} Title`}
-                      className="input w-full max-w-xs"
-                      value={label}
-                      onChange={(e) => setLabel(e.target.value)}
-                    />
+                  <div className="flex flex-wrap sm:justify-center my-5">
+                    <div className="max-w-xs mr-3">
+                      <label htmlFor="label">
+                        Enter the Label for your input field
+                      </label>
+                      <input
+                        type="text"
+                        name="label"
+                        placeholder={`Enter ${inputType} Label`}
+                        className="input w-full max-w-xs"
+                        value={label}
+                        minLength={1}
+                        onChange={(e) => setLabel(e.target.value)}
+                      />
+                    </div>
+                    <div className="max-w-xs">
+                      <label htmlFor="info">Enter input field detail</label>
+                      <input
+                        type="text"
+                        name="info"
+                        placeholder={`eg) Your name must be all caps`}
+                        className="input w-full max-w-xs"
+                        value={info}
+                        minLength={1}
+                        onChange={(e) => setInfo(e.target.value)}
+                      />
+                    </div>
                   </div>
-                  {inputType === 'Checkbox' && (
+
+                  {inputType === 'Text' && (
                     <div>
                       <div className="flex justify-center">
-                        <label htmlFor="quantity">Quantity:</label>
+                        <label htmlFor="minLength">Minimum Length:</label>
                         <input
                           type="number"
-                          value={quantity}
+                          value={minLength}
                           onChange={(e) => {
-                            setQuantity(Number(e.target.value))
-                            const extendby =
-                              Number(e.target.value) - checkboxOptions.length
-                            setCheckboxOptions(
-                              checkboxOptions.concat(
-                                Array.from({ length: extendby }, () => '')
-                              )
+                            let { value, min, max } = e.target
+                            const newVal = Math.max(
+                              Number(min),
+                              Math.min(Number(max), Number(value))
                             )
+                            setMinLength(newVal)
                           }}
-                          name="quantity"
-                          min="0"
-                          max="20"
-                          step="1"
+                          className="mx-2 px-2"
+                          name="minLength"
+                          min={0}
+                          max={maxLength}
+                          step={1}
                         />
+                      </div>
+                      <div className="flex justify-center">
+                        <label htmlFor="maxLength">Maximum Length</label>
+                        <input
+                          type="number"
+                          value={maxLength}
+                          onChange={(e) => {
+                            let { value, min, max } = e.target
+                            const newVal = Math.max(
+                              Number(min),
+                              Math.min(Number(max), Number(value))
+                            )
+                            setMaxLength(newVal)
+                          }}
+                          className="mx-2 px-2"
+                          name="maxLength"
+                          min={minLength}
+                          max={50}
+                          step={1}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {inputType === 'PassCode' && (
+                    <div className="flex justify-center">
+                      <label htmlFor="passcode">
+                        Enter The Correct Passcode (8 ~ 16 characters)
+                      </label>
+                      <input
+                        type="text"
+                        value={pattern}
+                        className="border border-black px-2 mx-2"
+                        onChange={(e) => {
+                          setPattern(e.target.value)
+                        }}
+                        name="passcode"
+                        minLength={8}
+                        maxLength={16}
+                      />
+                    </div>
+                  )}
+
+                  {inputType === 'Checkbox' && (
+                    <div>
+                      <div className="flex flex-wrap sm:justify-center">
+                        <div className="max-w-xs mx-2">
+                          <label htmlFor="quantity">Quantity (max: 20):</label>
+                          <input
+                            type="number"
+                            value={quantity}
+                            onChange={(e) => {
+                              let { value, min, max } = e.target
+                              const newVal = Math.max(
+                                Number(min),
+                                Math.min(Number(max), Number(value))
+                              )
+                              setQuantity(Number(newVal))
+                              const extendby =
+                                Number(newVal) - checkboxOptions.length
+                              setCheckboxOptions(
+                                checkboxOptions.concat(
+                                  Array.from({ length: extendby }, () => '')
+                                )
+                              )
+                            }}
+                            className="mx-2 px-2"
+                            name="quantity"
+                            min="0"
+                            max="20"
+                            step="1"
+                          />
+                        </div>
+                        <div className="max-w-xs mx-2">
+                          <label htmlFor="min">Minimum Selection:</label>
+                          <input
+                            type="number"
+                            value={min}
+                            onChange={(e) => {
+                              let { value, min, max } = e.target
+                              const newVal = Math.max(
+                                Number(min),
+                                Math.min(Number(max), Number(value))
+                              )
+                              setMin(newVal)
+                            }}
+                            className="mx-2 px-2"
+                            name="min"
+                            min={0}
+                            max={quantity}
+                            step={1}
+                          />
+                        </div>
+                        <div className="max-w-xs mx-2">
+                          <label htmlFor="max">Maximum Selection:</label>
+                          <input
+                            type="number"
+                            value={max}
+                            onChange={(e) => {
+                              let { value, min, max } = e.target
+                              const newVal = Math.max(
+                                Number(min),
+                                Math.min(Number(max), Number(value))
+                              )
+                              setMax(Number(newVal))
+                            }}
+                            className="mx-2 px-2"
+                            name="max"
+                            min={min}
+                            max={quantity}
+                            step={1}
+                          />
+                        </div>
                       </div>
                       <div className="flex justify-center">
                         <ul className="w-full max-w-xs">
@@ -365,7 +529,7 @@ function CreateSignupScreen() {
         <div className="md:hidden bg-white sticky bottom-0 z-50 border-t py-3 bg-white flex justify-center">
           <button
             className="btn btn-primary btn-block w-3/4 px-3"
-            type="submit"
+            onClick={handleCreate}
           >
             <FaUpload
               style={{

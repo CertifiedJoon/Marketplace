@@ -3,6 +3,10 @@ import React from 'react'
 interface Input {
   inputType: string
   label: string
+  info: string
+  lengthRange: Array<number>
+  range: Array<number>
+  pattern: string
   checkboxOptions: Array<string>
   radioOptions: Array<string>
   selectOptions: Array<string>
@@ -27,9 +31,13 @@ function CustomInput({ inputDetail, register }: Props) {
               </label>
               <input
                 type="text"
-                placeholder={inputDetail.label}
+                placeholder={inputDetail.info}
                 className="input input-bordered rounded-xl rounded-t-none"
-                {...register(inputDetail.label)}
+                {...register(inputDetail.label, {
+                  required: true,
+                  minLength: inputDetail.lengthRange[0],
+                  maxLength: inputDetail.lengthRange[1],
+                })}
               />
             </div>
           </div>
@@ -46,9 +54,12 @@ function CustomInput({ inputDetail, register }: Props) {
               </label>
               <input
                 type="email"
-                placeholder={inputDetail.label}
+                placeholder={inputDetail.info}
                 className="input input-bordered rounded-xl rounded-t-none"
-                {...register(inputDetail.label)}
+                {...register(inputDetail.label, {
+                  required: true,
+                  pattern: '^[w-.]+@([w-]+.)+[w-]{2,4}$',
+                })}
               />
             </div>
           </div>
@@ -65,9 +76,12 @@ function CustomInput({ inputDetail, register }: Props) {
               </label>
               <input
                 type="password"
-                placeholder={inputDetail.label}
+                placeholder={inputDetail.info}
                 className="input input-bordered rounded-xl rounded-t-none"
-                {...register(inputDetail.label)}
+                {...register(inputDetail.label, {
+                  required: true,
+                  pattern: inputDetail.pattern,
+                })}
               />
             </div>
           </div>
@@ -80,6 +94,9 @@ function CustomInput({ inputDetail, register }: Props) {
               <label className="label pb-1 bg-base-200">
                 <span className="label-text text-sm font-bold">
                   {inputDetail.label}
+                </span>
+                <span className="label-text text-xs ml-2">
+                  {inputDetail.info}
                 </span>
               </label>
               {inputDetail.checkboxOptions.map((option, i) => (
@@ -105,6 +122,7 @@ function CustomInput({ inputDetail, register }: Props) {
                 <span className="label-text font-bold">
                   {inputDetail.label}
                 </span>
+                <span className="label-text text-xs">{inputDetail.info}</span>
                 <input type="checkbox" className="toggle toggle-sm" />
               </label>
             </div>
@@ -118,6 +136,7 @@ function CustomInput({ inputDetail, register }: Props) {
               <span className="label-text text-sm font-bold">
                 {inputDetail.label}
               </span>
+              <span className="label-text text-xs">{inputDetail.info}</span>
             </label>
             <div className="form-control">
               <label className="label cursor-pointer">
@@ -135,7 +154,7 @@ function CustomInput({ inputDetail, register }: Props) {
             <div className="form-control">
               <label className="label cursor-pointer">
                 <span className="label-text">
-                  {inputDetail.radioOptions[0]}
+                  {inputDetail.radioOptions[1]}
                 </span>
                 <input
                   type="radio"
@@ -156,6 +175,7 @@ function CustomInput({ inputDetail, register }: Props) {
                 <span className="label-text font-bold">
                   {inputDetail.label}
                 </span>
+                <span className="label-text text-xs">{inputDetail.info}</span>
               </label>
               <select
                 className="select select-bordered rounded-xl rounded-t-none"
