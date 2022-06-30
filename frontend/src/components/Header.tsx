@@ -193,7 +193,9 @@ function Header({ sell = false }: Props) {
               </li>
               <li tab-index="0">
                 <p className="text-xs">
-                  {saleMode ? "I'm Selling!" : "I'm Buying!"}
+                  {saleMode
+                    ? "I'm Selling & Hosting!"
+                    : "I'm Buying & Joining!"}
                   <FaCaretDown />
                 </p>
                 <ul className="bg-transparent dropdown-content w-full p-2">
@@ -202,7 +204,7 @@ function Header({ sell = false }: Props) {
                       className="z-10 bg-white btn btn-ghost hover:bg-white active:btn-primary focus:btn-primary text-xs"
                       onClick={() => dispatch(setSaleMode(false))}
                     >
-                      I'm Buying!
+                      I'm Buying & Joining!
                     </button>
                   </li>
                   <li className="rounded">
@@ -210,7 +212,7 @@ function Header({ sell = false }: Props) {
                       className="z-10 bg-white btn btn-ghost hover:bg-white active:btn-secondary focus:btn-secondary text-xs"
                       onClick={() => dispatch(setSaleMode(true))}
                     >
-                      I'm Selling!
+                      I'm Selling & Hosting!
                     </button>
                   </li>
                 </ul>

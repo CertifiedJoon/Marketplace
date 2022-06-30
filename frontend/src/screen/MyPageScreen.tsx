@@ -101,7 +101,7 @@ function MyPageScreen() {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/communities">
+                    <Link to="/community/my-communities">
                       <div>Communities</div>
                     </Link>
                   </li>

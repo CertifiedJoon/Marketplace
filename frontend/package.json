@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@hookform/resolvers": "^2.9.3",
     "@reduxjs/toolkit": "^1.8.2",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/user-event": "^13.5.0",
@@ -32,7 +33,8 @@
     "swiper": "^8.1.6",
     "typescript": "^4.7.3",
     "web-vitals": "^2.1.4",
-    "yet-another-react-lightbox": "^1.7.0"
+    "yet-another-react-lightbox": "^1.7.0",
+    "yup": "^0.32.11"
   },
   "scripts": {
     "start": "react-scripts start",

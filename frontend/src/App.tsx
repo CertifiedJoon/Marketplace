@@ -23,6 +23,8 @@ import ItemEditScreen from './screen/ItemEditScreen'
 import TermsScreen from './screen/TermsScreen'
 import PrivacyScreen from './screen/PrivacyScreen'
 import CommunityJoinScreen from './screen/CommunityJoinScreen'
+import EventHostScreen from './screen/EventHostScreen'
+import MyCommunityScreen from './screen/MyCommunityScreen'
 
 function App() {
   return (
@@ -36,7 +38,7 @@ function App() {
           <Route path="/wishlist/userId" element={<SavedScreen />}></Route>
           <Route path="/productId" element={<ItemScreen />}></Route>
           <Route path="/sell" element={<HomeScreen sell />}></Route>
-          <Route path="/sell/upload" element={<ItemUploadScreen />}></Route>
+          <Route path="/sell/post" element={<ItemUploadScreen />}></Route>
           <Route path="/sell/edit/itemId" element={<ItemEditScreen />}></Route>
           <Route
             path="/eventId"
@@ -52,6 +54,7 @@ function App() {
             path="/event/create-signup"
             element={<CreateSignupScreen />}
           ></Route>
+          <Route path="/event/host" element={<EventHostScreen />}></Route>
           <Route
             path="/event/manage/eventId"
             element={<EventManageScreen />}
@@ -65,6 +68,10 @@ function App() {
           <Route
             path="/community/join"
             element={<CommunityJoinScreen />}
+          ></Route>
+          <Route
+            path="/community/my-communities"
+            element={<MyCommunityScreen />}
           ></Route>
           <Route path="/purchase-history" element={<HistoryScreen />}></Route>
           <Route path="/sale-history" element={<HistoryScreen sell />}></Route>

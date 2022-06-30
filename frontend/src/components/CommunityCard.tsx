@@ -9,9 +9,10 @@ interface Community {
 
 type Props = {
   community: Community
+  join?: boolean
 }
 
-function CommunityCard({ community }: Props) {
+function CommunityCard({ community, join = true }: Props) {
   const handleJoin = () => {
     console.log('Join Community')
   }
@@ -35,12 +36,16 @@ function CommunityCard({ community }: Props) {
                 Explore
               </button>
             </Link>
-            <button
-              className="btn glass btn-sm text-secondary mx-2"
-              onClick={handleJoin}
-            >
-              Join
-            </button>
+            {join && (
+              <Link to="/community/join">
+                <button
+                  className="btn glass btn-sm text-secondary mx-2"
+                  onClick={handleJoin}
+                >
+                  Join
+                </button>
+              </Link>
+            )}
           </div>
         </div>
       </div>

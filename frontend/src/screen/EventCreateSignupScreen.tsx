@@ -200,7 +200,7 @@ function CreateSignupScreen() {
                               register={register}
                             />
                           </div>
-                          <div className="col-span-1 text-secondary flex items-center">
+                          <div className="ml-2 col-span-1 text-secondary flex items-center">
                             <button
                               className="btn btn-circle btn-xs btn-secondary"
                               onClick={() => handleRemove(i)}
@@ -239,11 +239,13 @@ function CreateSignupScreen() {
                       onChange={(e) => setInputType(e.target.value)}
                     >
                       <option>Text</option>
+                      <option>Number</option>
                       <option>Email</option>
                       <option>PassCode</option>
                       <option>Checkbox</option>
                       <option>Toggle</option>
                       <option>Radio</option>
+                      <option>Textarea</option>
                       <option>Select</option>
                     </select>
                   </div>
@@ -315,6 +317,95 @@ function CreateSignupScreen() {
                           name="maxLength"
                           min={minLength}
                           max={50}
+                          step={1}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {inputType === 'Number' && (
+                    <div>
+                      <div className="flex justify-center">
+                        <label htmlFor="in">Minimum:</label>
+                        <input
+                          type="number"
+                          value={min}
+                          onChange={(e) => {
+                            let { value, min, max } = e.target
+                            const newVal = Math.max(
+                              Number(min),
+                              Math.min(Number(max), Number(value))
+                            )
+                            setMin(newVal)
+                          }}
+                          className="mx-2 px-2"
+                          name="min"
+                          min={0}
+                          max={max}
+                          step={1}
+                        />
+                      </div>
+                      <div className="flex justify-center">
+                        <label htmlFor="max">Maximum</label>
+                        <input
+                          type="number"
+                          value={max}
+                          onChange={(e) => {
+                            let { value, min, max } = e.target
+                            const newVal = Math.max(
+                              Number(min),
+                              Math.min(Number(max), Number(value))
+                            )
+                            setMax(newVal)
+                          }}
+                          className="mx-2 px-2"
+                          name="max"
+                          min={min}
+                          max={10000000000}
+                          step={1}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  {inputType === 'Textarea' && (
+                    <div>
+                      <div className="flex justify-center">
+                        <label htmlFor="minLength">Minimum Length:</label>
+                        <input
+                          type="number"
+                          value={minLength}
+                          onChange={(e) => {
+                            let { value, min, max } = e.target
+                            const newVal = Math.max(
+                              Number(min),
+                              Math.min(Number(max), Number(value))
+                            )
+                            setMinLength(newVal)
+                          }}
+                          className="mx-2 px-2"
+                          name="minLength"
+                          min={0}
+                          max={maxLength}
+                          step={1}
+                        />
+                      </div>
+                      <div className="flex justify-center">
+                        <label htmlFor="maxLength">Maximum Length</label>
+                        <input
+                          type="number"
+                          value={maxLength}
+                          onChange={(e) => {
+                            let { value, min, max } = e.target
+                            const newVal = Math.max(
+                              Number(min),
+                              Math.min(Number(max), Number(value))
+                            )
+                            setMaxLength(newVal)
+                          }}
+                          className="mx-2 px-2"
+                          name="maxLength"
+                          min={minLength}
+                          max={500}
                           step={1}
                         />
                       </div>

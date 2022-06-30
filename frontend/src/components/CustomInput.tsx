@@ -43,6 +43,50 @@ function CustomInput({ inputDetail, register }: Props) {
           </div>
         </>
       )}
+      {inputDetail.inputType === 'Textarea' && (
+        <>
+          <div className="bg-base-200 border shadow-lg rounded-xl min-h-content my-3 w-full">
+            <div className="form-control">
+              <label className="label pb-1">
+                <span className="label-text font-bold text-sm">
+                  {inputDetail.label}
+                </span>
+              </label>
+              <textarea
+                placeholder={inputDetail.info}
+                className="input input-bordered rounded-xl rounded-t-none"
+                {...register(inputDetail.label, {
+                  minLength: inputDetail.lengthRange[0],
+                  maxLength: inputDetail.lengthRange[1],
+                })}
+              />
+            </div>
+          </div>
+        </>
+      )}
+      {inputDetail.inputType === 'Number' && (
+        <>
+          <div className="bg-base-200 border shadow-lg rounded-xl min-h-content my-3 w-full">
+            <div className="form-control">
+              <label className="label pb-1">
+                <span className="label-text font-bold text-sm">
+                  {inputDetail.label}
+                </span>
+              </label>
+              <input
+                type="number"
+                placeholder={inputDetail.info}
+                className="input input-bordered rounded-xl rounded-t-none"
+                {...register(inputDetail.label, {
+                  required: true,
+                  min: inputDetail.range[0],
+                  max: inputDetail.range[1],
+                })}
+              />
+            </div>
+          </div>
+        </>
+      )}
       {inputDetail.inputType === 'Email' && (
         <>
           <div className="bg-base-100 border shadow-lg rounded-xl min-h-content my-3 w-full">

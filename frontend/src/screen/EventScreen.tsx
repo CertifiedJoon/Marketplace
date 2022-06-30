@@ -275,14 +275,11 @@ function EventScreen({ itemType }: Props) {
                           <span className="text-gray-500">Joining Fee</span> $4
                         </h2>
                       </div>
-                      <div className="col-span-1">
-                        <div className="badge badge-secondary">
-                          Unnegotiable
-                        </div>
-                      </div>
                     </div>
                     <div className="card-actions justify-stretch">
-                      <button className="btn btn-primary w-full">Join</button>
+                      <Link to="/event/signup/eventId" className="w-full">
+                        <button className="btn btn-primary w-full">Join</button>
+                      </Link>
                     </div>
                     <div className="grid grid-cols-5 border-b border-gray-300">
                       <div className="col-span-3">
@@ -465,9 +462,9 @@ function EventScreen({ itemType }: Props) {
             <div className="badge badge-secondary">Unnegotiable</div>
           </div>
           <div className="col-span-1">
-            <button className="btn btn-primary btn-md w-full">
-              Chat & Join
-            </button>
+            <Link to="/event/signup/eventId">
+              <button className="btn btn-primary btn-md w-full">Join</button>
+            </Link>
           </div>
         </div>
       </div>
