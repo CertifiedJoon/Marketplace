@@ -83,7 +83,7 @@ function HomeScreen({ sell = false }: Props) {
           <Card />
         </div>
       </div>
-      <Footer />
+      <Footer active="explore" />
     </>
   )
 }

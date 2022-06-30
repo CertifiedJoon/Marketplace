@@ -632,7 +632,7 @@ function CreateSignupScreen() {
         </div>
       </form>
       <div className="hidden md:block">
-        <Footer />
+        <Footer active="explore" />
       </div>
     </>
   )

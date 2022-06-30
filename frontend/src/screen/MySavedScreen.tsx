@@ -198,7 +198,7 @@ function SavedScreen() {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer active="likes" />
     </>
   )
 }

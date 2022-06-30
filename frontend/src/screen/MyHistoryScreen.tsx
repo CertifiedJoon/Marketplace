@@ -177,7 +177,7 @@ function HistoryScreen({ sell = false }: Props) {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer active="mypage" />
     </>
   )
 }

@@ -2,20 +2,23 @@ import React from 'react'
 import { FaSearch, FaHeart, FaInbox, FaUser } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 
-function Footer() {
+type Props = {
+  active: string
+}
+
+function Footer({ active }: Props) {
   return (
     <div className="sticky bottom-0 z-40 border-t bg-white">
       <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3 md:hidden">
         <div className="grid grid-cols-4">
           <Link to="/">
-            <div className="card py-1">
+            <div
+              className={`card py-1 ${
+                active === 'explore' ? 'text-primary' : 'text-gray-500'
+              }`}
+            >
               <figure>
-                <FaSearch
-                  style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0)',
-                    color: '#54bab9',
-                  }}
-                />
+                <FaSearch />
               </figure>
               <div className="card-body py-0 px-1 text-xs text-center">
                 Explore
@@ -23,14 +26,13 @@ function Footer() {
             </div>
           </Link>
           <Link to="/wishlist/userId">
-            <div className="card py-1">
+            <div
+              className={`card py-1 ${
+                active === 'likes' ? 'text-primary' : 'text-gray-500'
+              }`}
+            >
               <figure>
-                <FaHeart
-                  style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0)',
-                    color: '#D0C9C0',
-                  }}
-                />
+                <FaHeart />
               </figure>
               <div className="card-body py-0 px-1 text-xs text-center">
                 Likes
@@ -38,14 +40,13 @@ function Footer() {
             </div>
           </Link>
           <Link to="/messages">
-            <div className="card py-1">
+            <div
+              className={`card py-1 ${
+                active === 'chats' ? 'text-primary' : 'text-gray-500'
+              }`}
+            >
               <figure>
-                <FaInbox
-                  style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0)',
-                    color: '#D0C9C0',
-                  }}
-                />
+                <FaInbox />
               </figure>
               <div className="card-body py-0 px-1 text-xs text-center">
                 Chats
@@ -53,14 +54,13 @@ function Footer() {
             </div>
           </Link>
           <Link to="/mypage">
-            <div className="card py-1">
+            <div
+              className={`card py-1 ${
+                active === 'mypage' ? 'text-primary' : 'text-gray-500'
+              }`}
+            >
               <figure>
-                <FaUser
-                  style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0)',
-                    color: '#D0C9C0',
-                  }}
-                />
+                <FaUser />
               </figure>
               <div className="card-body py-0 px-1 text-xs text-center">
                 My Page

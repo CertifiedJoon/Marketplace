@@ -340,7 +340,7 @@ function EventManageScreen() {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer active="mypage" />
     </div>
   )
 }

@@ -191,7 +191,7 @@ function PrivacyScreen() {
           </p>
         </div>
       </div>
-      <Footer />
+      <Footer active="explore" />
     </div>
   )
 }

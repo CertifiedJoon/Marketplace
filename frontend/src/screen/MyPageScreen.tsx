@@ -121,7 +121,7 @@ function MyPageScreen() {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer active="mypage" />
     </>
   )
 }

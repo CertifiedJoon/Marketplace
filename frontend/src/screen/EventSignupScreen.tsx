@@ -133,7 +133,7 @@ function EventSignupScreen() {
 
         <div></div>
       </div>
-      <Footer />
+      <Footer active="explore" />
     </>
   )
 }

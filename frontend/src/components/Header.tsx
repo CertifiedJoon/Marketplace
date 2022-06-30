@@ -57,7 +57,7 @@ function Header({ sell = false }: Props) {
           </div>
           <div className="show md:hidden">
             <label
-              htmlFor="header-mobile-modal"
+              htmlFor="header-modal-mobile"
               className={`btn modal-button btn-xs text-white ${
                 saleMode ? 'btn-secondary' : 'btn-primary'
               }`}

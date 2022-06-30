@@ -148,7 +148,7 @@ function CommunityScreen() {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer active="mypage" />
     </>
   )
 }

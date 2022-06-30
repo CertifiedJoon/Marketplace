@@ -468,7 +468,7 @@ function EventScreen({ itemType }: Props) {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer active="explore" />
     </>
   )
 }

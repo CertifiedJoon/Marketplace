@@ -25,11 +25,13 @@ import PrivacyScreen from './screen/PrivacyScreen'
 import CommunityJoinScreen from './screen/CommunityJoinScreen'
 import EventHostScreen from './screen/EventHostScreen'
 import MyCommunityScreen from './screen/MyCommunityScreen'
+import ScrollToTop from './components/ScrollToTop'
 
 function App() {
   return (
     <>
       <Router>
+        <ScrollToTop />
         <main></main>
         <Routes>
           <Route path="/" element={<HomeScreen />}></Route>

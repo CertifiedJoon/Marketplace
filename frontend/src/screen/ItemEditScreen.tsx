@@ -621,7 +621,7 @@ function ItemEditScreen() {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer active="explore" />
     </>
   )
 }

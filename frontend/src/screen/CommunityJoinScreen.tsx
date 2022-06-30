@@ -51,7 +51,7 @@ function CommunityJoinScreen() {
           ))}
         </div>
       </div>
-      <Footer />
+      <Footer active="mypage" />
     </div>
   )
 }

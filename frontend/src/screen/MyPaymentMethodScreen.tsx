@@ -537,7 +537,7 @@ function PaymentMethodScreen() {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer active="mypage" />
     </>
   )
 }

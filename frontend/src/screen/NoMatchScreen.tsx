@@ -19,7 +19,7 @@ function NoMatchScreen() {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer active="explore" />
     </>
   )
 }

@@ -1,6 +1,7 @@
 import React from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
+import Footer from '../components/Footer'
 import Header from '../components/Header'
 import PublicProfile from '../components/PublicProfile'
 
@@ -54,6 +55,7 @@ function OrderDetailScreen() {
           <div className="border-b"></div>
         </div>
       </div>
+      <Footer active="mypage" />
     </>
   )
 }

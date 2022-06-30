@@ -310,7 +310,7 @@ function ProfileScreen() {
                 </div>
               </label>
               <textarea
-                className="p-0 textarea textarea-ghost text-accent placeholder-accent w-full text-lg h-60 rounded-sm disabled:text-black disabled:textarea-ghost disabled:border-none"
+                className="p-0 textarea textarea-ghost text-accent placeholder-accent w-full text-lg h-60 min-h-content rounded-sm disabled:text-black disabled:textarea-ghost disabled:border-none"
                 value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
             interdum lacus id urna aliquam placerat. In ultricies odio non
             interdum molestie. Etiam et volutpat sem. Vivamus ac consequat nunc,
@@ -424,7 +424,7 @@ function ProfileScreen() {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer active="mypage" />
     </>
   )
 }
