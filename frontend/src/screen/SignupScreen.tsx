@@ -23,7 +23,7 @@ function SignupScreen() {
   return (
     <>
       <div className="lg:mx-auto lg:w-1/3 ">
-        <div className="h-screen grid grid-rows-6 justify-items-stretch">
+        <div className="max-h-screen grid grid-rows-6 justify-items-stretch">
           <div></div>
           <div className="text-center my-auto">
             <h1 className="text-3xl text-primary">Welcome to Marketplace!</h1>
@@ -31,7 +31,7 @@ function SignupScreen() {
               A community based second-hand market.
             </h3>
           </div>
-          <div className="row-span-2 text-center my-auto grid grid-rows-5">
+          <div className="row-span-2 text-center my-auto">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div>
                 <input
@@ -75,23 +75,23 @@ function SignupScreen() {
               </div>
             </form>
           </div>
-          <div className="text-center mb-auto">
+          <div className="text-center my-auto">
             <button className="btn w-2/3 btn-block btn-outline btn-sm px-0">
-              <div className="grid grid-cols-4 justify-items-stretch items-center">
+              <div className="grid grid-cols-5 justify-items-stretch items-center">
                 <div className="col-span-1 justify-self-start">
                   <img src={googleIcon} alt="" className="w-6" />
                 </div>
-                <div className="col-span-3 justify-self-end">
+                <div className="col-span-4 justify-self-end">
                   <p className="text-sm">Sign Up with Google</p>
                 </div>
               </div>
             </button>
             <button className="btn w-2/3 btn-block btn-outline btn-sm bg-black">
-              <div className="grid grid-cols-4 justify-items-stretch items-center text-white">
+              <div className="grid grid-cols-5 justify-items-stretch items-center text-white">
                 <div className="col-span-1 text-xl justify-self-start">
                   <FaApple />
                 </div>
-                <div className="col-span-3 justify-self-end">
+                <div className="col-span-4 justify-self-end">
                   <p className="text-sm">Sign Up with Apple ID</p>
                 </div>
               </div>

@@ -1,24 +1,49 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
+
 import { FaHandSparkles, FaHeart, FaMedal, FaShare } from 'react-icons/fa'
 import LazySwiper from '../components/LazySwiper'
 import PhotoGallery from '../components/PhotoGallery'
 import profile from '../static/images/profile.png'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import { Link } from 'react-router-dom'
 import PublicProfile from '../components/PublicProfile'
+import { useAppSelector, useAppDispatch } from '../app/hook'
+import {
+  selectThumbnail,
+  selectImage,
+  selectItem,
+  selectItemStatus,
+  getItemById,
+} from '../features/item/itemSlice'
 
 function ItemScreen() {
-  /* 
-    Frontend worklist:
-    1. All links should be wrapped with react Link
-    2. Save and share button must do its functions
-    3. Labels & product details must be taken from a item state (redux)
-    4. Gallery and Swiper must be take files from a item state (redux)
-    5. Community hero must be taken from a community state (redux)
-    6. Seller Description must be taken from a item state (redux)
-    7. Price must be calculated by state management (redux)
-  */
+  const [copySuccess, setCopySuccess] = useState(false)
+  const params = useParams()
+  const itemStatus = useAppSelector(selectItemStatus)
+  const item = useAppSelector(selectItem)
+  const itemImage = useAppSelector(selectImage)
+  const itemThumbnail = useAppSelector(selectThumbnail)
+  const dispatch = useAppDispatch()
+
+  const handleShare = async () => {
+    await navigator.clipboard.writeText(window.location.href)
+    setCopySuccess(true)
+  }
+
+  const handleLike = () => {
+    toast.success('Item saved.')
+  }
+
+  useEffect(() => {
+    if (params.itemId) dispatch(getItemById(params.itemId))
+  }, [params])
+
+  useEffect(() => {
+    if (copySuccess === true) toast.success('Link copied.')
+  }, [copySuccess])
+
   return (
     <>
       <Header />
@@ -27,7 +52,7 @@ function ItemScreen() {
 
         <div className="lg:hidden">
           <div className="vh40 relative">
-            <LazySwiper containImg={true} />
+            <LazySwiper images={itemThumbnail} containImg={true} />
             <div className="bg-transparent absolute bottom-0 left-auto z-40">
               <label
                 htmlFor="my-modal-2"
@@ -53,10 +78,40 @@ function ItemScreen() {
           </div>
           <div className="mx-3 py-3">
             <h3 className="text-2xl my-3">
-              <strong>Nimbus 2000 Taken From Set</strong>
+              <strong>{item.heading}</strong>
             </h3>
             <div className="divide-y divide-gray-300">
-              <p className="text-sm text-gray-500 mb-1">Nimbus 2000</p>
+              <div className="grid grid-cols-5">
+                <div className="col-span-3">
+                  <p className="text-sm text-gray-500">{item.sub_heading}</p>
+                </div>
+                <div className="col-span-2 justify-self-end">
+                  <button
+                    className="btn btn-xs rounded btn-ghost text-xs px-0"
+                    onClick={handleLike}
+                  >
+                    <FaHeart
+                      style={{
+                        backgroundColor: 'rgba(0, 0, 0, 0)',
+                        color: 'hsl(var(--sf))',
+                      }}
+                    />
+                    &nbsp;Save
+                  </button>
+                  &nbsp;
+                  <button
+                    className="btn btn-xs rounded btn-ghost text-xs px-0"
+                    onClick={handleShare}
+                  >
+                    <FaShare
+                      style={{
+                        backgroundColor: 'rgba(0, 0, 0, 0)',
+                      }}
+                    />
+                    &nbsp;Share
+                  </button>
+                </div>
+              </div>
               <div className="grid grid-cols-4">
                 <div className="col-span-1 justify-self-start max-h-20 py-3 pr-3">
                   <label
@@ -90,28 +145,22 @@ function ItemScreen() {
                   </div>
                 </div>
                 <div className="col-span-3 justify-self-end text-md py-3 text-gray-500">
-                  I am selling because I've graduated Hogwarts!
+                  {item.reason}
                 </div>
               </div>
               <div className="py-3">
-                <label className="text-sm text-gray-500">Bought On</label>
-                <p className="mb-1">25th, December, 1982</p>
-                <label className="text-sm text-gray-500">Brand</label>
-                <p className="mb-1">The Nimbus Broom Racing Company</p>
-                <label className="text-sm text-gray-500">Condition</label>
-                <p className="mb-1">Almost Unusable</p>
-                <label className="text-sm text-gray-500">
-                  Frequency of Use
-                </label>
-                <p className="mb-1">
-                  Used every week during Quidditch Training.
-                </p>
-                <label className="text-sm text-gray-500">Description</label>
-                <p>
-                  "One of the Nimbus Racing Broom Company's most successful
-                  models. Highly reliable with good speed and exceptional
-                  handling — not for beginners!"
-                </p>
+                {item.details.map((detail, i) => (
+                  <div key={i}>
+                    <label className="text-sm text-gray-500">
+                      {detail.label}
+                    </label>
+                    <p className="mb-1">{detail.value}</p>
+                  </div>
+                ))}
+                <div>
+                  <label className="text-sm text-gray-500">Description</label>
+                  <p className="mb-1">{item.description}</p>
+                </div>
               </div>
               <div className="py-3">
                 <label className="text-sm text-gray-500">
@@ -155,10 +204,27 @@ function ItemScreen() {
         <div className="lg:hidden sticky bottom-0 z-50 border-t py-3 bg-white">
           <div className="grid grid-cols-3 px-3">
             <div className="col-span-2">
-              <p>
-                <span className="text-gray-500">Listed At</span> $4000
-              </p>
-              <div className="badge badge-secondary">Negotiable</div>
+              <div>
+                <span className="text-gray-500">
+                  {item.type === 'event' ? 'Join for' : 'Listed for'}
+                </span>{' '}
+                {Number(item.price) === 0 ? (
+                  <div className="badge badge-info badge-outline">Free</div>
+                ) : (
+                  `$${item.price}`
+                )}
+              </div>
+              {item.type === 'event' ? (
+                item.negotiability ? (
+                  <div className="badge badge-info">Open House</div>
+                ) : (
+                  <div className="badge badge-secondary">Private Hosting</div>
+                )
+              ) : item.negotiability ? (
+                <div className="badge badge-info">Negotiable</div>
+              ) : (
+                <div className="badge badge-secondary">Unnegotiable</div>
+              )}
               <button className="btn btn-xs rounded btn-ghost text-sm">
                 <FaHeart
                   style={{
@@ -177,9 +243,15 @@ function ItemScreen() {
               </button>
             </div>
             <div className="col-span-1">
-              <Link to="/message/chatId">
+              <Link
+                to={
+                  item.type === 'event'
+                    ? '/event/signup/eventId'
+                    : '/messages/chatId'
+                }
+              >
                 <button className="btn btn-primary btn-md w-full">
-                  Chat & Buy
+                  {item.type === 'event' ? 'Join' : 'Chat & Buy'}
                 </button>
               </Link>
             </div>
@@ -192,12 +264,15 @@ function ItemScreen() {
           <div className="grid grid-cols-5 my-4">
             <div className="col-span-4">
               <h1>
-                <strong>Nimbus 2000 Stolen From Set</strong>
+                <strong>{item.heading}</strong>
               </h1>
             </div>
             <div className="col-span-1">
               <div className="grid grid-cols-2 gap-0">
-                <button className="btn rounded btn-ghost text-xs px-0">
+                <button
+                  className="btn rounded btn-ghost text-xs px-0"
+                  onClick={handleLike}
+                >
                   <FaHeart
                     style={{
                       backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -206,7 +281,10 @@ function ItemScreen() {
                   />
                   &nbsp;Save
                 </button>
-                <button className="btn rounded btn-ghost text-xs px-0">
+                <button
+                  className="btn rounded btn-ghost text-xs px-0"
+                  onClick={handleShare}
+                >
                   <FaShare
                     style={{
                       backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -223,7 +301,7 @@ function ItemScreen() {
                 className="col-span-3 bg-cover bg-no-repeat bg-center rounded-l-xl"
                 style={{
                   backgroundImage: `url(
-                    'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
+                    '${itemThumbnail[0]}'
                     )`,
                 }}
               ></div>
@@ -233,7 +311,7 @@ function ItemScreen() {
                     className="col-span-3 bg-cover bg-no-repeat bg-center"
                     style={{
                       backgroundImage: `url(
-                      'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
+                      '${itemThumbnail[1]}'
                       )`,
                     }}
                   ></div>
@@ -241,7 +319,7 @@ function ItemScreen() {
                     className="col-span-3 bg-cover bg-no-repeat bg-center"
                     style={{
                       backgroundImage: `url(
-                      'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
+                      '${itemThumbnail[2]}'
                       )`,
                     }}
                   ></div>
@@ -253,7 +331,7 @@ function ItemScreen() {
                     className="col-span-3 bg-cover bg-no-repeat bg-center rounded-tr-xl"
                     style={{
                       backgroundImage: `url(
-                      'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
+                      '${itemThumbnail[3]}'
                       )`,
                     }}
                   ></div>
@@ -261,7 +339,7 @@ function ItemScreen() {
                     className="col-span-3 bg-cover bg-no-repeat bg-center rounded-br-xl"
                     style={{
                       backgroundImage: `url(
-                      'https://api.lorem.space/image/car?w=800&h=800&hash=8B7BCDC2'
+                      '${itemThumbnail[4]}'
                       )`,
                     }}
                   ></div>
@@ -297,58 +375,44 @@ function ItemScreen() {
             <div className="col-span-2 pr-5">
               <div className="grid grid-rows-7 divide-y divide-gray-300">
                 <div className="row-span-1 py-5">
-                  {/* One liner Description & reason for sale & profile pic */}
                   <div className="grid grid-cols-3 gap-3">
                     <div className="col-span-2 justify-start">
                       <div>
-                        <h1 className="w-full text-2xl">
-                          Nimbus Full Option 2007
-                        </h1>
+                        <h1 className="w-full text-2xl">{item.sub_heading}</h1>
                       </div>
                       <div className="w-full my-1 text-lg text-gray-500">
-                        I am selling because I've graduated Hogwarts!
+                        {item.reason}
                       </div>
                     </div>
-                    <div className="col-span-1 justify-content-end">
-                      <img
-                        src={profile}
-                        alt="profile"
-                        className="w-1/2 mask mask-squircle ml-auto"
-                      />
+                    <div className="col-span-1 flex justify-end">
+                      <label
+                        htmlFor="my-modal-profile"
+                        className="btn modal-button btn-ghost btn-square btn-lg"
+                      >
+                        <img
+                          src={profile}
+                          alt="profile"
+                          className="mask mask-squircle"
+                        />
+                      </label>
                     </div>
                   </div>
                 </div>
                 <div className="row-span-2 py-5">
-                  <label className="text-sm text-gray-500">Bought On</label>
-                  <p className="mb-1">25th, December, 1982</p>
-                  <label className="text-sm text-gray-500">Brand</label>
-                  <p className="mb-1">The Nimbus Broom Racing Company</p>
-                  <label className="text-sm text-gray-500">Condition</label>
-                  <p className="mb-1">Almost Unusable</p>
-                  <label className="text-sm text-gray-500">
-                    Frequency of Use
-                  </label>
-                  <p className="mb-1">
-                    Used every week during Quidditch Training.
-                  </p>
+                  {item.details.map((detail, i) => (
+                    <div key={i}>
+                      <label className="text-sm text-gray-500">
+                        {detail.label}
+                      </label>
+                      <p className="mb-1">{detail.value}</p>
+                    </div>
+                  ))}
                 </div>
                 <div className="row-span-2 py-5">
                   <label className="text-lg text-gray-500 mb-2">
                     Description
                   </label>
-                  <p>
-                    "One of the Nimbus Racing Broom Company's most successful
-                    models. Highly reliable with good speed and exceptional
-                    handling — not for beginners!"
-                  </p>
-                  <p>
-                    The Nimbus 2000 was a broomstick produced by the Nimbus
-                    Racing Broom Company as part of their successful line of
-                    racing brooms. At the time of its release in 1991, it was
-                    the fastest broomstick in production. The Nimbus 2000 easily
-                    outperformed its competitors on the Quidditch pitch until it
-                    was replaced as the top broomstick by the Nimbus 2001.
-                  </p>
+                  <p>{item.description}</p>
                 </div>
                 <div className="row-span-2 py-5">
                   <label className="text-lg text-gray-500 mb-5">
@@ -438,35 +502,83 @@ function ItemScreen() {
                 bg-white border shadow-xl ml-auto"
                 >
                   <div className="card-body">
-                    <div className="grid grid-cols-3">
-                      <div className="col-span-2">
+                    <div className="grid grid-cols-2">
+                      <div className="col-span-1">
                         <h2 className="card-title">
-                          <span className="text-gray-500">Listed At</span> $4000
+                          <span className="text-gray-500">
+                            {item.type === 'event' ? 'Join for' : 'Listed for'}
+                          </span>{' '}
+                          {Number(item.price) === 0 ? (
+                            <div className="badge badge-info badge-outline">
+                              Free
+                            </div>
+                          ) : (
+                            `$${item.price}`
+                          )}
                         </h2>
                       </div>
-                      <div className="col-span-1">
-                        <div className="badge badge-secondary">Negotiable</div>
+                      <div className="col-span-1 flex justify-end">
+                        {item.type === 'event' ? (
+                          item.negotiability ? (
+                            <div className="badge badge-info">Open House</div>
+                          ) : (
+                            <div className="badge badge-secondary">
+                              Private Hosting
+                            </div>
+                          )
+                        ) : item.negotiability ? (
+                          <div className="badge badge-info">Negotiable</div>
+                        ) : (
+                          <div className="badge badge-secondary">
+                            Unnegotiable
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="card-actions justify-stretch">
-                      <Link to="/message/chatId" className="w-full">
+                      <Link
+                        to={
+                          item.type === 'event'
+                            ? '/event/signup/eventId'
+                            : '/messages/chatId'
+                        }
+                        className="w-full"
+                      >
                         <button className="btn btn-primary w-full">
-                          Chat & Buy
+                          {item.type === 'event' ? 'Join' : 'Chat & Buy'}
                         </button>
                       </Link>
                     </div>
                     <div className="grid grid-cols-5 border-b border-gray-300">
                       <div className="col-span-3">
-                        <p className="underline">Product Price</p>
+                        <p className="underline">
+                          {item.type === 'event' ? 'Ticket' : 'Item'}
+                        </p>
                       </div>
                       <div className="col-span-2 justify-self-end">
-                        <p className="mb-1">$4000</p>
+                        <div className="mb-1">
+                          {item.price === 0 ? (
+                            <div className="badge badge-info badge-outline">
+                              Free
+                            </div>
+                          ) : (
+                            `$${item.price}`
+                          )}
+                        </div>
                       </div>
                       <div className="col-span-3">
                         <p className="underline">Marketplace Fee</p>
                       </div>
                       <div className="col-span-2 justify-self-end">
-                        <p className="mb-1">$10</p>
+                        <div className="mb-1">
+                          {item.price === 0 ? (
+                            <div className="badge badge-info badge-outline">
+                              No Fee
+                            </div>
+                          ) : (
+                            `$${item.price * 0.05}`
+                          )}
+                        </div>
                       </div>
                     </div>
                     <div className="grid grid-cols-5">
@@ -474,7 +586,15 @@ function ItemScreen() {
                         <strong className="underline">Total</strong>
                       </div>
                       <div className="col-span-2 justify-self-end">
-                        <strong className="mb-1">$4010</strong>
+                        <div className="mb-1">
+                          {item.price === 0 ? (
+                            <div className="badge badge-info badge-outline">
+                              <strong>Free</strong>
+                            </div>
+                          ) : (
+                            `$${item.price * 1.05}`
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>

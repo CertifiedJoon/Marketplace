@@ -401,7 +401,7 @@ function EventHostScreen() {
             </div>
           </div>
           <div className="vh40 relative">
-            <LazySwiper containImg={true} />
+            {/* <LazySwiper containImg={true} /> */}
             <button className="btn glass btn-sm w-1/2 z-40 absolute top-1 left-1">
               <input
                 type="file"

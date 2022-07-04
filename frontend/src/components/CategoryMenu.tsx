@@ -57,9 +57,6 @@ function CategoryMenu({ activeType }: Props) {
           1024: {
             slidesPerView: 8,
           },
-          1280: {
-            slidesPerView: 10,
-          },
         }}
         modules={[Navigation, Pagination]}
         className="mySwiper text-center"

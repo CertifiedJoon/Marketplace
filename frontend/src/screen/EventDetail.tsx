@@ -226,7 +226,7 @@ function EventDetail({ host = false }: Props) {
             </div>
             <div className="lg:hidden">
               <div className="vh40">
-                <LazySwiper containImg={true} />
+                {/* <LazySwiper containImg={true} /> */}
               </div>
               <div className="mx-3 py-3">
                 <h3 className="text-2xl my-3">

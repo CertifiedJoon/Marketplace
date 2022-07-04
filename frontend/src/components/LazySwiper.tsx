@@ -11,10 +11,11 @@ import nextSvg from '../static/images/circle-right.svg'
 import prevSvg from '../static/images/circle-left.svg'
 
 type Props = {
+  images: Array<string>
   containImg: boolean
 }
 
-function LazySwiper({ containImg }: Props) {
+function LazySwiper({ images, containImg }: Props) {
   return (
     <>
       <Swiper
@@ -31,38 +32,16 @@ function LazySwiper({ containImg }: Props) {
         modules={[Lazy, Pagination, Navigation]}
         className="mySwiper"
       >
-        <SwiperSlide>
-          <img
-            src="https://api.lorem.space/image/movie?w=800&h=800"
-            className={`swiper-lazy ${containImg && 'containImg'}`}
-            alt=""
-          />
-          <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <img
-            src="https://api.lorem.space/image/movie?w=800&h=1000"
-            className={`swiper-lazy ${containImg && 'containImg'}`}
-            alt=""
-          />
-          <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <img
-            src="https://api.lorem.space/image/book?w=800&h=1600"
-            className={`swiper-lazy ${containImg && 'containImg'}`}
-            alt=""
-          />
-          <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <img
-            src="https://api.lorem.space/image/furniture?w=800&h=300"
-            className={`swiper-lazy ${containImg && 'containImg'}`}
-            alt=""
-          />
-          <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
-        </SwiperSlide>
+        {images.map((image, i) => (
+          <SwiperSlide key={i}>
+            <img
+              src={image}
+              className={`swiper-lazy ${containImg && 'containImg'}`}
+              alt=""
+            />
+            <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
+          </SwiperSlide>
+        ))}
         <div className="swiper-button-prev-card">
           <button className="absolute btn btn-circle btn-ghost left-0">
             <img

@@ -1,29 +1,36 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
+
 import CategoryMenu from '../components/CategoryMenu'
 import Card from '../components/ItemCard'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import { useAppSelector } from '../app/hook'
+import { useAppSelector, useAppDispatch } from '../app/hook'
 import { selectSaleMode } from '../features/header/headerSlice'
+import {
+  selectItems,
+  selectItemsStatus,
+  getItems,
+} from '../features/item/itemListSlice'
+import { ItemBrief } from '../interface/itemInterface'
+
 type Props = {
   sell?: boolean
 }
 
 function HomeScreen({ sell = false }: Props) {
-  /* 
-      Frontend worklist:
-      1. All links should be wrapped with react Link
-      2. community badge must be dynamic and taken from a community state (redux)
-      3. Buy/Sell badge must be dynamic and taken from a user state(redux)
-      4. Category Menu must be dynamic and stored on a generic state(redux)
-      5. Profile must be taken from a user state (redux)
-      6. LazyLoad on cards must work and must integrate with redux
-      7. Cards should be displayed based on a file (async)
-      8. Cards must be filtered through category menu (async)
-    */
   const saleMode = useAppSelector(selectSaleMode)
+  const items = useAppSelector(selectItems)
+  const itemsStatus = useAppSelector(selectItemsStatus)
+  const dispatch = useAppDispatch()
   const params = useParams()
+
+  useEffect(() => {
+    if (itemsStatus === 'idle') {
+      dispatch(getItems())
+    }
+  }, [dispatch])
+
   return (
     <>
       <Header sell={sell} />
@@ -53,34 +60,23 @@ function HomeScreen({ sell = false }: Props) {
           </div>
         )}
         <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+          {items.map((item: ItemBrief, i) => (
+            <Card
+              key={i}
+              cardDetail={{
+                _id: item._id,
+                type: item.type,
+                heading: item.heading,
+                sub_heading: item.sub_heading,
+                thumbnail: item.images
+                  .filter((img) => img.thumbnail)
+                  .map((item) => item.image),
+                price: item.price,
+                profile: item.user.profile_image,
+                badges: item.user.badges,
+              }}
+            />
+          ))}
         </div>
       </div>
       <Footer active="explore" />

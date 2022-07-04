@@ -6,7 +6,6 @@ import HomeScreen from './screen/HomeScreen'
 import LoginScreen from './screen/LoginScreen'
 import SignupScreen from './screen/SignupScreen'
 import MyPageScreen from './screen/MyPageScreen'
-import EventScreen from './screen/EventScreen'
 import SavedScreen from './screen/MySavedScreen'
 import NoMatchScreen from './screen/NoMatchScreen'
 import EventSignupScreen from './screen/EventSignupScreen'
@@ -39,15 +38,11 @@ function App() {
           <Route path="/" element={<HomeScreen />}></Route>
           <Route path="/explore/:itemType" element={<HomeScreen />}></Route>
           <Route path="*" element={<NoMatchScreen />}></Route>
-          <Route path="/wishlist/userId" element={<SavedScreen />}></Route>
-          <Route path="/productId" element={<ItemScreen />}></Route>
           <Route path="/sell" element={<HomeScreen sell />}></Route>
+          <Route path="/wishlist/userId" element={<SavedScreen />}></Route>
+          <Route path="/item/:itemId" element={<ItemScreen />}></Route>
           <Route path="/sell/post" element={<ItemUploadScreen />}></Route>
           <Route path="/sell/edit/itemId" element={<ItemEditScreen />}></Route>
-          <Route
-            path="/eventId"
-            element={<EventScreen itemType="event" />}
-          ></Route>
           <Route path="/login" element={<LoginScreen />}></Route>
           <Route path="/signup" element={<SignupScreen />}></Route>
           <Route
