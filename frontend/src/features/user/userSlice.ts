@@ -14,12 +14,8 @@ interface UserLoginState {
   error: string | undefined
 }
 
-const userInfoFromStorage: UserInfo = localStorage.getItem('userInfo')
-  ? JSON.parse(localStorage.getItem('userInfo') || '{}')
-  : null
-
 const initialState: UserLoginState = {
-  user: userInfoFromStorage,
+  user: null,
   status: 'idle',
   error: '',
 }
@@ -41,8 +37,6 @@ export const login = createAsyncThunk(
       },
       config
     )
-
-    localStorage.setItem('userInfo', JSON.stringify(data))
 
     return data
   }
@@ -67,8 +61,6 @@ export const signup = createAsyncThunk(
       config
     )
 
-    localStorage.setItem('userInfo', JSON.stringify(data))
-
     return data
   }
 )
@@ -78,7 +70,6 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     logout: (state: UserLoginState) => {
-      localStorage.removeItem('userInfo')
       state.user = null
       state.status = 'idle'
     },
@@ -105,7 +96,7 @@ const userSlice = createSlice({
       })
       .addCase(signup.rejected, (state, action) => {
         state.status = 'failed'
-        state.error = 'Email Already Exists'
+        state.error = action.error.message
       })
   },
 })

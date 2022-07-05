@@ -58,6 +58,52 @@ def getUsers(request):
 @permission_classes([IsAuthenticated])
 def getUserProfile(request):
   user = request.user
-  profile = UserProfile.objects.prefetch_related('badge_user', 'communities').get(user=user)
+  if (UserProfile.objects.filter(user=user).exists()):
+    profile = UserProfile.objects.prefetch_related('badge_user', 'communities').get(user=user)
+  else:
+    profile = UserProfile.objects.create(
+      user = user,
+      events_hosted = 0,
+      people_hosted = 0,
+      items_sold = 0,
+      items_bought = 0,
+      clean_transaction = 0,
+      nickname = user.first_name,
+      introduction = ""
+    )
   serializer = UserProfileSerializer(profile, many=False)
+  return Response(serializer.data)
+
+# name, email, nickname, profile_image, introduction
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updateUserProfile(request):
+  user = request.user
+  serializer = UserSerializerWithToken(user, many=False)
+  data = request.data
+  
+  if (UserProfile.objects.filter(user=user).exists()):
+    profile = UserProfile.objects.get(user=user)
+    profile.nickname = data['nickname']
+    profile.profile_image = data['profile_image']
+    profile.introduction = data['introduction']
+    profile.save()
+  else:
+    profile = UserProfile.objects.create(
+      user = user,
+      events_hosted = 0,
+      people_hosted = 0,
+      items_sold = 0,
+      items_bought = 0,
+      clean_transaction = 0,
+      nickname = "",
+      introduction = ""
+    )
+
+  user.first_name = data['name']
+  user.user_name = data['email']
+  user.email = data['email']
+  user.save()
+
   return Response(serializer.data)

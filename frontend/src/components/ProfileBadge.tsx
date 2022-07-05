@@ -61,10 +61,10 @@ function ProfileBadge({ name, brief = false }: Props) {
     }
     return (
       <div
-        className="tooltip tooltip-success tooltip-left"
+        className="tooltip tooltip-info tooltip-left"
         data-tip="100% Clean Transactions"
       >
-        <div className="badge badge-success badge-outline mr-1">
+        <div className="badge badge-info badge-outline mr-1">
           <FaHandSparkles />
           &nbsp;Clean
         </div>

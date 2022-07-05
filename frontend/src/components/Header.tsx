@@ -10,6 +10,7 @@ import {
   setSaleMode,
 } from '../features/header/headerSlice'
 import { selectUser } from '../features/user/userSlice'
+import { selectUserImage } from '../features/user/userProfileSlice'
 import profile from '../static/images/profile.png'
 import SearchBar from './SearchBar'
 
@@ -23,6 +24,7 @@ function Header({ sell = false }: Props) {
   const saleMode = useAppSelector(selectSaleMode)
   const communityKey = useAppSelector(selectCommunityKey)
   const user = useAppSelector(selectUser)
+  const profile_image = useAppSelector(selectUserImage)
   const [selectedKey, setSelectedKey] = useState('All')
 
   useEffect(() => {
@@ -224,7 +226,7 @@ function Header({ sell = false }: Props) {
                     <Link to="/mypage">
                       <img
                         className="mask mask-squircle"
-                        src={profile}
+                        src={profile_image}
                         alt="profile"
                       />
                     </Link>

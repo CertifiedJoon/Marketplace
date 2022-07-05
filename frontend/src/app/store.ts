@@ -1,19 +1,49 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 import headerReducer from '../features/header/headerSlice'
 import itemListSlice from '../features/item/itemListSlice'
 import itemSlice from '../features/item/itemSlice'
 import userProfileSlice from '../features/user/userProfileSlice'
 import userSlice from '../features/user/userSlice'
 
-export const store = configureStore({
-  reducer: {
-    header: headerReducer,
-    items: itemListSlice,
-    item: itemSlice,
-    user: userSlice,
-    userProfile: userProfileSlice,
-  },
+const persistConfig = {
+  key: 'root',
+  version: 1,
+  storage,
+  whitelist: ['header', 'user', 'userProfile'],
+}
+
+export const rootReducer = combineReducers({
+  header: headerReducer,
+  items: itemListSlice,
+  item: itemSlice,
+  user: userSlice,
+  userProfile: userProfileSlice,
 })
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
+})
+
+export let persistor = persistStore(store)
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>

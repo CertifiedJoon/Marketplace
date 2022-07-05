@@ -2,16 +2,22 @@ import React, { useEffect } from 'react'
 import { FaMedal, FaHandSparkles } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 
+import { persistor } from '../app/store'
+import { useAppSelector, useAppDispatch } from '../app/hook'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
-import Profile from '../static/images/profile.png'
-import { useAppSelector, useAppDispatch } from '../app/hook'
 import { selectUser, logout } from '../features/user/userSlice'
+import {
+  selectUserProfile,
+  profileout,
+} from '../features/user/userProfileSlice'
+import ProfileBadge from '../components/ProfileBadge'
 
 function MyPageScreen() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const user = useAppSelector(selectUser)
+  const profile = useAppSelector(selectUserProfile)
 
   useEffect(() => {
     if (!user) {
@@ -21,6 +27,8 @@ function MyPageScreen() {
 
   const handleLogout = () => {
     dispatch(logout())
+    dispatch(profileout())
+    persistor.purge()
     navigate('/')
   }
   return (
@@ -35,34 +43,19 @@ function MyPageScreen() {
               <div className="col-span-1 justify-self-end">
                 <div className="avatar">
                   <div className="w-2/3 rounded-full">
-                    <img src={Profile} alt="" />
+                    <img src={profile.profile_image} alt="" />
                   </div>
                 </div>
               </div>
               <div className="col-span-2">
                 <div className="grid grid-rows-2 h-full">
                   <div className="self-end">
-                    <h3 className="text-xl lg:text-2xl">Joonyoung Moon</h3>
+                    <h3 className="text-xl lg:text-2xl">{user?.name}</h3>
                   </div>
                   <div className="self-end lg:self-center">
-                    <div
-                      className="tooltip tooltip-info"
-                      data-tip="100% Clean Transactions"
-                    >
-                      <div className="badge badge-info badge-outline mr-1">
-                        <FaHandSparkles />
-                        &nbsp;Clean
-                      </div>
-                    </div>
-                    <div
-                      className="tooltip tooltip-success"
-                      data-tip="Sold and Bought 10 items"
-                    >
-                      <div className="badge badge-success badge-outline mr-1">
-                        <FaMedal />
-                        &nbsp;PowerUser
-                      </div>
-                    </div>
+                    {profile.badges.map((badge, i) => (
+                      <ProfileBadge key={i} name={badge.name} />
+                    ))}
                   </div>
                 </div>
               </div>
@@ -74,13 +67,15 @@ function MyPageScreen() {
                 <label className="text-sm text-gray-500">Your Record</label>
                 <div className="flex stats shadow mt-2">
                   <div className="stat place-items-center">
-                    <div className="stat-title">Clean Purchase</div>
-                    <div className="stat-value">31K</div>
+                    <div className="stat-title">Clean Purchases</div>
+                    <div className="stat-value">{profile.items_bought}</div>
                     <div className="stat-desc">100% of Transactions</div>
                   </div>
                   <div className="stat place-items-center">
-                    <div className="stat-title">Clean Sale</div>
-                    <div className="stat-value text-secondary">4,200</div>
+                    <div className="stat-title">Clean Sales</div>
+                    <div className="stat-value text-secondary">
+                      {profile.items_sold}
+                    </div>
                     <div className="stat-desc">100% of Transactions</div>
                   </div>
                 </div>

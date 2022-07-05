@@ -11,6 +11,7 @@ import {
   selectUserProfile,
   selectUserProfileStatus,
 } from '../features/user/userProfileSlice'
+import { UserProfilePlaceholder } from '../interface/userProfileInterface'
 
 interface IFormInput {
   email: string
@@ -18,11 +19,6 @@ interface IFormInput {
 }
 
 function LoginScreen() {
-  /* 
-  Frontend Worklist 
-    1. Store login data to a user state (redux)
-    2. Link Wrap [Done]
-  */
   const { register, handleSubmit } = useForm<IFormInput>()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
@@ -34,10 +30,12 @@ function LoginScreen() {
   const redirect = location.search ? location.search.split('=')[1] : '/'
 
   useEffect(() => {
-    if (user && userProfile) {
+    if (user && userProfile.user !== 0) {
       navigate(redirect)
+    } else if (user) {
+      dispatch(getUserProfile())
     }
-  }, [user, redirect, navigate])
+  }, [user, userProfile, dispatch, redirect, navigate])
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     dispatch(
@@ -46,10 +44,6 @@ function LoginScreen() {
         password: data.password,
       })
     )
-    if (userStatus === 'succeeded') {
-      dispatch(getUserProfile())
-      if (userProfileStatus === 'succeeded') navigate('/')
-    }
   }
 
   return (

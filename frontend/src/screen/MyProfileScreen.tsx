@@ -1,8 +1,5 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import profile from '../static/images/profile.png'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import {
   FaArrowLeft,
   FaHandSparkles,
@@ -11,9 +8,28 @@ import {
   FaPencilAlt,
 } from 'react-icons/fa'
 
+import Header from '../components/Header'
+import Footer from '../components/Footer'
+
+import { useAppSelector } from '../app/hook'
+import { selectUserProfile } from '../features/user/userProfileSlice'
+import { selectUser } from '../features/user/userSlice'
+import ProfileBadge from '../components/ProfileBadge'
+
 function ProfileScreen() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [editStatus, setEditStatus] = useState(false)
+  const user = useAppSelector(selectUser)
+  const profile = useAppSelector(selectUserProfile)
+  const redirect = location.search ? location.search.split('=')[1] : '/'
+
+  useEffect(() => {
+    if (!user) {
+      navigate(redirect)
+    }
+  }, [user, redirect, navigate])
+
   const saveProfile = () => {
     console.log('Profile Saved')
   }
@@ -56,7 +72,7 @@ function ProfileScreen() {
           <div className="col-span-1 justify-self-end">
             <div className="avatar px-2">
               <div className="w-full max-w-40 rounded-full">
-                <img src={profile} alt="" />
+                <img src={profile.profile_image} alt="" />
               </div>
             </div>
           </div>
@@ -65,7 +81,7 @@ function ProfileScreen() {
               <input
                 type="text"
                 placeholder="Name"
-                value="Joonyoung Moon"
+                value={user?.name}
                 className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent item-input-xl w-full disabled:text-black disabled:input-ghost disabled:border-none"
                 disabled={!editStatus}
                 onChange={() => {}}
@@ -73,7 +89,7 @@ function ProfileScreen() {
               <input
                 type="text"
                 placeholder="E-mail"
-                value="marketplace@gmail.com"
+                value={user?.email}
                 className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent item-input-lg w-full disabled:text-black disabled:input-ghost disabled:border-none"
                 disabled={!editStatus}
                 onChange={() => {}}
@@ -91,7 +107,7 @@ function ProfileScreen() {
           <input
             type="text"
             placeholder="E-mail"
-            value="Joon"
+            value={profile.nickname}
             className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent text-lg w-full disabled:text-black disabled:input-ghost disabled:border-none"
             disabled={!editStatus}
             onChange={() => {}}
@@ -101,18 +117,7 @@ function ProfileScreen() {
           </label>
           <textarea
             className="p-0 rounded-none textarea textarea-ghost text-accent placeholder-accent w-full text-lg h-60 rounded-sm disabled:text-black disabled:textarea-ghost disabled:border-none"
-            value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-            interdum lacus id urna aliquam placerat. In ultricies odio non
-            interdum molestie. Etiam et volutpat sem. Vivamus ac consequat nunc,
-            quis mollis justo. Morbi venenatis ex eu imperdiet tristique.
-            Maecenas sollicitudin viverra fringilla. Etiam imperdiet lacinia
-            magna, nec porttitor libero tempus et. Nunc eu ligula ac orci
-            posuere pellentesque eu eget mauris. Praesent convallis nisi ac urna
-            vulputate, eget viverra lectus mattis. Quisque id mi eget magna
-            finibus semper ut eget dolor. Sed sodales dignissim magna, id
-            feugiat nibh placerat interdum. Nunc nec lacus mollis magna placerat
-            laoreet non et mauris."
-            placeholder="Describe your listing."
+            value={profile.introduction}
             disabled={!editStatus}
             onChange={() => {}}
           ></textarea>
@@ -121,24 +126,9 @@ function ProfileScreen() {
           <div>
             <label className="text-md text-gray-500">Badge Earned</label>
             <div className="flex mt-2">
-              <div
-                className="tooltip tooltip-info"
-                data-tip="100% Clean Transactions"
-              >
-                <div className="badge badge-lg badge-info badge-outline mr-3">
-                  <FaHandSparkles />
-                  &nbsp;Clean
-                </div>
-              </div>
-              <div
-                className="tooltip tooltip-success"
-                data-tip="Sold and Bought 10 items"
-              >
-                <div className="badge badge-lg badge-success badge-outline mr-3">
-                  <FaMedal />
-                  &nbsp;PowerUser
-                </div>
-              </div>
+              {profile.badges.map((badge, i) => (
+                <ProfileBadge key={i} name={badge.name} />
+              ))}
             </div>
             <label className="text-md text-gray-500">Badge Progress</label>
             <div>
@@ -246,7 +236,7 @@ function ProfileScreen() {
               <div className="col-span-1 justify-self-end">
                 <div className="avatar">
                   <div className="w-2/3 rounded-full">
-                    <img src={profile} alt="" />
+                    <img src={profile.profile_image} alt="" />
                   </div>
                 </div>
               </div>
@@ -256,7 +246,7 @@ function ProfileScreen() {
                     <input
                       type="text"
                       placeholder="Name"
-                      value="Joonyoung Moon"
+                      value={user?.name}
                       className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent item-input-2xl w-full disabled:text-black disabled:input-ghost disabled:border-none"
                       disabled={!editStatus}
                       onChange={() => {}}
@@ -266,7 +256,7 @@ function ProfileScreen() {
                     <input
                       type="text"
                       placeholder="Name"
-                      value="marketplace@gmail.com"
+                      value={user?.email}
                       className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent item-input-lg w-full disabled:text-black disabled:input-ghost disabled:border-none"
                       disabled={!editStatus}
                       onChange={() => {}}
@@ -291,7 +281,7 @@ function ProfileScreen() {
                   <input
                     type="text"
                     placeholder="E-mail"
-                    value="Joon"
+                    value={profile.nickname}
                     className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent text-lg w-full disabled:text-black disabled:input-ghost disabled:border-none"
                     disabled={!editStatus}
                     onChange={() => {}}
@@ -302,26 +292,16 @@ function ProfileScreen() {
 
               <label className="text-lg text-gray-500">
                 Introduce yourself to your community:
-                <div
+                {/* <div
                   className="tooltip tooltip-info z-30 inline-block ml-5 mt-1"
                   data-tip="Your Introduction must be different for each community"
                 >
                   <FaInfoCircle className="text-lg text-info" />
-                </div>
+                </div> */}
               </label>
               <textarea
                 className="p-0 textarea textarea-ghost text-accent placeholder-accent w-full text-lg h-60 min-h-content rounded-sm disabled:text-black disabled:textarea-ghost disabled:border-none"
-                value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-            interdum lacus id urna aliquam placerat. In ultricies odio non
-            interdum molestie. Etiam et volutpat sem. Vivamus ac consequat nunc,
-            quis mollis justo. Morbi venenatis ex eu imperdiet tristique.
-            Maecenas sollicitudin viverra fringilla. Etiam imperdiet lacinia
-            magna, nec porttitor libero tempus et. Nunc eu ligula ac orci
-            posuere pellentesque eu eget mauris. Praesent convallis nisi ac urna
-            vulputate, eget viverra lectus mattis. Quisque id mi eget magna
-            finibus semper ut eget dolor. Sed sodales dignissim magna, id
-            feugiat nibh placerat interdum. Nunc nec lacus mollis magna placerat
-            laoreet non et mauris."
+                value={profile.introduction}
                 placeholder="Describe your listing."
                 disabled={!editStatus}
                 onChange={() => {}}
@@ -331,24 +311,9 @@ function ProfileScreen() {
               <div>
                 <label className="text-md text-gray-500">Badge Earned</label>
                 <div className="flex mt-2">
-                  <div
-                    className="tooltip tooltip-info"
-                    data-tip="100% Clean Transactions"
-                  >
-                    <div className="badge badge-lg badge-info badge-outline mr-3">
-                      <FaHandSparkles />
-                      &nbsp;Clean
-                    </div>
-                  </div>
-                  <div
-                    className="tooltip tooltip-success"
-                    data-tip="Sold and Bought 10 items"
-                  >
-                    <div className="badge badge-lg badge-success badge-outline mr-3">
-                      <FaMedal />
-                      &nbsp;PowerUser
-                    </div>
-                  </div>
+                  {profile.badges.map((badge, i) => (
+                    <ProfileBadge key={i} name={badge.name} />
+                  ))}
                 </div>
                 <label className="text-md text-gray-500">Badge Progress</label>
                 <div>

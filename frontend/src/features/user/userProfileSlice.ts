@@ -1,9 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
 import axios from 'axios'
-
-import { useAppSelector } from '../../app/hook'
-import { selectUserToken } from '../../features/user/userSlice'
 import {
   UserProfile,
   UserProfilePlaceholder,
@@ -15,33 +12,42 @@ interface UserProfileState {
   error: string
 }
 
-const initialState = {
-  userProfile: null,
+const initialState: UserProfileState = {
+  userProfile: UserProfilePlaceholder,
   status: 'idle',
   error: '',
 }
 
-export const getUserProfile = createAsyncThunk(
-  'userProfile/getUserProfile',
-  async () => {
-    const token = useAppSelector(selectUserToken)
-
-    const config = {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    }
-
-    const { data } = await axios.get('/api/users/profile/', config)
-    return data
+export const getUserProfile = createAsyncThunk<
+  UserProfile,
+  undefined,
+  {
+    state: RootState
   }
-)
+>('userProfile/getUserProfile', async (args, thunkApi) => {
+  let token = thunkApi.getState().user.user
+    ? thunkApi.getState().user.user?.token
+    : ''
+  const config = {
+    headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const { data } = await axios.get('/api/users/profile/', config)
+  return data as UserProfile
+})
 
 const userProfileSlice = createSlice({
   name: 'userProfile',
   initialState,
-  reducers: {},
+  reducers: {
+    profileout: (state: UserProfileState) => {
+      state.userProfile = UserProfilePlaceholder
+      state.status = 'idle'
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getUserProfile.pending, (state, action) => {
@@ -58,8 +64,22 @@ const userProfileSlice = createSlice({
   },
 })
 
+export const { profileout } = userProfileSlice.actions
+
 export const selectUserProfileStatus = (state: RootState) =>
   state.userProfile.status
-export const selectUserProfile = (state: RootState) =>
-  state.userProfile.userProfile
+export const selectUserProfile = (state: RootState) => {
+  if (state.userProfile.userProfile) return state.userProfile.userProfile
+  else return UserProfilePlaceholder
+}
+export const selectUserImage = (state: RootState) => {
+  if (state.userProfile.userProfile)
+    return state.userProfile.userProfile.profile_image
+  else return UserProfilePlaceholder.profile_image
+}
+export const selectUserCommunities = (state: RootState) => {
+  if (state.userProfile.userProfile)
+    return state.userProfile.userProfile.communities
+  else return UserProfilePlaceholder.communities
+}
 export default userProfileSlice.reducer

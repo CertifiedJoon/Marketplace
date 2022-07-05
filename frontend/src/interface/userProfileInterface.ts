@@ -3,7 +3,7 @@ import { CommunityId } from './communityInterface'
 
 export interface UserProfile {
   user: number
-  badge: Array<Badge>
+  badges: Array<Badge>
   communities: Array<CommunityId>
   profile_image: string
   events_hosted: number
@@ -16,10 +16,10 @@ export interface UserProfile {
 }
 
 export const UserProfilePlaceholder = {
-  user: 1,
-  badge: [],
+  user: 0,
+  badges: [],
   communities: [],
-  profile_image: '',
+  profile_image: '../static/images/profile_placeholder.png',
   events_hosted: 0,
   people_hosted: 0,
   items_sold: 0,

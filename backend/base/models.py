@@ -1,7 +1,6 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib.postgres.fields import ArrayField
 # Create your models here.
 
 class Community(models.Model):
@@ -17,7 +16,7 @@ class Community(models.Model):
 
 class UserProfile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-  profile_image = models.ImageField(upload_to='profile', default='default.jpg')
+  profile_image = models.ImageField(upload_to='profile', default='profile_placeholder.png')
   communities = models.ManyToManyField(Community, blank=True, through='Membership')
   # payment_method = 
   events_hosted = models.IntegerField(blank=True, null=True, default=0)
