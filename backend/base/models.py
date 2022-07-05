@@ -23,6 +23,7 @@ class UserProfile(models.Model):
   events_hosted = models.IntegerField(blank=True, null=True, default=0)
   people_hosted = models.IntegerField(blank=True, null=True,default=0)
   items_sold = models.IntegerField(blank=True, null=True,default=0)
+  items_bought = models.IntegerField(blank=True, null=True,default=0)
   clean_transaction = models.IntegerField(null=True,blank=True, default=0)
   nickname = models.CharField(max_length=10, blank=True, null=True)
   createdAt = models.DateTimeField(auto_now_add=True)

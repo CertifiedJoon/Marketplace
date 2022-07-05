@@ -1,8 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FaApple } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
-import googleIcon from '../static/images/google.png'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
+
+import googleIcon from '../static/images/google.png'
+import { useAppSelector, useAppDispatch } from '../app/hook'
+import {
+  selectUser,
+  selectUserStatus,
+  selectUserError,
+  signup,
+} from '../features/user/userSlice'
+import { toast } from 'react-toastify'
 
 interface IFormInput {
   name: string
@@ -12,26 +21,48 @@ interface IFormInput {
 }
 
 function SignupScreen() {
-  /* 
-  Frontend Worklist 
-    1. Store sign up data to a user state (redux)
-    2. Link Wrap [Done]
-  */
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const user = useAppSelector(selectUser)
+  const userStatus = useAppSelector(selectUserStatus)
+  const userError = useAppSelector(selectUserError)
+  const redirect = location.search ? location.search.split('=')[1] : '/'
   const { register, handleSubmit } = useForm<IFormInput>()
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data)
+
+  useEffect(() => {
+    if (user) {
+      navigate(redirect)
+    }
+  }, [user, redirect, navigate])
+
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    dispatch(
+      signup({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      })
+    )
+    if (userStatus === 'succeeded') {
+      navigate('/')
+    } else if (userStatus === 'failed') {
+      toast.error('Email Already Exists')
+    }
+  }
 
   return (
     <>
-      <div className="lg:mx-auto lg:w-1/3 ">
-        <div className="max-h-screen grid grid-rows-6 justify-items-stretch">
+      <div className="lg:mx-auto lg:w-1/2 xl:w-1/3">
+        <div className="grid grid-rows-6 justify-items-stretch">
           <div></div>
-          <div className="text-center my-auto">
+          <div className="text-center my-auto min-h-content">
             <h1 className="text-3xl text-primary">Welcome to Marketplace!</h1>
             <h3 className="text-gray-500">
               A community based second-hand market.
             </h3>
           </div>
-          <div className="row-span-2 text-center my-auto">
+          <div className="row-span-2 text-center my-auto min-h-content">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div>
                 <input
@@ -75,7 +106,7 @@ function SignupScreen() {
               </div>
             </form>
           </div>
-          <div className="text-center my-auto">
+          <div className="text-center my-auto min-h-content">
             <button className="btn w-2/3 btn-block btn-outline btn-sm px-0">
               <div className="grid grid-cols-5 justify-items-stretch items-center">
                 <div className="col-span-1 justify-self-start">
@@ -97,7 +128,7 @@ function SignupScreen() {
               </div>
             </button>
           </div>
-          <div className="text-center my-auto text-gray-500 underline">
+          <div className="text-center my-auto text-gray-500 underline min-h-content">
             <Link to="/login">Back to login</Link>
           </div>
         </div>

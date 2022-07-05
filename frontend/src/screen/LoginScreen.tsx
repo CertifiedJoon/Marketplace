@@ -1,8 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FaApple, FaAt } from 'react-icons/fa'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+
 import googleIcon from '../static/images/google.png'
+import { login, selectUser, selectUserStatus } from '../features/user/userSlice'
+import { useAppSelector, useAppDispatch } from '../app/hook'
+import {
+  getUserProfile,
+  selectUserProfile,
+  selectUserProfileStatus,
+} from '../features/user/userProfileSlice'
 
 interface IFormInput {
   email: string
@@ -16,12 +24,39 @@ function LoginScreen() {
     2. Link Wrap [Done]
   */
   const { register, handleSubmit } = useForm<IFormInput>()
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data)
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const user = useAppSelector(selectUser)
+  const userStatus = useAppSelector(selectUserStatus)
+  const userProfile = useAppSelector(selectUserProfile)
+  const userProfileStatus = useAppSelector(selectUserProfileStatus)
+  const redirect = location.search ? location.search.split('=')[1] : '/'
+
+  useEffect(() => {
+    if (user && userProfile) {
+      navigate(redirect)
+    }
+  }, [user, redirect, navigate])
+
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    dispatch(
+      login({
+        email: data.email,
+        password: data.password,
+      })
+    )
+    if (userStatus === 'succeeded') {
+      dispatch(getUserProfile())
+      if (userProfileStatus === 'succeeded') navigate('/')
+    }
+  }
+
   return (
     <>
       {/* Tablet or bigger */}
       <div className="hidden lg:block mx-auto w-1/3 ">
-        <div className="h-screen grid grid-rows-6 justify-items-stretch">
+        <div className="min-h-screen grid grid-rows-6 justify-items-stretch">
           <div></div>
           <div className="text-center my-auto">
             <h1 className="text-3xl text-primary">Welcome to Marketplace!</h1>
@@ -29,7 +64,7 @@ function LoginScreen() {
               A community based second-hand market.
             </h3>
           </div>
-          <div className="text-center my-auto row-span-2">
+          <div className="text-center min-h-content row-span-2">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div>
                 <input
@@ -49,7 +84,7 @@ function LoginScreen() {
               </div>
               <button
                 type="submit"
-                className="my-10 btn w-2/3 btn-block btn-accent"
+                className="mt-2 btn w-2/3 btn-block btn-accent"
               >
                 Login
               </button>
@@ -64,7 +99,7 @@ function LoginScreen() {
               </span>
             </p>
           </div>
-          <div className="text-center mb-auto">
+          <div className="text-center my-auto">
             <button className="btn w-2/3 btn-block btn-outline btn-sm px-0">
               <div className="grid grid-cols-4 justify-items-stretch items-center">
                 <div className="col-span-1 justify-self-start">
@@ -92,7 +127,7 @@ function LoginScreen() {
         </div>
       </div>
       {/* Mobile */}
-      <div className="lg:hidden h-screen grid grid-rows-6 justify-items-stretch">
+      <div className="lg:hidden min-h-screen grid grid-rows-6 justify-items-stretch">
         <div></div>
         <div className="text-center my-auto">
           <h1 className="text-3xl text-primary">Welcome to Marketplace!</h1>
@@ -100,7 +135,7 @@ function LoginScreen() {
             A community based second-hand market.
           </h3>
         </div>
-        <div className="text-center mb-auto">
+        <div className="text-center mb-auto min-h-content">
           <button className="btn w-2/3 btn-block btn-outline btn-sm px-0">
             <div className="grid grid-cols-4 justify-items-stretch items-center">
               <div className="col-span-1 justify-self-start">

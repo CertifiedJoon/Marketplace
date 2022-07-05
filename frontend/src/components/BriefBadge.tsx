@@ -12,7 +12,6 @@ function BriefBadge({ badges, type }: Props) {
       const eventBadges = badges.filter(
         (badge) => badge.name === ('Celebrity' || 'PowerHost')
       )
-      console.log(eventBadges)
       if (eventBadges.length === 2)
         return <ProfileBadge name="Celebrity" brief={true} />
       else if (eventBadges.length === 1)

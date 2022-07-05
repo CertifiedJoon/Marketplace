@@ -17,7 +17,6 @@ const initialState = {
 
 export const getItems = createAsyncThunk('itemList/getItems', async () => {
   const { data } = await axios.get('/api/items/')
-  console.log(data)
   return data
 })
 

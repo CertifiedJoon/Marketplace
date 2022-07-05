@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { FaCaretDown } from 'react-icons/fa'
+import { FaCaretDown, FaUser } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 
 import { useAppSelector, useAppDispatch } from '../app/hook'
@@ -9,6 +9,7 @@ import {
   setCommunityKey,
   setSaleMode,
 } from '../features/header/headerSlice'
+import { selectUser } from '../features/user/userSlice'
 import profile from '../static/images/profile.png'
 import SearchBar from './SearchBar'
 
@@ -21,7 +22,7 @@ function Header({ sell = false }: Props) {
   const dispatch = useAppDispatch()
   const saleMode = useAppSelector(selectSaleMode)
   const communityKey = useAppSelector(selectCommunityKey)
-
+  const user = useAppSelector(selectUser)
   const [selectedKey, setSelectedKey] = useState('All')
 
   useEffect(() => {
@@ -219,13 +220,19 @@ function Header({ sell = false }: Props) {
               </li>
               <li>
                 <div className="w-20">
-                  <Link to="/mypage">
-                    <img
-                      className="mask mask-squircle"
-                      src={profile}
-                      alt="profile"
-                    />
-                  </Link>
+                  {user ? (
+                    <Link to="/mypage">
+                      <img
+                        className="mask mask-squircle"
+                        src={profile}
+                        alt="profile"
+                      />
+                    </Link>
+                  ) : (
+                    <Link to="/login">
+                      &nbsp; <span className="text-xs">Login</span>
+                    </Link>
+                  )}
                 </div>
               </li>
             </ul>

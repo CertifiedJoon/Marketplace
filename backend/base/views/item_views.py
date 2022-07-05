@@ -14,6 +14,6 @@ def getItems(request):
 
 @api_view(['GET'])
 def getItem(reqeust, pk):
-  item = Item.objects.get(pk=pk)
+  item = Item.objects.prefetch_related('item_detail', 'item_image').select_related('user').get(pk=pk)
   serializer = ItemSerializer(item)
   return Response(serializer.data)

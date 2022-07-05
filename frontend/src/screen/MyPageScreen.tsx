@@ -1,16 +1,28 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { FaMedal, FaHandSparkles } from 'react-icons/fa'
+import { Link, useNavigate } from 'react-router-dom'
+
 import Footer from '../components/Footer'
 import Header from '../components/Header'
-import { FaMedal, FaHandSparkles } from 'react-icons/fa'
-
 import Profile from '../static/images/profile.png'
-import { Link } from 'react-router-dom'
+import { useAppSelector, useAppDispatch } from '../app/hook'
+import { selectUser, logout } from '../features/user/userSlice'
+
 function MyPageScreen() {
-  /*
-    Frontend Worklist:
-    1. Link Wrap [Done]
-    2. Profile data pulled from a user state (redux)
-  */
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const user = useAppSelector(selectUser)
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login')
+    }
+  }, [])
+
+  const handleLogout = () => {
+    dispatch(logout())
+    navigate('/')
+  }
   return (
     <>
       <div className="hidden lg:block">
@@ -114,6 +126,9 @@ function MyPageScreen() {
                     <Link to="/payment-method">
                       <div>Payment Method</div>
                     </Link>
+                  </li>
+                  <li>
+                    <button onClick={handleLogout}>Logout</button>
                   </li>
                   {/* <li>
                     <Link to="/settings">
