@@ -80,7 +80,6 @@ def getUserProfile(request):
 @permission_classes([IsAuthenticated])
 def updateUserProfile(request):
   user = request.user
-  serializer = UserSerializerWithToken(user, many=False)
   data = request.data
   
   if (UserProfile.objects.filter(user=user).exists()):
@@ -101,6 +100,7 @@ def updateUserProfile(request):
       introduction = ""
     )
 
+  serializer = UserProfileSerializer(profile, many=False)
   user.first_name = data['name']
   user.user_name = data['email']
   user.email = data['email']

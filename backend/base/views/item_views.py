@@ -8,7 +8,19 @@ from base.models import Item
 
 @api_view(['GET'])
 def getItems(request):
-  items = Item.objects.prefetch_related('item_detail', 'item_image').select_related('user')
+  items = Item.objects.prefetch_related('item_image', 'communities').select_related('user')
+  serializer = ItemBriefSerializer(items, many=True)
+  return Response(serializer.data)
+
+@api_view(['GET'])
+def getItemsFiltered(request, community, type):
+  items = Item.objects.prefetch_related('item_detail', 'communities').select_related('user').filter(communities__pk = community).filter(type=type)
+  serializer = ItemBriefSerializer(items, many=True)
+  return Response(serializer.data)
+
+@api_view(['GET'])
+def getItemsFilteredByType(request, type):
+  items = Item.objects.prefetch_related('item_detail', 'communities').select_related('user').filter(type=type)
   serializer = ItemBriefSerializer(items, many=True)
   return Response(serializer.data)
 

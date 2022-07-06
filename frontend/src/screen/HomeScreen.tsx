@@ -11,6 +11,7 @@ import {
   selectItems,
   selectItemsStatus,
   getItems,
+  getItemsFiltered,
 } from '../features/item/itemListSlice'
 import { ItemBrief } from '../interface/itemInterface'
 
@@ -26,10 +27,9 @@ function HomeScreen({ sell = false }: Props) {
   const params = useParams()
 
   useEffect(() => {
-    if (itemsStatus === 'idle') {
-      dispatch(getItems())
-    }
-  }, [dispatch])
+    if (params.itemType) dispatch(getItemsFiltered(params.itemType))
+    else dispatch(getItems())
+  }, [dispatch, params])
 
   return (
     <>

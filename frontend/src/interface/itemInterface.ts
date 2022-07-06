@@ -1,5 +1,5 @@
 import { UserBrief } from './userInterface'
-import { Badge } from './badgeInterface'
+import { UserProfile, UserProfilePlaceholder } from './userProfileInterface'
 export interface ItemDetail {
   _id: string
   item: string
@@ -15,7 +15,7 @@ export interface ItemImage {
 
 export interface Item {
   _id: string
-  user: string
+  user: UserProfile
   type: string
   communities: Array<string>
   heading: string
@@ -41,7 +41,7 @@ export interface ItemBrief {
 
 export const ItemPlaceholder: Item = {
   _id: '1',
-  user: '',
+  user: UserProfilePlaceholder,
   type: '',
   communities: [],
   heading: '',

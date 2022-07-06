@@ -20,6 +20,14 @@ export const getItems = createAsyncThunk('itemList/getItems', async () => {
   return data
 })
 
+export const getItemsFiltered = createAsyncThunk(
+  'itemList/getItems',
+  async (type: string) => {
+    const { data } = await axios.get(`/api/items/type/${type}/`)
+    return data
+  }
+)
+
 const itemListSlice = createSlice({
   name: 'itemList',
   initialState,

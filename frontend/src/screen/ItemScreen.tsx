@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { FaHandSparkles, FaHeart, FaMedal, FaShare } from 'react-icons/fa'
+import { FaHeart, FaShare } from 'react-icons/fa'
 import LazySwiper from '../components/LazySwiper'
 import PhotoGallery from '../components/PhotoGallery'
-import profile from '../static/images/profile.png'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import PublicProfile from '../components/PublicProfile'
@@ -17,13 +16,13 @@ import {
   selectItemStatus,
   getItemById,
 } from '../features/item/itemSlice'
+import ProfileBadge from '../components/ProfileBadge'
 
 function ItemScreen() {
   const [copySuccess, setCopySuccess] = useState(false)
   const params = useParams()
-  const itemStatus = useAppSelector(selectItemStatus)
   const item = useAppSelector(selectItem)
-  const itemImage = useAppSelector(selectImage)
+  // const itemImage = useAppSelector(selectImage)
   const itemThumbnail = useAppSelector(selectThumbnail)
   const dispatch = useAppDispatch()
 
@@ -119,7 +118,7 @@ function ItemScreen() {
                     className="btn modal-button btn-ghost btn-square btn-lg"
                   >
                     <img
-                      src={profile}
+                      src={item.user.profile_image}
                       alt="profile"
                       className="mask mask-squircle"
                     />
@@ -164,38 +163,47 @@ function ItemScreen() {
               </div>
               <div className="py-3">
                 <label className="text-sm text-gray-500">
-                  Joon's Record &nbsp;
-                  <div
-                    className="tooltip tooltip-info"
-                    data-tip="100% Clean Transactions"
-                  >
-                    <div className="badge badge-info badge-outline mr-1">
-                      <FaHandSparkles />
-                      &nbsp;Clean
-                    </div>
-                  </div>
-                  <div
-                    className="tooltip tooltip-success"
-                    data-tip="Sold and Bought 10 items"
-                  >
-                    <div className="badge badge-success badge-outline mr-1">
-                      <FaMedal />
-                      &nbsp;PowerUser
-                    </div>
-                  </div>
+                  {item.user.nickname}'s Record &nbsp;
+                  {item.user.badges.map((badge, i) => (
+                    <ProfileBadge key={i} name={badge.name} />
+                  ))}
                 </label>
                 <div className="flex stats shadow mt-2">
-                  <div className="stat place-items-center">
-                    <div className="stat-title">Clean Purchase</div>
-                    <div className="stat-value">31K</div>
-                    <div className="stat-desc">100% of Transactions</div>
-                  </div>
-
-                  <div className="stat place-items-center">
-                    <div className="stat-title">Clean Sale</div>
-                    <div className="stat-value text-secondary">4,200</div>
-                    <div className="stat-desc">100% of Transactions</div>
-                  </div>
+                  {item.type === 'event' ? (
+                    <>
+                      <div className="stat place-items-center">
+                        <div className="stat-title">Events Hosted</div>
+                        <div className="stat-value">
+                          {item.user.events_hosted}
+                        </div>
+                        <div className="stat-desc">Past year</div>
+                      </div>
+                      <div className="stat place-items-center">
+                        <div className="stat-title">People Hosted</div>
+                        <div className="stat-value text-secondary">
+                          {item.user.people_hosted}
+                        </div>
+                        <div className="stat-desc">86 rating</div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="stat place-items-center">
+                        <div className="stat-title">Clean Purchase</div>
+                        <div className="stat-value">
+                          {item.user.items_bought}
+                        </div>
+                        <div className="stat-desc">100% of Transactions</div>
+                      </div>
+                      <div className="stat place-items-center">
+                        <div className="stat-title">Clean Sale</div>
+                        <div className="stat-value text-secondary">
+                          {item.user.items_sold}
+                        </div>
+                        <div className="stat-desc">100% of Transactions</div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -303,6 +311,7 @@ function ItemScreen() {
                   backgroundImage: `url(
                     '${itemThumbnail[0]}'
                     )`,
+                  backgroundColor: 'lightgray',
                 }}
               ></div>
               <div className="col-span-1">
@@ -313,6 +322,7 @@ function ItemScreen() {
                       backgroundImage: `url(
                       '${itemThumbnail[1]}'
                       )`,
+                      backgroundColor: 'lightgray',
                     }}
                   ></div>
                   <div
@@ -321,6 +331,7 @@ function ItemScreen() {
                       backgroundImage: `url(
                       '${itemThumbnail[2]}'
                       )`,
+                      backgroundColor: 'lightgray',
                     }}
                   ></div>
                 </div>
@@ -333,6 +344,7 @@ function ItemScreen() {
                       backgroundImage: `url(
                       '${itemThumbnail[3]}'
                       )`,
+                      backgroundColor: 'lightgray',
                     }}
                   ></div>
                   <div
@@ -341,6 +353,7 @@ function ItemScreen() {
                       backgroundImage: `url(
                       '${itemThumbnail[4]}'
                       )`,
+                      backgroundColor: 'lightgray',
                     }}
                   ></div>
                 </div>
@@ -390,7 +403,7 @@ function ItemScreen() {
                         className="btn modal-button btn-ghost btn-square btn-lg"
                       >
                         <img
-                          src={profile}
+                          src={item.user.profile_image}
                           alt="profile"
                           className="mask mask-squircle"
                         />
@@ -417,37 +430,45 @@ function ItemScreen() {
                 <div className="row-span-2 py-5">
                   <label className="text-lg text-gray-500 mb-5">
                     Seller Description &nbsp;
-                    <div
-                      className="tooltip tooltip-info"
-                      data-tip="100% Clean Transactions"
-                    >
-                      <div className="badge badge-info badge-outline mr-1">
-                        <FaHandSparkles />
-                        &nbsp;Clean
-                      </div>
-                    </div>
-                    <div
-                      className="tooltip tooltip-success"
-                      data-tip="Sold and Bought 10 items"
-                    >
-                      <div className="badge badge-success badge-outline mr-1">
-                        <FaMedal />
-                        &nbsp;PowerUser
-                      </div>
-                    </div>
+                    {item.user.badges.map((badge, i) => (
+                      <ProfileBadge key={i} name={badge.name} />
+                    ))}
                   </label>
                   <div className="stats shadow">
-                    <div className="stat">
-                      <div className="stat-title">Items Bought</div>
-                      <div className="stat-value text-primary">25.6K</div>
-                      <div className="stat-desc">21% more than last month</div>
-                    </div>
-
-                    <div className="stat">
-                      <div className="stat-title">Items Sold</div>
-                      <div className="stat-value text-secondary">2.6M</div>
-                      <div className="stat-desc">21% more than last month</div>
-                    </div>
+                    {item.type === 'event' ? (
+                      <div className="stat place-items-center">
+                        <div className="stat-title">Events Hosted</div>
+                        <div className="stat-value">
+                          {item.user.events_hosted}
+                        </div>
+                        <div className="stat-desc">Past year</div>
+                      </div>
+                    ) : (
+                      <div className="stat place-items-center">
+                        <div className="stat-title">Clean Purchase</div>
+                        <div className="stat-value">
+                          {item.user.items_bought}
+                        </div>
+                        <div className="stat-desc">100% of Transactions</div>
+                      </div>
+                    )}
+                    {item.type === 'event' ? (
+                      <div className="stat place-items-center">
+                        <div className="stat-title">People Hosted</div>
+                        <div className="stat-value text-secondary">
+                          {item.user.people_hosted}
+                        </div>
+                        <div className="stat-desc">86 rating</div>
+                      </div>
+                    ) : (
+                      <div className="stat place-items-center">
+                        <div className="stat-title">Clean Sale</div>
+                        <div className="stat-value text-secondary">
+                          {item.user.items_sold}
+                        </div>
+                        <div className="stat-desc">100% of Transactions</div>
+                      </div>
+                    )}
 
                     <div className="stat">
                       <div className="stat-figure text-secondary">
@@ -458,7 +479,7 @@ function ItemScreen() {
                               className="btn modal-button btn-ghost btn-square btn-lg"
                             >
                               <img
-                                src={profile}
+                                src={item.user.profile_image}
                                 alt="profile"
                                 className="mask mask-circle"
                               />
@@ -485,7 +506,9 @@ function ItemScreen() {
                           </div>
                         </div>
                       </div>
-                      <div className="stat-value">86</div>
+                      <div className="stat-value">
+                        {item.user.clean_transaction}
+                      </div>
                       <div className="stat-title">Transaction</div>
                       <div className="stat-desc text-secondary">
                         100% Clean Transaction
@@ -576,7 +599,7 @@ function ItemScreen() {
                               No Fee
                             </div>
                           ) : (
-                            `$${item.price * 0.05}`
+                            `$${(item.price * 0.05).toFixed(2)}`
                           )}
                         </div>
                       </div>
@@ -592,7 +615,7 @@ function ItemScreen() {
                               <strong>Free</strong>
                             </div>
                           ) : (
-                            `$${item.price * 1.05}`
+                            `$${(item.price * 1.05).toFixed(2)}`
                           )}
                         </div>
                       </div>

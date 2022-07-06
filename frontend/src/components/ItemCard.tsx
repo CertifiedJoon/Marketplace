@@ -61,12 +61,16 @@ function ItemCard({ cardDetail }: Props) {
                   )}
                 </div>
               </div>
-              <div className="col-span-1 relative justify-end py-1 pl-6 xl:pl-3">
-                <img
-                  src={cardDetail.profile}
-                  alt="profile"
-                  className="mask mask-squircle"
-                />
+              <div className="col-span-1 relative py-1 pl-6 xl:pl-3 flex justify-end">
+                <div className="avatar">
+                  <div className="w-20 lg:w-16 rounded-xl">
+                    <img
+                      src={cardDetail.profile}
+                      alt="Profile"
+                      className="mask mask-squircle"
+                    />
+                  </div>
+                </div>
                 <div className="absolute top-0 right-0">
                   <BriefBadge
                     badges={cardDetail.badges}
