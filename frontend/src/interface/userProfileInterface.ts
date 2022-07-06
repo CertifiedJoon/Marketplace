@@ -28,3 +28,11 @@ export const UserProfilePlaceholder = {
   nickname: '',
   introduction: '',
 }
+
+export interface ProfileUpdate {
+  name: string
+  email: string
+  profile_image: string
+  nickname: string
+  introduction: string
+}

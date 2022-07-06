@@ -4,6 +4,7 @@ import axios from 'axios'
 import {
   UserProfile,
   UserProfilePlaceholder,
+  ProfileUpdate,
 } from '../../interface/userProfileInterface'
 
 interface UserProfileState {
@@ -39,6 +40,27 @@ export const getUserProfile = createAsyncThunk<
   return data as UserProfile
 })
 
+export const updateUserProfile = createAsyncThunk<
+  UserProfile,
+  ProfileUpdate,
+  {
+    state: RootState
+  }
+>('userProfile/updateUserProfile', async (patch, thunkApi) => {
+  let token = thunkApi.getState().user.user
+    ? thunkApi.getState().user.user?.token
+    : ''
+  const config = {
+    headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const { data } = await axios.put('/api/users/profile/update/', patch, config)
+  return data as UserProfile
+})
+
 const userProfileSlice = createSlice({
   name: 'userProfile',
   initialState,
@@ -58,6 +80,17 @@ const userProfileSlice = createSlice({
         state.status = 'succeeded'
       })
       .addCase(getUserProfile.rejected, (state, action) => {
+        state.status = 'failed'
+        if (action.error.message) state.error = action.error.message
+      })
+      .addCase(updateUserProfile.pending, (state, action) => {
+        state.status = 'pending'
+      })
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        state.userProfile = action.payload
+        state.status = 'succeeded'
+      })
+      .addCase(updateUserProfile.rejected, (state, action) => {
         state.status = 'failed'
         if (action.error.message) state.error = action.error.message
       })
