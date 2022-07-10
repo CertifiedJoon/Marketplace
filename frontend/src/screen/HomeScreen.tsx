@@ -6,11 +6,15 @@ import Card from '../components/ItemCard'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { useAppSelector, useAppDispatch } from '../app/hook'
-import { selectSaleMode } from '../features/header/headerSlice'
+import {
+  selectCommunityId,
+  selectSaleMode,
+} from '../features/header/headerSlice'
 import {
   selectItems,
   selectItemsStatus,
   getItems,
+  getItemsByType,
   getItemsFiltered,
 } from '../features/item/itemListSlice'
 import { ItemBrief } from '../interface/itemInterface'
@@ -23,11 +27,17 @@ function HomeScreen({ sell = false }: Props) {
   const saleMode = useAppSelector(selectSaleMode)
   const items = useAppSelector(selectItems)
   const itemsStatus = useAppSelector(selectItemsStatus)
+  const community = useAppSelector(selectCommunityId)
   const dispatch = useAppDispatch()
   const params = useParams()
 
   useEffect(() => {
-    if (params.itemType) dispatch(getItemsFiltered(params.itemType))
+    if (params.itemType && community === '0')
+      dispatch(getItemsByType(params.itemType))
+    else if (params.itemType && community !== '0')
+      dispatch(getItemsFiltered({ type: params.itemType, community }))
+    else if (community !== '0')
+      dispatch(getItemsFiltered({ type: 'all', community }))
     else dispatch(getItems())
   }, [dispatch, params])
 

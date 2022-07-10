@@ -20,10 +20,20 @@ export const getItems = createAsyncThunk('itemList/getItems', async () => {
   return data
 })
 
-export const getItemsFiltered = createAsyncThunk(
-  'itemList/getItems',
+export const getItemsByType = createAsyncThunk(
+  'itemList/getItemsByType',
   async (type: string) => {
     const { data } = await axios.get(`/api/items/type/${type}/`)
+    return data
+  }
+)
+
+export const getItemsFiltered = createAsyncThunk(
+  'itemList/getItemsFiltered',
+  async (args: { community: string; type: string }) => {
+    const { data } = await axios.get(
+      `/api/items/${args.community}/${args.type}/`
+    )
     return data
   }
 )
@@ -42,6 +52,28 @@ const itemListSlice = createSlice({
         state.itemList = action.payload
       })
       .addCase(getItems.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message
+      })
+      .addCase(getItemsByType.pending, (state, action) => {
+        state.status = 'pending'
+      })
+      .addCase(getItemsByType.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        state.itemList = action.payload
+      })
+      .addCase(getItemsByType.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message
+      })
+      .addCase(getItemsFiltered.pending, (state, action) => {
+        state.status = 'pending'
+      })
+      .addCase(getItemsFiltered.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        state.itemList = action.payload
+      })
+      .addCase(getItemsFiltered.rejected, (state, action) => {
         state.status = 'failed'
         state.error = action.error.message
       })

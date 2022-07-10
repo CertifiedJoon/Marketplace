@@ -12,9 +12,17 @@ def getItems(request):
   serializer = ItemBriefSerializer(items, many=True)
   return Response(serializer.data)
 
+# @api_view(['GET'])
+# def getLiveEvents(request):
+#   events = Item.objects.prefetch_related('item_image').filter(type='event').filter(live=True)
+#   serializer = LiveEventSerializer(events, many=True)
+#   return Response(serializer.data)
+
 @api_view(['GET'])
 def getItemsFiltered(request, community, type):
-  items = Item.objects.prefetch_related('item_detail', 'communities').select_related('user').filter(communities__pk = community).filter(type=type)
+  items = Item.objects.prefetch_related('item_detail', 'communities').select_related('user').filter(communities__pk = community)
+  if type != 'all':
+    items = items.filter(type=type)
   serializer = ItemBriefSerializer(items, many=True)
   return Response(serializer.data)
 

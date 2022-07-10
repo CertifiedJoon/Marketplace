@@ -1,14 +1,30 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import axios from 'axios'
 
 import profile from '../static/images/profile.png'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
 import { FaHandSparkles, FaMedal } from 'react-icons/fa'
 import EventSwiper from '../components/EventSwiper'
+import {
+  Community,
+  CommunityPlaceholder,
+} from '../interface/communityInterface'
+import ProfileBadge from '../components/ProfileBadge'
+import membershipSlice from '../features/community/membershipSlice'
+
 function CommunityScreen() {
   //eslint-disable-next-line
   const params = useParams()
+  const [community, setCommunity] = useState<Community>(CommunityPlaceholder)
+  useEffect(() => {
+    const fetchCommunity = async () => {
+      const { data } = await axios.get(`/api/community/${params.communityId}/`)
+      setCommunity(data)
+    }
+    fetchCommunity()
+  }, [params])
 
   const followEvent = () => {
     console.log('Event followed')
@@ -26,19 +42,15 @@ function CommunityScreen() {
           className="hero min-h-full rounded"
           style={{
             backgroundImage: `url(
-              'https://180dc.org/wp-content/uploads/2015/03/HKU.jpg'
+              ${community.thumbnail_image}
               )`,
           }}
         >
           <div className="hero-overlay bg-opacity-60 rounded"></div>
           <div className="hero-content text-center text-neutral-content">
             <div className="max-w-md">
-              <h1 className="mb-5 text-5xl font-bold">HKU</h1>
-              <p className="mb-5">
-                Provident cupiditate voluptatem et in. Quaerat fugiat ut
-                assumenda excepturi exercitationem quasi. In deleniti eaque aut
-                repudiandae et a id nisi.
-              </p>
+              <h1 className="mb-5 text-5xl font-bold">{community.name}</h1>
+              <p className="mb-5">{community.description}</p>
             </div>
           </div>
         </div>
@@ -53,7 +65,9 @@ function CommunityScreen() {
         </div>
         <div className="my-10">
           <h1 className="font-bold inline-block">Members</h1>
-          <div className="badge badge-outline badge-lga ml-3">2.3k Total</div>
+          <div className="badge badge-outline badge-lga ml-3">
+            {community.members.length} Total
+          </div>
           <div className="block">
             <div className="overflow-x-auto w-full">
               <table className="table w-full">
@@ -67,81 +81,50 @@ function CommunityScreen() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th>
-                      <p className="text-primary">98.2</p>
-                    </th>
-                    <td>
-                      <div className="flex items-center space-x-3">
-                        <div className="avatar">
-                          <div className="mask mask-squircle w-12 h-12">
-                            <img src={profile} alt="profile" />
+                  {community.members.map((member, i) => (
+                    <tr key={i}>
+                      <th>
+                        <p className="text-primary">402</p>
+                      </th>
+                      <td>
+                        <div className="flex items-center space-x-3">
+                          <div className="avatar">
+                            <div className="mask mask-squircle w-12 h-12">
+                              <img src={member.profile_image} alt="profile" />
+                            </div>
+                          </div>
+                          <div>
+                            <div className="font-bold">Hart Hagerty</div>
+                            <div className="text-sm opacity-50">
+                              Computer Engineering
+                            </div>
                           </div>
                         </div>
-                        <div>
-                          <div className="font-bold">Hart Hagerty</div>
-                          <div className="text-sm opacity-50">
-                            Computer Engineering
-                          </div>
+                      </td>
+                      <td>
+                        <div className="flex flex-wrap justify-start">
+                          {member.badges.map((badge, i) => (
+                            <ProfileBadge key={i} name={badge.name} />
+                          ))}
                         </div>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="flex flex-wrap justify-start">
-                        <div
-                          className="tooltip tooltip-info"
-                          data-tip="100% Clean Transactions"
+                      </td>
+                      <td>200</td>
+                      <th>
+                        <button
+                          className="block btn btn-ghost btn-xs m-1"
+                          onClick={followItem}
                         >
-                          <div className="badge badge-info badge-outline mr-1">
-                            <FaHandSparkles />
-                            &nbsp;Clean
-                          </div>
-                        </div>
-                        <div
-                          className="tooltip tooltip-success"
-                          data-tip="Sold and Bought 10 items"
+                          Follow for Items
+                        </button>
+                        <button
+                          className="block btn btn-ghost btn-xs m-1"
+                          onClick={followEvent}
                         >
-                          <div className="badge badge-success badge-outline mr-1">
-                            <FaMedal />
-                            &nbsp;PowerUser
-                          </div>
-                        </div>
-                        <div
-                          className="tooltip tooltip-success"
-                          data-tip="Sold and Bought 10 items"
-                        >
-                          <div className="badge badge-success badge-outline mr-1">
-                            <FaMedal />
-                            &nbsp;PowerUser
-                          </div>
-                        </div>
-                        <div
-                          className="tooltip tooltip-success"
-                          data-tip="Sold and Bought 10 items"
-                        >
-                          <div className="badge badge-success badge-outline mr-1">
-                            <FaMedal />
-                            &nbsp;PowerUser
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td>200</td>
-                    <th>
-                      <button
-                        className="block btn btn-ghost btn-xs m-1"
-                        onClick={followItem}
-                      >
-                        Follow for Items
-                      </button>
-                      <button
-                        className="block btn btn-ghost btn-xs m-1"
-                        onClick={followEvent}
-                      >
-                        Follow for Events
-                      </button>
-                    </th>
-                  </tr>
+                          Follow for Events
+                        </button>
+                      </th>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
