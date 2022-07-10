@@ -61,7 +61,7 @@ function App() {
           <Route path="/mypage" element={<MyPageScreen />}></Route>
           <Route path="/profile" element={<ProfileScreen />}></Route>
           <Route
-            path="/community/communityId"
+            path="/community/:communityId"
             element={<CommunityScreen />}
           ></Route>
           <Route

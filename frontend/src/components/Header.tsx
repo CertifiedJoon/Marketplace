@@ -7,12 +7,15 @@ import {
   selectCommunityKey,
   selectSaleMode,
   setCommunityKey,
+  setCommunityId,
   setSaleMode,
 } from '../features/header/headerSlice'
 import { selectUser } from '../features/user/userSlice'
 import { selectUserImage } from '../features/user/userProfileSlice'
 import profile from '../static/images/profile.png'
 import SearchBar from './SearchBar'
+import { CommunityBrief } from '../interface/communityInterface'
+import { selectMemberships } from '../features/community/membershipSlice'
 
 type Props = {
   sell?: boolean
@@ -25,7 +28,12 @@ function Header({ sell = false }: Props) {
   const communityKey = useAppSelector(selectCommunityKey)
   const user = useAppSelector(selectUser)
   const profile_image = useAppSelector(selectUserImage)
-  const [selectedKey, setSelectedKey] = useState('All')
+  const [selectedCommunity, setSelectedCommunity] = useState<CommunityBrief>({
+    _id: '0',
+    key: 'ALL',
+    name: 'All of your communities.',
+    thumbnail_image: '/community/placeholder.jpg',
+  })
 
   useEffect(() => {
     if (sell) {
@@ -35,12 +43,22 @@ function Header({ sell = false }: Props) {
 
   const handleCommunityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.checked) {
-      dispatch(setCommunityKey(selectedKey))
+      dispatch(setCommunityKey(selectedCommunity.key))
+      dispatch(setCommunityId(selectedCommunity._id))
     }
   }
-
-  const handleCommunitySelect = (selected: string) => {
-    setSelectedKey(selected)
+  const memberships = useAppSelector(selectMemberships)
+  const handleCommunitySelect = (community: { key: string; _id: string }) => {
+    const selected = memberships.find(
+      (membership) => membership.community._id === community._id
+    )
+    setSelectedCommunity({
+      _id: selected?.community._id ?? '0',
+      key: selected?.community.key ?? 'ALL',
+      name: selected?.community.name ?? 'All of your communities',
+      thumbnail_image:
+        selected?.community.thumbnail_image ?? '/community/placeholder.jpg',
+    })
   }
 
   return (
@@ -80,26 +98,25 @@ function Header({ sell = false }: Props) {
               <div className="modal-box h-2/3">
                 <h3 className="font-bold text-lg">Jump to another Community</h3>
                 <div className="my-1 text-md">
-                  <SearchBar onChangeFunction={handleCommunitySelect} />
+                  <SearchBar
+                    defaultOpen={false}
+                    onChangeFunction={handleCommunitySelect}
+                  />
                 </div>
                 <div
                   className="hero h-2/3 rounded-2xl"
                   style={{
-                    backgroundImage: `url(
-            'https://180dc.org/wp-content/uploads/2015/03/HKU.jpg'
-          )`,
+                    backgroundImage: `url(${selectedCommunity.thumbnail_image})`,
                   }}
                 >
                   <div className="hero-overlay bg-opacity-60 rounded-2xl"></div>
                   <div className="hero-content text-center text-neutral-content">
                     <div className="max-w-md">
-                      <h1 className="mb-5 text-5xl font-bold">HKU</h1>
-                      <p className="mb-5">
-                        Provident cupiditate voluptatem et in. Quaerat fugiat ut
-                        assumenda excepturi exercitationem quasi. In deleniti
-                        eaque aut repudiandae et a id nisi.
-                      </p>
-                      <Link to="/community/communityId">
+                      <h1 className="mb-5 text-5xl font-bold">
+                        {selectedCommunity.key}
+                      </h1>
+                      <p className="mb-5 text-lg">{selectedCommunity.name}</p>
+                      <Link to={`/community/${selectedCommunity._id}`}>
                         <button className="btn btn-primary">
                           Explore Community
                         </button>
@@ -147,27 +164,27 @@ function Header({ sell = false }: Props) {
                         Jump to another Community
                       </h3>
                       <div className="my-1 text-md">
-                        <SearchBar onChangeFunction={handleCommunitySelect} />
+                        <SearchBar
+                          defaultOpen={false}
+                          onChangeFunction={handleCommunitySelect}
+                        />
                       </div>
                       <div
                         className="hero h-2/3 rounded-2xl"
                         style={{
-                          backgroundImage: `url(
-            'https://180dc.org/wp-content/uploads/2015/03/HKU.jpg'
-          )`,
+                          backgroundImage: `url(${selectedCommunity.thumbnail_image})`,
                         }}
                       >
                         <div className="hero-overlay bg-opacity-60 rounded-2xl"></div>
                         <div className="hero-content text-center text-neutral-content">
                           <div className="max-w-md">
-                            <h1 className="mb-5 text-5xl font-bold">HKU</h1>
-                            <p className="mb-5">
-                              Provident cupiditate voluptatem et in. Quaerat
-                              fugiat ut assumenda excepturi exercitationem
-                              quasi. In deleniti eaque aut repudiandae et a id
-                              nisi.
+                            <h1 className="mb-5 text-5xl font-bold">
+                              {selectedCommunity.key}
+                            </h1>
+                            <p className="mb-5 text-lg">
+                              {selectedCommunity.name}
                             </p>
-                            <Link to="/community/communityId">
+                            <Link to={`/community/${selectedCommunity._id}`}>
                               <button className="btn btn-primary">
                                 Explore Community
                               </button>

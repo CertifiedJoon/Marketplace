@@ -4,14 +4,17 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 import googleIcon from '../static/images/google.png'
-import { login, selectUser, selectUserStatus } from '../features/user/userSlice'
+import { login, selectUser } from '../features/user/userSlice'
 import { useAppSelector, useAppDispatch } from '../app/hook'
 import {
   getUserProfile,
   selectUserProfile,
   selectUserProfileStatus,
 } from '../features/user/userProfileSlice'
-import { UserProfilePlaceholder } from '../interface/userProfileInterface'
+import {
+  getMemberships,
+  selectMembershipStatus,
+} from '../features/community/membershipSlice'
 
 interface IFormInput {
   email: string
@@ -24,18 +27,19 @@ function LoginScreen() {
   const navigate = useNavigate()
   const location = useLocation()
   const user = useAppSelector(selectUser)
-  const userStatus = useAppSelector(selectUserStatus)
   const userProfile = useAppSelector(selectUserProfile)
-  const userProfileStatus = useAppSelector(selectUserProfileStatus)
+  const membershipStatus = useAppSelector(selectMembershipStatus)
+  const profileStatus = useAppSelector(selectUserProfileStatus)
   const redirect = location.search ? location.search.split('=')[1] : '/'
 
   useEffect(() => {
-    if (user && userProfile.user !== 0) {
+    if (user && userProfile.user !== 0 && membershipStatus === 'succeeded') {
       navigate(redirect)
     } else if (user) {
-      dispatch(getUserProfile())
+      if (membershipStatus === 'idle') dispatch(getMemberships())
+      if (profileStatus === 'idle') dispatch(getUserProfile())
     }
-  }, [user, userProfile, dispatch, redirect, navigate])
+  }, [user, userProfile, membershipStatus, dispatch, redirect, navigate])
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     dispatch(

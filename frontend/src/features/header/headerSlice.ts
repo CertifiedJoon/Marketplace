@@ -4,11 +4,13 @@ import type { RootState } from '../../app/store'
 interface HeaderState {
   saleMode: boolean
   communityKey: string
+  communityId: string
 }
 
 const initialState: HeaderState = {
   saleMode: false,
   communityKey: 'all',
+  communityId: '0',
 }
 
 export const headerSlice = createSlice({
@@ -21,14 +23,20 @@ export const headerSlice = createSlice({
     setCommunityKey: (state: HeaderState, action: PayloadAction<string>) => {
       state.communityKey = action.payload
     },
+    setCommunityId: (state: HeaderState, action: PayloadAction<string>) => {
+      state.communityId = action.payload
+    },
   },
 })
 
-export const { setSaleMode, setCommunityKey } = headerSlice.actions
+export const { setSaleMode, setCommunityKey, setCommunityId } =
+  headerSlice.actions
 
 export const selectSaleMode = (state: RootState) => state.header.saleMode
 
 export const selectCommunityKey = (state: RootState) =>
   state.header.communityKey
+
+export const selectCommunityId = (state: RootState) => state.header.communityId
 
 export default headerSlice.reducer

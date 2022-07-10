@@ -10,6 +10,7 @@ import {
   REGISTER,
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import membershipSlice from '../features/community/membershipSlice'
 import headerReducer from '../features/header/headerSlice'
 import itemListSlice from '../features/item/itemListSlice'
 import itemSlice from '../features/item/itemSlice'
@@ -20,7 +21,7 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  whitelist: ['header', 'user', 'userProfile'],
+  whitelist: ['header', 'user', 'userProfile', 'membership'],
 }
 
 export const rootReducer = combineReducers({
@@ -29,6 +30,7 @@ export const rootReducer = combineReducers({
   item: itemSlice,
   user: userSlice,
   userProfile: userProfileSlice,
+  membership: membershipSlice,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

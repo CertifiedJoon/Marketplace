@@ -17,6 +17,7 @@ import {
   getItemById,
 } from '../features/item/itemSlice'
 import ProfileBadge from '../components/ProfileBadge'
+import { UserProfile } from '../interface/userProfileInterface'
 
 function ItemScreen() {
   const [copySuccess, setCopySuccess] = useState(false)
@@ -37,7 +38,7 @@ function ItemScreen() {
 
   useEffect(() => {
     if (params.itemId) dispatch(getItemById(params.itemId))
-  }, [params])
+  }, [params, dispatch])
 
   useEffect(() => {
     if (copySuccess === true) toast.success('Link copied.')
@@ -131,7 +132,7 @@ function ItemScreen() {
                   />
                   <div className="modal modal-bottom">
                     <div className="modal-box">
-                      <PublicProfile />
+                      <PublicProfile profile={item.user} type={item.type} />
                       <div className="modal-action">
                         <label
                           htmlFor="my-modal-profile-mobile"
@@ -428,12 +429,14 @@ function ItemScreen() {
                   <p>{item.description}</p>
                 </div>
                 <div className="row-span-2 py-5">
-                  <label className="text-lg text-gray-500 mb-5">
-                    Seller Description &nbsp;
-                    {item.user.badges.map((badge, i) => (
-                      <ProfileBadge key={i} name={badge.name} />
-                    ))}
-                  </label>
+                  <div>
+                    <label className="text-lg text-gray-500 mb-5">
+                      Seller Description &nbsp;
+                      {item.user.badges.map((badge, i) => (
+                        <ProfileBadge key={i} name={badge.name} />
+                      ))}
+                    </label>
+                  </div>
                   <div className="stats shadow">
                     {item.type === 'event' ? (
                       <div className="stat place-items-center">
@@ -492,7 +495,10 @@ function ItemScreen() {
                             />
                             <div className="modal modal-middle">
                               <div className="modal-box">
-                                <PublicProfile />
+                                <PublicProfile
+                                  profile={item.user}
+                                  type={item.type}
+                                />
                                 <div className="modal-action">
                                   <label
                                     htmlFor="my-modal-profile"

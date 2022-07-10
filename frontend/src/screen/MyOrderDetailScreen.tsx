@@ -46,7 +46,7 @@ function OrderDetailScreen() {
         <div className="my-3">
           <h1 className="text-lg">Seller Profile</h1>
           <div className="mx-1 my-1 min-h-content">
-            <PublicProfile />
+            {/* <PublicProfile type="event" profile=""/> */}
           </div>
           <div className="border-b"></div>
         </div>

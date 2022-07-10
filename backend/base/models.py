@@ -17,7 +17,7 @@ class Community(models.Model):
 class UserProfile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
   profile_image = models.ImageField(upload_to='profile', default='profile_placeholder.png')
-  communities = models.ManyToManyField(Community, blank=True, through='Membership')
+  communities = models.ManyToManyField(Community, related_name="user_communities", blank=True, through='Membership')
   # payment_method = 
   events_hosted = models.IntegerField(blank=True, null=True, default=0)
   people_hosted = models.IntegerField(blank=True, null=True,default=0)
@@ -58,6 +58,7 @@ class Item(models.Model):
   negotiability = models.BooleanField(default=True)
   createdAt = models.DateTimeField(auto_now_add=True)
   description = models.TextField()
+  live = models.BooleanField(default=True)
 
   def __str__(self):
     return self.heading

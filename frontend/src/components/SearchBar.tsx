@@ -1,76 +1,58 @@
-import React, { CSSProperties, useState } from 'react'
-
+import React, { useState, useEffect } from 'react'
 import Select, { SingleValue } from 'react-select'
+
+import { useAppSelector, useAppDispatch } from '../app/hook'
 import {
-  uniOptions,
-  groupedOptions,
-  UniOption,
-  StateOption,
-  GroupedOption,
-} from '../static/docs/data'
+  getMemberships,
+  selectMemberships,
+  selectMembershipStatus,
+} from '../features/community/membershipSlice'
+import { Membership } from '../interface/communityInterface'
 
-const groupStyles = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
+interface UniOption {
+  readonly value: string
+  readonly label: string
+  readonly _id: string
 }
-
-const groupBadgeStyles: CSSProperties = {
-  backgroundColor: '#54bab9',
-  borderRadius: '2em',
-  color: '#fff',
-  display: 'inline-block',
-  fontSize: 12,
-  fontWeight: 'normal',
-  lineHeight: '1',
-  minWidth: 1,
-  padding: '0.16666666666667em 0.5em',
-  textAlign: 'center',
-}
-
-const formatGroupLabel = (data: GroupedOption) => (
-  <div style={groupStyles}>
-    <span className="text-primary">
-      <strong>{data.label}</strong>
-    </span>
-    <span style={groupBadgeStyles}>{data.options.length}</span>
-  </div>
-)
 
 type Props = {
   defaultOpen?: boolean
   joined?: boolean
-  onChangeFunction: (selected: string) => void
+  onChangeFunction: (community: { key: string; _id: string }) => void
 }
+let uniOptions: UniOption[] = [
+  { value: 'ALL', label: 'All of your communities.', _id: '0' },
+]
 
-function SearchBar({
-  defaultOpen = true,
-  joined = true,
-  onChangeFunction,
-}: Props) {
+function SearchBar({ defaultOpen = true, onChangeFunction }: Props) {
   const [selectedOption, setSelectedOption] =
     useState<SingleValue<UniOption>>(null)
+  const memberships = useAppSelector(selectMemberships)
+
+  useEffect(() => {
+    uniOptions = [{ value: 'ALL', label: 'All of your communities.', _id: '0' }]
+    memberships.forEach((membership) => {
+      uniOptions.push({
+        value: membership.community.key,
+        label: membership.community.name,
+        _id: membership.community._id,
+      })
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [memberships])
 
   const handleChange = (value: UniOption | null) => {
     setSelectedOption(value)
     if (value) {
-      onChangeFunction(value.value)
+      onChangeFunction({ key: value.value, _id: value._id })
     }
   }
-  return joined ? (
+  return (
     <Select
       value={selectedOption}
       name="Your Communities"
       options={uniOptions}
       onChange={handleChange}
-      defaultMenuIsOpen={defaultOpen}
-      closeMenuOnSelect
-    />
-  ) : (
-    <Select<UniOption | StateOption, false, GroupedOption>
-      options={groupedOptions}
-      onChange={(newValue) => handleChange(newValue)}
-      formatGroupLabel={formatGroupLabel}
       defaultMenuIsOpen={defaultOpen}
       closeMenuOnSelect
     />

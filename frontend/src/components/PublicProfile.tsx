@@ -1,7 +1,14 @@
 import React from 'react'
 import { FaHandSparkles, FaMedal } from 'react-icons/fa'
+import { UserProfile } from '../interface/userProfileInterface'
+import ProfileBadge from './ProfileBadge'
 
-function PublicProfile() {
+type Props = {
+  profile: UserProfile
+  type: string
+}
+
+function PublicProfile({ profile, type }: Props) {
   const followEvent = () => {
     console.log('Event followed')
   }
@@ -13,46 +20,48 @@ function PublicProfile() {
   return (
     <div className="w-full">
       <div className="flex stats shadow  mt-2">
-        <div className="stat place-items-center">
-          <div className="stat-title">Clean Purchase</div>
-          <div className="stat-value">31K</div>
-          <div className="stat-desc">100% of Purchases</div>
-        </div>
-        <div className="stat place-items-center">
-          <div className="stat-title">Clean Sale</div>
-          <div className="stat-value text-secondary">4,200</div>
-          <div className="stat-desc">100% of Sales</div>
-        </div>
+        {type === 'event' ? (
+          <div className="stat place-items-center">
+            <div className="stat-title">Events Hosted</div>
+            <div className="stat-value">{profile.events_hosted}</div>
+            <div className="stat-desc">Past year</div>
+          </div>
+        ) : (
+          <div className="stat place-items-center">
+            <div className="stat-title">Clean Purchase</div>
+            <div className="stat-value">{profile.items_bought}</div>
+            <div className="stat-desc">100% of Transactions</div>
+          </div>
+        )}
+        {type === 'event' ? (
+          <div className="stat place-items-center">
+            <div className="stat-title">People Hosted</div>
+            <div className="stat-value text-secondary">
+              {profile.people_hosted}
+            </div>
+            <div className="stat-desc">86 rating</div>
+          </div>
+        ) : (
+          <div className="stat place-items-center">
+            <div className="stat-title">Clean Sale</div>
+            <div className="stat-value text-secondary">
+              {profile.items_sold}
+            </div>
+            <div className="stat-desc">100% of Transactions</div>
+          </div>
+        )}
       </div>
       <div className="my-3 rounded rounded-2xl bg-base-100 shadow min-h-content">
         <div className="w-full h-full rounded-2xl p-3 bg-base-200">
-          <p className="mb-1 text-sm text-black font-bold">Joonyoung Moon</p>
-          <p className="mb-1 text-sm text-black">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-            ultrices magna quis mollis pellentesque. Cras vehicula vitae purus
-            sit amet mollis. Integer posuere a ex vel lacinia. Mauris urna ante,
-            tempor sed neque at, egestas rhoncus justo. Sed et faucibus.
+          <p className="mb-1 text-sm text-black font-bold">
+            {profile.nickname}
           </p>
+          <p className="mb-1 text-sm text-black">{profile.introduction}</p>
           <p className="mb-1 text-xs text-gray-500">Joined: DD/MM/YYYY</p>
           <div className="flex justify-center mt-4">
-            <div
-              className="tooltip tooltip-info"
-              data-tip="100% Clean Transactions"
-            >
-              <div className="badge badge-info badge-outline mr-1">
-                <FaHandSparkles />
-                &nbsp;Clean
-              </div>
-            </div>
-            <div
-              className="tooltip tooltip-success"
-              data-tip="Sold and Bought 10 items"
-            >
-              <div className="badge badge-success badge-outline mr-1">
-                <FaMedal />
-                &nbsp;PowerUser
-              </div>
-            </div>
+            {profile.badges.map((badge, i) => (
+              <ProfileBadge key={i} name={badge.name} />
+            ))}
           </div>
         </div>
       </div>

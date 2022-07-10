@@ -51,16 +51,6 @@ class UserSerializerWithToken(UserSerializer):
     token = RefreshToken.for_user(obj)
     return str(token.access_token)
 
-# Community / Membership
-class CommunitySerializer(serializers.ModelSerializer):
-  class Meta:
-    model = Community
-    fields = '__all__'
-
-class CommunityIdSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = Community
-    fields = ('_id',)
 
 # UserProfile
 class UserProfileBriefSerializer(serializers.ModelSerializer):
@@ -69,14 +59,30 @@ class UserProfileBriefSerializer(serializers.ModelSerializer):
     model = UserProfile
     fields = ('profile_image', 'badges')
 
-
 class UserProfileSerializer(serializers.ModelSerializer):
   badges = BadgeSerializer(source='badge_user', many=True)
-  communities = CommunityIdSerializer(many=True)
   class Meta:
     model = UserProfile
     fields = '__all__'
 
+# Community / Membership
+class CommunitySerializer(serializers.ModelSerializer):
+  members = UserProfileBriefSerializer(source='user_communities', many=True)
+  class Meta:
+    model = Community
+    fields = '__all__'
+
+class CommunityBriefSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Community
+    fields = ('_id', 'key', 'name', 'thumbnail_image')
+
+class MembershipSerializer(serializers.ModelSerializer):
+  community = CommunityBriefSerializer(many=False)
+  class Meta:
+    model = Membership
+    fields = '__all__'
+    
 class MembershipCommunitySerializer(serializers.ModelSerializer):
   class Meta:
     model = Membership
