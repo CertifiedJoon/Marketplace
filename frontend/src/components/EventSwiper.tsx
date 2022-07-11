@@ -7,8 +7,13 @@ import 'swiper/css/pagination'
 // import required modules
 import { Pagination, Navigation } from 'swiper'
 import EventCard from './EventCard'
+import { LiveEvent } from '../interface/itemInterface'
 
-function EventSwiper() {
+type Props = {
+  events: Array<LiveEvent>
+}
+
+function EventSwiper({ events }: Props) {
   return (
     <>
       <Swiper
@@ -35,21 +40,11 @@ function EventSwiper() {
         modules={[Pagination, Navigation]}
         className="mySwiper"
       >
-        <SwiperSlide>
-          <EventCard />
-        </SwiperSlide>
-        <SwiperSlide>
-          <EventCard />
-        </SwiperSlide>
-        <SwiperSlide>
-          <EventCard />
-        </SwiperSlide>
-        <SwiperSlide>
-          <EventCard />
-        </SwiperSlide>
-        <SwiperSlide>
-          <EventCard />
-        </SwiperSlide>
+        {events.map((event, i) => (
+          <SwiperSlide key={i}>
+            <EventCard event={event} />
+          </SwiperSlide>
+        ))}
       </Swiper>
     </>
   )

@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
-from base.serializers import ItemBriefSerializer, ItemSerializer
+from base.serializers import ItemBriefSerializer, ItemSerializer, LiveEventSerializer
 from base.models import Item
 # Create your views here.
 
@@ -12,11 +12,11 @@ def getItems(request):
   serializer = ItemBriefSerializer(items, many=True)
   return Response(serializer.data)
 
-# @api_view(['GET'])
-# def getLiveEvents(request):
-#   events = Item.objects.prefetch_related('item_image').filter(type='event').filter(live=True)
-#   serializer = LiveEventSerializer(events, many=True)
-#   return Response(serializer.data)
+@api_view(['GET'])
+def getLiveEvents(request, community):
+  events = Item.objects.prefetch_related('item_image', 'communities').filter(communities__pk = community).filter(type='event').filter(live=True)
+  serializer = LiveEventSerializer(events, many=True)
+  return Response(serializer.data)
 
 @api_view(['GET'])
 def getItemsFiltered(request, community, type):

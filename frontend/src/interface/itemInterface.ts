@@ -39,6 +39,18 @@ export interface ItemBrief {
   images: Array<ItemImage>
 }
 
+export interface LiveEvent {
+  _id: string
+  heading: string
+  images: Array<ItemImage>
+}
+
+export const LiveEventPlaceholder: LiveEvent = {
+  _id: '0',
+  heading: 'No Live Event Currently',
+  images: [{ _id: '0', image: '/community/placeholder.jpg', thumbnail: true }],
+}
+
 export const ItemPlaceholder: Item = {
   _id: '1',
   user: UserProfilePlaceholder,

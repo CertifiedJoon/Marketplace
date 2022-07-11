@@ -90,6 +90,12 @@ class MembershipCommunitySerializer(serializers.ModelSerializer):
   
 
 # Item
+class LiveEventSerializer(serializers.ModelSerializer):
+  images = ItemImageSerializer(source='item_image', many=True)
+
+  class Meta:
+    model = Item
+    fields = ('_id', 'heading', 'images')
 
 class ItemBriefSerializer(serializers.ModelSerializer):
   images = ItemImageSerializer(source="item_image", many=True)

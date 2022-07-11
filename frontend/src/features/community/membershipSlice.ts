@@ -37,10 +37,16 @@ export const getMemberships = createAsyncThunk<
   return data as Array<Membership>
 })
 
-const MembershipSlice = createSlice({
+const membershipSlice = createSlice({
   name: 'membership',
   initialState,
-  reducers: {},
+  reducers: {
+    membershipout: (state: MembershipState) => {
+      state.memberships = []
+      state.status = 'idle'
+      state.error = ''
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getMemberships.pending, (state) => {
@@ -57,10 +63,12 @@ const MembershipSlice = createSlice({
   },
 })
 
+export const { membershipout } = membershipSlice.actions
+
 export const selectMemberships = (state: RootState) =>
   state.membership.memberships
 
 export const selectMembershipStatus = (state: RootState) =>
   state.membership.status
 
-export default MembershipSlice.reducer
+export default membershipSlice.reducer

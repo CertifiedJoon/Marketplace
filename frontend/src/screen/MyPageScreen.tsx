@@ -12,6 +12,7 @@ import {
   profileout,
 } from '../features/user/userProfileSlice'
 import ProfileBadge from '../components/ProfileBadge'
+import { membershipout } from '../features/community/membershipSlice'
 
 function MyPageScreen() {
   const dispatch = useAppDispatch()
@@ -28,6 +29,7 @@ function MyPageScreen() {
   const handleLogout = () => {
     dispatch(logout())
     dispatch(profileout())
+    dispatch(membershipout())
     persistor.purge()
     navigate('/')
   }

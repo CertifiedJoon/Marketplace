@@ -13,16 +13,28 @@ import {
 } from '../interface/communityInterface'
 import ProfileBadge from '../components/ProfileBadge'
 import membershipSlice from '../features/community/membershipSlice'
+import { LiveEvent, LiveEventPlaceholder } from '../interface/itemInterface'
 
 function CommunityScreen() {
   //eslint-disable-next-line
   const params = useParams()
   const [community, setCommunity] = useState<Community>(CommunityPlaceholder)
+  const [liveEvents, setLiveEvents] = useState<Array<LiveEvent>>([
+    LiveEventPlaceholder,
+  ])
+
   useEffect(() => {
     const fetchCommunity = async () => {
       const { data } = await axios.get(`/api/community/${params.communityId}/`)
       setCommunity(data)
     }
+    const fetchLiveEvents = async () => {
+      const { data } = await axios.get(
+        `/api/items/live-events/${params.communityId}/`
+      )
+      if (data) setLiveEvents(data)
+    }
+    fetchLiveEvents()
     fetchCommunity()
   }, [params])
 
@@ -57,10 +69,10 @@ function CommunityScreen() {
         <div className="my-10">
           <h1 className="font-bold inline-block">Events</h1>
           <div className="badge badge-outline badge-lga ml-3">
-            3 Currently Hosting
+            {liveEvents.length} Currently Hosting
           </div>
           <div>
-            <EventSwiper />
+            <EventSwiper events={liveEvents} />
           </div>
         </div>
         <div className="my-10">
