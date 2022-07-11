@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import profile from '../static/images/profile.png'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
-import LazySwiper from '../components/LazySwiper'
 import PhotoGallery from '../components/PhotoGallery'
 
 type Props = {

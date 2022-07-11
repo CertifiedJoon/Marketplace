@@ -11,19 +11,15 @@ import PublicProfile from '../components/PublicProfile'
 import { useAppSelector, useAppDispatch } from '../app/hook'
 import {
   selectThumbnail,
-  selectImage,
   selectItem,
-  selectItemStatus,
   getItemById,
 } from '../features/item/itemSlice'
 import ProfileBadge from '../components/ProfileBadge'
-import { UserProfile } from '../interface/userProfileInterface'
 
 function ItemScreen() {
   const [copySuccess, setCopySuccess] = useState(false)
   const params = useParams()
   const item = useAppSelector(selectItem)
-  // const itemImage = useAppSelector(selectImage)
   const itemThumbnail = useAppSelector(selectThumbnail)
   const dispatch = useAppDispatch()
 

@@ -7,7 +7,6 @@ import {
   FaInfoCircle,
   FaUpload,
 } from 'react-icons/fa'
-import LazySwiper from '../components/LazySwiper'
 import PhotoGallery from '../components/PhotoGallery'
 import profile from '../static/images/profile.png'
 import Header from '../components/Header'

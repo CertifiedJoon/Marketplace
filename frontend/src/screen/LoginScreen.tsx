@@ -4,7 +4,13 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 import googleIcon from '../static/images/google.png'
-import { login, selectUser } from '../features/user/userSlice'
+import {
+  login,
+  resetUserStatus,
+  selectUser,
+  selectUserError,
+  selectUserStatus,
+} from '../features/user/userSlice'
 import { useAppSelector, useAppDispatch } from '../app/hook'
 import {
   getUserProfile,
@@ -15,6 +21,7 @@ import {
   getMemberships,
   selectMembershipStatus,
 } from '../features/community/membershipSlice'
+import { toast } from 'react-toastify'
 
 interface IFormInput {
   email: string
@@ -27,6 +34,8 @@ function LoginScreen() {
   const navigate = useNavigate()
   const location = useLocation()
   const user = useAppSelector(selectUser)
+  const userStatus = useAppSelector(selectUserStatus)
+  const userError = useAppSelector(selectUserError)
   const userProfile = useAppSelector(selectUserProfile)
   const membershipStatus = useAppSelector(selectMembershipStatus)
   const profileStatus = useAppSelector(selectUserProfileStatus)
@@ -40,6 +49,13 @@ function LoginScreen() {
       if (profileStatus === 'idle') dispatch(getUserProfile())
     }
   }, [user, userProfile, membershipStatus, dispatch, redirect, navigate])
+
+  useEffect(() => {
+    if (userStatus === 'failed') {
+      toast.error(userError)
+      dispatch(resetUserStatus())
+    }
+  }, [userStatus, dispatch])
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     dispatch(
@@ -74,7 +90,7 @@ function LoginScreen() {
               </div>
               <div>
                 <input
-                  type="text"
+                  type="password"
                   placeholder="Password"
                   className="input input-bordered input-accent input-md rounded-b-xl rounded-t-none w-2/3 focus:outline-none"
                   {...register('password', { required: true })}

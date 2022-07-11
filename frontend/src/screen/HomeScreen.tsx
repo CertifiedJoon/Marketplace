@@ -12,7 +12,6 @@ import {
 } from '../features/header/headerSlice'
 import {
   selectItems,
-  selectItemsStatus,
   getItems,
   getItemsByType,
   getItemsFiltered,
@@ -26,7 +25,6 @@ type Props = {
 function HomeScreen({ sell = false }: Props) {
   const saleMode = useAppSelector(selectSaleMode)
   const items = useAppSelector(selectItems)
-  const itemsStatus = useAppSelector(selectItemsStatus)
   const community = useAppSelector(selectCommunityId)
   const dispatch = useAppDispatch()
   const params = useParams()
@@ -39,7 +37,7 @@ function HomeScreen({ sell = false }: Props) {
     else if (community !== '0')
       dispatch(getItemsFiltered({ type: 'all', community }))
     else dispatch(getItems())
-  }, [dispatch, params])
+  }, [dispatch, params, community])
 
   return (
     <>

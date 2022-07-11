@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import {
-  FaArrowLeft,
-  FaHandSparkles,
-  FaInfoCircle,
-  FaMedal,
-  FaPencilAlt,
-} from 'react-icons/fa'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { FaArrowLeft, FaMedal, FaPencilAlt } from 'react-icons/fa'
+import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
@@ -27,7 +21,7 @@ export const profileUpdateSchema = yup
     name: yup
       .string()
       .required('Name is a required field.')
-      .min(10, 'Nmae must be at least 3 characters long.')
+      .min(10, 'Name must be at least 3 characters long.')
       .max(30, 'Name must be at least 30 characters long.'),
     email: yup
       .string()
@@ -145,6 +139,7 @@ function ProfileScreen() {
                   disabled={!editStatus}
                   {...register('name')}
                 />
+                <p className="text-error text-xs">{errors.name?.message}</p>
                 <input
                   type="text"
                   placeholder="E-mail"
@@ -153,6 +148,7 @@ function ProfileScreen() {
                   disabled={!editStatus}
                   {...register('email')}
                 />
+                <p className="text-error text-xs">{errors.email?.message}</p>
                 <Link to="/edit-password">
                   <h3 className="btn btn-ghost btn-outline btn-xs rounded-sm w-2/3 ">
                     Edit Password
@@ -171,6 +167,7 @@ function ProfileScreen() {
               disabled={!editStatus}
               {...register('nickname')}
             />
+            <p>{errors.nickname?.message}</p>
             <label className="text-lg text-gray-500">
               Introduce yourself to your community:
             </label>
@@ -180,6 +177,7 @@ function ProfileScreen() {
               disabled={!editStatus}
               {...register('introduction')}
             ></textarea>
+            <p className="text-error text-xs">{errors.introduction?.message}</p>
           </div>
           <div className="py-5">
             <div>
@@ -316,20 +314,28 @@ function ProfileScreen() {
                         type="text"
                         placeholder="Name"
                         defaultValue={user?.name}
-                        className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent item-input-2xl w-full disabled:text-black disabled:input-ghost disabled:border-none"
+                        className="p-0 w-full rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent item-input-2xl w-full disabled:text-black disabled:input-ghost disabled:border-none"
                         disabled={!editStatus}
                         {...registerLaptop('name')}
                       />
+                      <p className="text-error text-xs">
+                        {error2.name?.message}
+                      </p>
                     </div>
                     <div className="grid grid-cols-2">
-                      <input
-                        type="text"
-                        placeholder="Name"
-                        defaultValue={user?.email}
-                        className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent item-input-lg w-full disabled:text-black disabled:input-ghost disabled:border-none"
-                        disabled={!editStatus}
-                        {...registerLaptop('email')}
-                      />
+                      <div>
+                        <input
+                          type="text"
+                          placeholder="Name"
+                          defaultValue={user?.email}
+                          className="p-0 w-full rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent item-input-lg w-full disabled:text-black disabled:input-ghost disabled:border-none"
+                          disabled={!editStatus}
+                          {...registerLaptop('email')}
+                        />
+                        <p className="text-error text-xs">
+                          {error2.email?.message}
+                        </p>
+                      </div>
                       <div className="justify-self-end">
                         <Link to="/edit-password">
                           <h3 className="btn btn-ghost btn-xs rounded-sm justify-self-end w-2/3">
@@ -355,6 +361,9 @@ function ProfileScreen() {
                       disabled={!editStatus}
                       {...registerLaptop('nickname')}
                     />
+                    <p className="text-error text-xs">
+                      {error2.nickname?.message}
+                    </p>
                   </div>
                   <div className="col-span-3"></div>
                 </div>
@@ -375,6 +384,9 @@ function ProfileScreen() {
                   disabled={!editStatus}
                   {...registerLaptop('introduction')}
                 ></textarea>
+                <p className="text-error text-xs">
+                  {error2.introduction?.message}
+                </p>
               </div>
               <div className="py-5">
                 <div>

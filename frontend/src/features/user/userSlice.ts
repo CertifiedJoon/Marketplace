@@ -17,19 +17,29 @@ interface UserLoginState {
 const initialState: UserLoginState = {
   user: null,
   status: 'idle',
-  error: '',
+  error: undefined,
 }
 
-export const login = createAsyncThunk(
-  'userLogin/login',
-  async (credentials: Credentials) => {
-    const { email, password } = credentials
-    const config = {
-      headers: {
-        'Content-type': 'application/json',
-      },
-    }
-    const { data } = await axios.post(
+interface KnownError {
+  detail: string
+}
+
+export const login = createAsyncThunk<
+  UserInfo,
+  Credentials,
+  {
+    rejectValue: KnownError
+  }
+>('userLogin/login', async (credentials: Credentials, thunkApi) => {
+  const { email, password } = credentials
+  const config = {
+    headers: {
+      'Content-type': 'application/json',
+    },
+  }
+  let data: UserInfo | null = null
+  try {
+    const response = await axios.post(
       '/api/users/login/',
       {
         username: email,
@@ -37,21 +47,32 @@ export const login = createAsyncThunk(
       },
       config
     )
-
-    return data
-  }
-)
-
-export const signup = createAsyncThunk(
-  'userLogin/signup',
-  async (detail: SignupDetail) => {
-    const { name, email, password } = detail
-    const config = {
-      headers: {
-        'Content-type': 'application/json',
-      },
+    data = response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response)
+        return thunkApi.rejectWithValue(error.response.data as KnownError)
     }
-    const { data } = await axios.post(
+  }
+  return data as UserInfo
+})
+
+export const signup = createAsyncThunk<
+  UserInfo,
+  SignupDetail,
+  {
+    rejectValue: KnownError
+  }
+>('userLogin/signup', async (detail: SignupDetail, thunkApi) => {
+  const { name, email, password } = detail
+  const config = {
+    headers: {
+      'Content-type': 'application/json',
+    },
+  }
+  let data: UserInfo | null = null
+  try {
+    const response = await axios.post(
       '/api/users/register/',
       {
         name,
@@ -60,10 +81,13 @@ export const signup = createAsyncThunk(
       },
       config
     )
-
-    return data
+    data = response.data
+  } catch (error) {
+    if (axios.isAxiosError(error))
+      return thunkApi.rejectWithValue(error.response?.data as KnownError)
   }
-)
+  return data as UserInfo
+})
 
 const userSlice = createSlice({
   name: 'userLogin',
@@ -72,6 +96,11 @@ const userSlice = createSlice({
     logout: (state: UserLoginState) => {
       state.user = null
       state.status = 'idle'
+      state.error = ''
+    },
+    resetUserStatus: (state: UserLoginState) => {
+      state.status = 'idle'
+      state.error = ''
     },
   },
   extraReducers: (builder) => {
@@ -85,7 +114,11 @@ const userSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         state.status = 'failed'
-        state.error = action.error.message
+        if (action.payload) {
+          state.error = action.payload.detail
+        } else {
+          state.error = action.error.message
+        }
       })
       .addCase(signup.pending, (state, action) => {
         state.status = 'pending'
@@ -96,12 +129,16 @@ const userSlice = createSlice({
       })
       .addCase(signup.rejected, (state, action) => {
         state.status = 'failed'
-        state.error = action.error.message
+        if (action.payload) {
+          state.error = action.payload.detail
+        } else {
+          state.error = action.error.message
+        }
       })
   },
 })
 
-export const { logout } = userSlice.actions
+export const { logout, resetUserStatus } = userSlice.actions
 
 export const selectUser = (state: RootState) => state.user.user
 export const selectUserToken = (state: RootState) => {

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { FaMedal, FaHandSparkles } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 
 import { persistor } from '../app/store'
@@ -24,7 +23,7 @@ function MyPageScreen() {
     if (!user) {
       navigate('/login')
     }
-  }, [])
+  }, [navigate, user])
 
   const handleLogout = () => {
     dispatch(logout())

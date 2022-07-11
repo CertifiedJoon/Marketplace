@@ -3,12 +3,21 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
 from base.serializers import ItemBriefSerializer, ItemSerializer, LiveEventSerializer
-from base.models import Item
+from base.models import Item, UserProfile
 # Create your views here.
 
 @api_view(['GET'])
 def getItems(request):
   items = Item.objects.prefetch_related('item_image', 'communities').select_related('user')
+  serializer = ItemBriefSerializer(items, many=True)
+  return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getMyItems(request):
+  user = request.user
+  profile = UserProfile.objects.get(user=user)
+  items = Item.objects.prefetch_related('item_image', 'communities').select_related('user').filter(user=profile)
   serializer = ItemBriefSerializer(items, many=True)
   return Response(serializer.data)
 

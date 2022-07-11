@@ -26,7 +26,7 @@ import EventHostScreen from './screen/EventHostScreen'
 import MyCommunityScreen from './screen/MyCommunityScreen'
 import ScrollToTop from './components/ScrollToTop'
 import MyEventScreen from './screen/MyEventScreen'
-import EventDetail from './screen/EventDetail'
+import EventDetail from './screen/EventDetailScreen'
 
 function App() {
   return (

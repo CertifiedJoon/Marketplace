@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import type { RootState } from '../../app/store'
 import { ItemBrief } from '../../interface/itemInterface'
 import axios from 'axios'
@@ -30,6 +30,16 @@ export const getItemsByType = createAsyncThunk(
 
 export const getItemsFiltered = createAsyncThunk(
   'itemList/getItemsFiltered',
+  async (args: { community: string; type: string }) => {
+    const { data } = await axios.get(
+      `/api/items/${args.community}/${args.type}/`
+    )
+    return data
+  }
+)
+
+export const getMyItems = createAsyncThunk(
+  'itemList/getMyItems',
   async (args: { community: string; type: string }) => {
     const { data } = await axios.get(
       `/api/items/${args.community}/${args.type}/`

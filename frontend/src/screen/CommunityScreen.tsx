@@ -2,17 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
 
-import profile from '../static/images/profile.png'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
-import { FaHandSparkles, FaMedal } from 'react-icons/fa'
 import EventSwiper from '../components/EventSwiper'
 import {
   Community,
   CommunityPlaceholder,
 } from '../interface/communityInterface'
 import ProfileBadge from '../components/ProfileBadge'
-import membershipSlice from '../features/community/membershipSlice'
 import { LiveEvent, LiveEventPlaceholder } from '../interface/itemInterface'
 
 function CommunityScreen() {

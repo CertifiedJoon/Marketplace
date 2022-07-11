@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import LazyLoad from 'react-lazyload'
 import { toast } from 'react-toastify'
 import Footer from '../components/Footer'
 import Header from '../components/Header'

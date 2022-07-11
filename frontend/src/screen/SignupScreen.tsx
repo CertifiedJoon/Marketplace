@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import { FaApple } from 'react-icons/fa'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 
 import googleIcon from '../static/images/google.png'
 import { useAppSelector, useAppDispatch } from '../app/hook'
@@ -10,6 +12,7 @@ import {
   selectUserStatus,
   selectUserError,
   signup,
+  resetUserStatus,
 } from '../features/user/userSlice'
 import { toast } from 'react-toastify'
 
@@ -20,6 +23,30 @@ interface IFormInput {
   confirmPassword: string
 }
 
+const signupSchema = yup.object({
+  name: yup
+    .string()
+    .required('Name is a required field.')
+    .min(10, 'Name must be at least 3 characters long.')
+    .max(30, 'Name must be at least 30 characters long.'),
+  email: yup
+    .string()
+    .email('Incorrent email format.')
+    .required('Email is a required field.'),
+  password: yup
+    .string()
+    .min(8, 'Password must be at least 8 characters long.')
+    .max(30, 'Password must be at most 30 characters long.')
+    .matches(
+      /^[ A-Za-z0-9_@./#&+-]*$/,
+      'Password must only include alphanumerics and special letters.'
+    )
+    .required('Password is a required field.'),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref('password'), null], 'Passwords must match'),
+})
+
 function SignupScreen() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
@@ -28,13 +55,29 @@ function SignupScreen() {
   const userStatus = useAppSelector(selectUserStatus)
   const userError = useAppSelector(selectUserError)
   const redirect = location.search ? location.search.split('=')[1] : '/'
-  const { register, handleSubmit } = useForm<IFormInput>()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IFormInput>({
+    resolver: yupResolver(signupSchema),
+  })
 
   useEffect(() => {
     if (user) {
       navigate(redirect)
     }
   }, [user, redirect, navigate])
+
+  useEffect(() => {
+    if (userStatus === 'failed') {
+      toast.error(userError)
+      dispatch(resetUserStatus())
+    } else if (userStatus === 'succeeded') {
+      dispatch(resetUserStatus())
+      navigate('/')
+    }
+  }, [userStatus, dispatch, navigate])
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     dispatch(
@@ -44,11 +87,6 @@ function SignupScreen() {
         password: data.password,
       })
     )
-    if (userStatus === 'succeeded') {
-      navigate('/')
-    } else if (userStatus === 'failed') {
-      toast.error('Email Already Exists')
-    }
   }
 
   return (
@@ -71,6 +109,7 @@ function SignupScreen() {
                   className="input input-bordered input-accent input-md rounded-t-xl rounded-b-none w-2/3 focus:outline-none"
                   {...register('name', { required: true })}
                 />
+                <p className="text-error text-xs">{errors.name?.message}</p>
               </div>
               <div>
                 <input
@@ -79,6 +118,7 @@ function SignupScreen() {
                   className="input input-bordered border-t-0 input-accent input-md rounded-none w-2/3 focus:outline-none"
                   {...register('email', { required: true })}
                 />
+                <p className="text-error text-xs">{errors.email?.message}</p>
               </div>
               <div>
                 <input
@@ -87,6 +127,7 @@ function SignupScreen() {
                   className="input input-bordered border-t-0 input-accent input-md rounded-none w-2/3 focus:outline-none"
                   {...register('password', { required: true })}
                 />
+                <p className="text-error text-xs">{errors.password?.message}</p>
               </div>
               <div>
                 <input
@@ -95,6 +136,9 @@ function SignupScreen() {
                   className="input input-bordered border-t-0 input-accent input-md rounded-b-xl rounded-t-none w-2/3 focus:outline-none"
                   {...register('confirmPassword', { required: true })}
                 />
+                <p className="text-error text-xs">
+                  {errors.confirmPassword?.message}
+                </p>
               </div>
               <div className="text-center mt-1">
                 <button
