@@ -9,12 +9,29 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { useAppSelector, useAppDispatch } from '../app/hook'
 import {
+  resetUserProfileStatus,
   selectUserProfile,
+  selectUserProfileError,
+  selectUserProfileStatus,
   updateUserProfile,
+  uploadProfileImage,
 } from '../features/user/userProfileSlice'
 import { selectUser } from '../features/user/userSlice'
 import ProfileBadge from '../components/ProfileBadge'
 import { ProfileUpdate } from '../interface/userProfileInterface'
+import { toast } from 'react-toastify'
+
+const imageSchema = yup.object().shape({
+  image: yup
+    .mixed()
+    .required('You must provide a profile picture.')
+    .test('fileSize', 'The file must be smaller than 1MB', (value) => {
+      return value && value.size <= 1000000
+    })
+    .test('type', 'File must be either .jpeg or .png', (value) => {
+      return value && value.type === ('image/jpeg' || 'image/png')
+    }),
+})
 
 export const profileUpdateSchema = yup
   .object({
@@ -48,6 +65,8 @@ function ProfileScreen() {
   const [editStatus, setEditStatus] = useState(false)
   const user = useAppSelector(selectUser)
   const profile = useAppSelector(selectUserProfile)
+  const profileStatus = useAppSelector(selectUserProfileStatus)
+  const profileError = useAppSelector(selectUserProfileError)
   const redirect = location.search ? location.search.split('=')[1] : '/'
   const {
     register,
@@ -81,9 +100,30 @@ function ProfileScreen() {
     }
   }, [user, redirect, navigate])
 
+  useEffect(() => {
+    if (profileStatus === 'failed') {
+      toast.error(profileError)
+      dispatch(resetUserProfileStatus)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profileStatus, dispatch])
+
   const handleClick = () => {
     if (editStatus === false) {
       setEditStatus(true)
+    }
+  }
+
+  const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      try {
+        await imageSchema.validate({ image: event.target.files[0] })
+      } catch (err) {
+        if (err instanceof yup.ValidationError) toast.error(err.message)
+        return
+      }
+      dispatch(uploadProfileImage(event.target.files[0]))
     }
   }
 
@@ -309,7 +349,7 @@ function ProfileScreen() {
                 </div>
                 <div className="col-span-2">
                   <div className="grid grid-rows-2 h-full">
-                    <div className="self-end">
+                    <div>
                       <input
                         type="text"
                         placeholder="Name"
@@ -322,8 +362,8 @@ function ProfileScreen() {
                         {error2.name?.message}
                       </p>
                     </div>
-                    <div className="grid grid-cols-2">
-                      <div>
+                    <div className="grid grid-cols-3">
+                      <div className="col-span-2">
                         <input
                           type="text"
                           placeholder="Name"
@@ -336,9 +376,9 @@ function ProfileScreen() {
                           {error2.email?.message}
                         </p>
                       </div>
-                      <div className="justify-self-end">
+                      <div className="flex justify-end">
                         <Link to="/edit-password">
-                          <h3 className="btn btn-ghost btn-xs rounded-sm justify-self-end w-2/3">
+                          <h3 className="btn btn-ghost btn-xs rounded-sm">
                             Edit Password
                           </h3>
                         </Link>
@@ -346,7 +386,9 @@ function ProfileScreen() {
                     </div>
                   </div>
                 </div>
+                {editStatus && <input type="file" onChange={handleUpload} />}
               </div>
+
               <div className="border-b border-gray-300 py-5">
                 <div className="grid grid-cols-5">
                   <div className="col-span-2">

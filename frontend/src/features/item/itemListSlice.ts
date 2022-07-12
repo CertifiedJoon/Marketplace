@@ -16,14 +16,19 @@ const initialState = {
 } as itemListState
 
 export const getItems = createAsyncThunk('itemList/getItems', async () => {
-  const { data } = await axios.get('/api/items/')
+  const config = {
+    headers: {
+      'Content-type': 'application/json',
+    },
+  }
+  const { data } = await axios.get('/api/items/', config)
   return data
 })
 
 export const getItemsByType = createAsyncThunk(
   'itemList/getItemsByType',
   async (type: string) => {
-    const { data } = await axios.get(`/api/items/type/${type}/`)
+    const { data } = await axios.get(`/api/items/?type=${type}`)
     return data
   }
 )
@@ -32,7 +37,7 @@ export const getItemsFiltered = createAsyncThunk(
   'itemList/getItemsFiltered',
   async (args: { community: string; type: string }) => {
     const { data } = await axios.get(
-      `/api/items/${args.community}/${args.type}/`
+      `/api/items/?community=${args.community}&type=${args.type}`
     )
     return data
   }
@@ -42,7 +47,7 @@ export const getMyItems = createAsyncThunk(
   'itemList/getMyItems',
   async (args: { community: string; type: string }) => {
     const { data } = await axios.get(
-      `/api/items/${args.community}/${args.type}/`
+      `/api/items/?community=${args.community}&type=${args.type}`
     )
     return data
   }

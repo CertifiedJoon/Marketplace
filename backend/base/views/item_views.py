@@ -1,3 +1,5 @@
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.exceptions import NotFound
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -8,8 +10,21 @@ from base.models import Item, UserProfile
 
 @api_view(['GET'])
 def getItems(request):
-  items = Item.objects.prefetch_related('item_image', 'communities').select_related('user')
-  serializer = ItemBriefSerializer(items, many=True)
+  queryset = Item.objects.prefetch_related('item_image', 'communities').select_related('user').filter(live=True)
+  sell = request.query_params.get('sell')
+  type = request.query_params.get('type')
+  community = request.query_params.get('community')
+  
+  if sell:
+    user = request.user
+    profile = UserProfile.objects.get(user=user)
+    queryset = queryset.filter(user=profile)
+  if type and type != 'all':
+    queryset = queryset.filter(type=type)
+  if community and community != 'all':
+    queryset = queryset.filter(communities__pk = community)
+  
+  serializer = ItemBriefSerializer(queryset, many=True)
   return Response(serializer.data)
 
 @api_view(['GET'])
@@ -17,8 +32,14 @@ def getItems(request):
 def getMyItems(request):
   user = request.user
   profile = UserProfile.objects.get(user=user)
-  items = Item.objects.prefetch_related('item_image', 'communities').select_related('user').filter(user=profile)
-  serializer = ItemBriefSerializer(items, many=True)
+  queryset = Item.objects.prefetch_related('item_image', 'communities').select_related('user').filter(user=profile).filter(live=True)
+  type = request.query_params.get('type')
+  community = request.query_params.get('community')
+  if type and type != 'all':
+    queryset = queryset.filter(type=type)
+  if community and community != 'all':
+    queryset = queryset.filter(communities__pk = community)
+  serializer = ItemBriefSerializer(queryset, many=True)
   return Response(serializer.data)
 
 @api_view(['GET'])
@@ -28,21 +49,10 @@ def getLiveEvents(request, community):
   return Response(serializer.data)
 
 @api_view(['GET'])
-def getItemsFiltered(request, community, type):
-  items = Item.objects.prefetch_related('item_detail', 'communities').select_related('user').filter(communities__pk = community)
-  if type != 'all':
-    items = items.filter(type=type)
-  serializer = ItemBriefSerializer(items, many=True)
-  return Response(serializer.data)
-
-@api_view(['GET'])
-def getItemsFilteredByType(request, type):
-  items = Item.objects.prefetch_related('item_detail', 'communities').select_related('user').filter(type=type)
-  serializer = ItemBriefSerializer(items, many=True)
-  return Response(serializer.data)
-
-@api_view(['GET'])
-def getItem(reqeust, pk):
-  item = Item.objects.prefetch_related('item_detail', 'item_image').select_related('user').get(pk=pk)
+def getItem(request, pk):
+  try:
+    item = Item.objects.prefetch_related('item_detail', 'item_image').select_related('user').get(pk=pk)
+  except ObjectDoesNotExist:
+    raise NotFound("Item does not exist.", 404) 
   serializer = ItemSerializer(item)
   return Response(serializer.data)

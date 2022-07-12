@@ -12,6 +12,9 @@ import { useAppSelector, useAppDispatch } from '../app/hook'
 import {
   selectThumbnail,
   selectItem,
+  selectItemError,
+  selectItemStatus,
+  resetItemStatus,
   getItemById,
 } from '../features/item/itemSlice'
 import ProfileBadge from '../components/ProfileBadge'
@@ -20,6 +23,8 @@ function ItemScreen() {
   const [copySuccess, setCopySuccess] = useState(false)
   const params = useParams()
   const item = useAppSelector(selectItem)
+  const itemStatus = useAppSelector(selectItemStatus)
+  const itemError = useAppSelector(selectItemError)
   const itemThumbnail = useAppSelector(selectThumbnail)
   const dispatch = useAppDispatch()
 
@@ -35,6 +40,13 @@ function ItemScreen() {
   useEffect(() => {
     if (params.itemId) dispatch(getItemById(params.itemId))
   }, [params, dispatch])
+
+  useEffect(() => {
+    if (itemStatus === 'failed') {
+      toast.error(itemError)
+      dispatch(resetItemStatus)
+    }
+  }, [itemStatus])
 
   useEffect(() => {
     if (copySuccess === true) toast.success('Link copied.')

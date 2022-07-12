@@ -53,6 +53,11 @@ class UserSerializerWithToken(UserSerializer):
 
 
 # UserProfile
+class UserProfileImageSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = UserProfile
+    fields = ('profile_image',)
+
 class UserProfileBriefSerializer(serializers.ModelSerializer):
   badges = BadgeSerializer(source='badge_user', many=True)
   class Meta:

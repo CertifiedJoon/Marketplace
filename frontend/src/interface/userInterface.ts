@@ -24,3 +24,7 @@ export interface SignupDetail {
   email: string
   password: string
 }
+
+export interface UserProfileImage {
+  profile_image: string
+}

@@ -1,5 +1,5 @@
-from pickle import FALSE
-from types import NoneType
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.exceptions import NotFound
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -20,7 +20,10 @@ def getMemberships(request):
 
 @api_view(['GET'])
 def getCommunity(request, pk):
-  community = Community.objects.get(_id=pk)
+  try:
+    community = Community.objects.get(_id=pk)
+  except ObjectDoesNotExist:
+    raise NotFound('Community Not Found.')
   serializer = CommunitySerializer(community, many=False)
   return Response(serializer.data)
 

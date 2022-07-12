@@ -6,11 +6,12 @@ import {
   UserProfilePlaceholder,
   ProfileUpdate,
 } from '../../interface/userProfileInterface'
+import { UserProfileImage } from '../../interface/userInterface'
 
 interface UserProfileState {
   userProfile: UserProfile | null
   status: 'idle' | 'pending' | 'succeeded' | 'failed'
-  error: string
+  error: string | undefined
 }
 
 const initialState: UserProfileState = {
@@ -19,11 +20,22 @@ const initialState: UserProfileState = {
   error: '',
 }
 
+interface KnownError {
+  detail: string
+  code: string
+  messages: Array<{
+    token_class: string
+    token_type: string
+    message: string
+  }>
+}
+
 export const getUserProfile = createAsyncThunk<
   UserProfile,
   undefined,
   {
     state: RootState
+    rejectValue: KnownError
   }
 >('userProfile/getUserProfile', async (args, thunkApi) => {
   let token = thunkApi.getState().user.user
@@ -35,9 +47,54 @@ export const getUserProfile = createAsyncThunk<
       Authorization: `Bearer ${token}`,
     },
   }
-
-  const { data } = await axios.get('/api/users/profile/', config)
+  let data: UserProfile | null = null
+  try {
+    const response = await axios.get('/api/users/profile/', config)
+    data = response.data
+  } catch (error) {
+    if (axios.isAxiosError(error))
+      if (error.response) {
+        return thunkApi.rejectWithValue(error.response.data as KnownError)
+      }
+  }
   return data as UserProfile
+})
+
+export const uploadProfileImage = createAsyncThunk<
+  UserProfileImage,
+  File,
+  {
+    state: RootState
+    rejectValue: KnownError
+  }
+>('userProfile/uploadProfileImage', async (image, thunkApi) => {
+  let token = thunkApi.getState().user.user
+    ? thunkApi.getState().user.user?.token
+    : ''
+  const config = {
+    headers: {
+      'Content-type': 'multipart/form-data',
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const profile_image = {
+    profile_image: image,
+  }
+  let data: UserProfileImage | null = null
+  try {
+    const response = await axios.put(
+      '/api/users/upload-profile-image/',
+      profile_image,
+      config
+    )
+    data = response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response)
+        return thunkApi.rejectWithValue(error.response.data as KnownError)
+    }
+  }
+  return data as UserProfileImage
 })
 
 export const updateUserProfile = createAsyncThunk<
@@ -45,6 +102,7 @@ export const updateUserProfile = createAsyncThunk<
   ProfileUpdate,
   {
     state: RootState
+    rejectValue: KnownError
   }
 >('userProfile/updateUserProfile', async (patch, thunkApi) => {
   let token = thunkApi.getState().user.user
@@ -56,8 +114,20 @@ export const updateUserProfile = createAsyncThunk<
       Authorization: `Bearer ${token}`,
     },
   }
-
-  const { data } = await axios.put('/api/users/profile/update/', patch, config)
+  let data: UserProfile | null = null
+  try {
+    const response = await axios.put(
+      '/api/users/profile/update/',
+      patch,
+      config
+    )
+    data = response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response)
+        return thunkApi.rejectWithValue(error.response.data as KnownError)
+    }
+  }
   return data as UserProfile
 })
 
@@ -68,6 +138,11 @@ const userProfileSlice = createSlice({
     profileout: (state: UserProfileState) => {
       state.userProfile = UserProfilePlaceholder
       state.status = 'idle'
+      state.error = ''
+    },
+    resetUserProfileStatus: (state: UserProfileState) => {
+      state.status = 'idle'
+      state.error = ''
     },
   },
   extraReducers: (builder) => {
@@ -81,7 +156,11 @@ const userProfileSlice = createSlice({
       })
       .addCase(getUserProfile.rejected, (state, action) => {
         state.status = 'failed'
-        if (action.error.message) state.error = action.error.message
+        if (action.payload) {
+          state.error = action.payload.messages[0].message
+        } else {
+          state.error = action.error.message
+        }
       })
       .addCase(updateUserProfile.pending, (state, action) => {
         state.status = 'pending'
@@ -92,15 +171,42 @@ const userProfileSlice = createSlice({
       })
       .addCase(updateUserProfile.rejected, (state, action) => {
         state.status = 'failed'
-        if (action.error.message) state.error = action.error.message
+        if (action.payload) {
+          state.error = action.payload.messages[0].message
+        } else {
+          state.error = action.error.message
+        }
+      })
+      .addCase(uploadProfileImage.pending, (state, action) => {
+        state.status = 'pending'
+      })
+      .addCase(uploadProfileImage.fulfilled, (state, action) => {
+        const prevState = state.userProfile as UserProfile
+        state.userProfile = {
+          ...prevState,
+          profile_image: action.payload.profile_image,
+        }
+        state.status = 'succeeded'
+      })
+      .addCase(uploadProfileImage.rejected, (state, action) => {
+        state.status = 'failed'
+        if (action.payload) {
+          state.error = action.payload.messages[0].message
+        } else {
+          state.error = action.error.message
+        }
       })
   },
 })
 
-export const { profileout } = userProfileSlice.actions
+export const { profileout, resetUserProfileStatus } = userProfileSlice.actions
 
 export const selectUserProfileStatus = (state: RootState) =>
   state.userProfile.status
+
+export const selectUserProfileError = (state: RootState) =>
+  state.userProfile.error
+
 export const selectUserProfile = (state: RootState) => {
   if (state.userProfile.userProfile) return state.userProfile.userProfile
   else return UserProfilePlaceholder

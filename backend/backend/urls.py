@@ -13,6 +13,11 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from rest_framework.views import exception_handler
+from rest_framework.views import Response
+from http import HTTPStatus
+from typing import Any
+
 from django.contrib import admin
 from django.urls import path, include
 
@@ -28,3 +33,24 @@ urlpatterns = [
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+
+def api_exception_handler(exc: Exception, context: dict[str, Any]) -> Response:
+    """Custom API Exception Handler"""
+    response = exception_handler(exc, context)
+    if response is not None:
+        http_code_to_message = {v.value: v.description for v in HTTPStatus}
+        error_payload = {
+            "error": {
+                "status_code": 0,
+                "message": "",
+                "details": [],
+            }
+        }
+        error = error_payload['error']
+        status_code = response.status_code
+
+        error["status_code"] = status_code
+        error["message"] = http_code_to_message[status_code]
+        error["details"] = response.data
+        response.data = error_payload
+    return response

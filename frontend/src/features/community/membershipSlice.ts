@@ -16,11 +16,22 @@ const initialState: MembershipState = {
   error: '',
 }
 
+interface KnownError {
+  detail: string
+  code: string
+  messages: Array<{
+    token_class: string
+    token_type: string
+    message: string
+  }>
+}
+
 export const getMemberships = createAsyncThunk<
   Array<Membership>,
   undefined,
   {
     state: RootState
+    rejectValue: KnownError
   }
 >('community/memberships', async (args, thunkApi) => {
   let token = thunkApi.getState().user.user
@@ -32,8 +43,16 @@ export const getMemberships = createAsyncThunk<
       Authorization: `Bearer ${token}`,
     },
   }
-
-  const { data } = await axios.get('/api/community/memberships/', config)
+  let data: Array<Membership> | null = null
+  try {
+    const response = await axios.get('/api/community/memberships/', config)
+    data = response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response)
+        return thunkApi.rejectWithValue(error.response.data as KnownError)
+    }
+  }
   return data as Array<Membership>
 })
 
@@ -43,6 +62,10 @@ const membershipSlice = createSlice({
   reducers: {
     membershipout: (state: MembershipState) => {
       state.memberships = []
+      state.status = 'idle'
+      state.error = ''
+    },
+    resetMembershipStatus: (state: MembershipState) => {
       state.status = 'idle'
       state.error = ''
     },
@@ -58,17 +81,24 @@ const membershipSlice = createSlice({
       })
       .addCase(getMemberships.rejected, (state, action) => {
         state.status = 'failed'
-        state.error = action.error.message
+        if (action.payload) {
+          state.error = action.payload.messages[0].message
+        } else {
+          state.error = action.error.message
+        }
       })
   },
 })
 
-export const { membershipout } = membershipSlice.actions
+export const { membershipout, resetMembershipStatus } = membershipSlice.actions
 
 export const selectMemberships = (state: RootState) =>
   state.membership.memberships
 
 export const selectMembershipStatus = (state: RootState) =>
   state.membership.status
+
+export const selectMembershipError = (state: RootState) =>
+  state.membership.error
 
 export default membershipSlice.reducer

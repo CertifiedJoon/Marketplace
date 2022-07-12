@@ -9,7 +9,7 @@ from rest_framework import status
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 
-from base.serializers import UserSerializer, UserSerializerWithToken, UserProfileSerializer
+from base.serializers import UserSerializer, UserSerializerWithToken, UserProfileSerializer, UserProfileImageSerializer
 from base.models import UserProfile
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -78,6 +78,18 @@ def getUserProfile(request):
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
+def uploadProfileImage(request):
+  user = request.user
+
+  if (UserProfile.objects.filter(user=user).exists()):
+    profile = UserProfile.objects.get(user=user)
+    profile.profile_image = request.FILES.get('profile_image')
+    profile.save()
+    serializer = UserProfileImageSerializer(profile)
+    return Response(serializer.data)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def updateUserProfile(request):
   user = request.user
   data = request.data
@@ -85,7 +97,6 @@ def updateUserProfile(request):
   if (UserProfile.objects.filter(user=user).exists()):
     profile = UserProfile.objects.get(user=user)
     profile.nickname = data['nickname']
-    profile.profile_image = data['profile_image']
     profile.introduction = data['introduction']
     profile.save()
   else:

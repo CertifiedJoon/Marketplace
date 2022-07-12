@@ -11,6 +11,8 @@ import {
 } from '../interface/communityInterface'
 import ProfileBadge from '../components/ProfileBadge'
 import { LiveEvent, LiveEventPlaceholder } from '../interface/itemInterface'
+import { toast } from 'react-toastify'
+import { KnownError } from '../interface/exceptionInterface'
 
 function CommunityScreen() {
   //eslint-disable-next-line
@@ -22,8 +24,21 @@ function CommunityScreen() {
 
   useEffect(() => {
     const fetchCommunity = async () => {
-      const { data } = await axios.get(`/api/community/${params.communityId}/`)
-      setCommunity(data)
+      try {
+        const { data } = await axios.get(
+          `/api/community/${params.communityId}/`
+        )
+        setCommunity(data)
+        return true
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          if (error.response) {
+            const response = error.response.data as KnownError
+            toast.error(response.error.details.detail)
+          }
+        }
+        return false
+      }
     }
     const fetchLiveEvents = async () => {
       const { data } = await axios.get(
@@ -31,8 +46,8 @@ function CommunityScreen() {
       )
       if (data) setLiveEvents(data)
     }
-    fetchLiveEvents()
     fetchCommunity()
+    fetchLiveEvents()
   }, [params])
 
   const followEvent = () => {

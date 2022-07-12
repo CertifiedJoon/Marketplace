@@ -7,18 +7,20 @@ import googleIcon from '../static/images/google.png'
 import {
   login,
   resetUserStatus,
-  selectUser,
   selectUserError,
   selectUserStatus,
 } from '../features/user/userSlice'
 import { useAppSelector, useAppDispatch } from '../app/hook'
 import {
   getUserProfile,
-  selectUserProfile,
+  resetUserProfileStatus,
+  selectUserProfileError,
   selectUserProfileStatus,
 } from '../features/user/userProfileSlice'
 import {
   getMemberships,
+  resetMembershipStatus,
+  selectMembershipError,
   selectMembershipStatus,
 } from '../features/community/membershipSlice'
 import { toast } from 'react-toastify'
@@ -33,29 +35,54 @@ function LoginScreen() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const location = useLocation()
-  const user = useAppSelector(selectUser)
   const userStatus = useAppSelector(selectUserStatus)
   const userError = useAppSelector(selectUserError)
-  const userProfile = useAppSelector(selectUserProfile)
+  const userProfileStatus = useAppSelector(selectUserProfileStatus)
+  const userProfileError = useAppSelector(selectUserProfileError)
   const membershipStatus = useAppSelector(selectMembershipStatus)
-  const profileStatus = useAppSelector(selectUserProfileStatus)
+  const membershipError = useAppSelector(selectMembershipError)
   const redirect = location.search ? location.search.split('=')[1] : '/'
 
-  useEffect(() => {
-    if (user && userProfile.user !== 0 && membershipStatus === 'succeeded') {
-      navigate(redirect)
-    } else if (user) {
-      if (membershipStatus === 'idle') dispatch(getMemberships())
-      if (profileStatus === 'idle') dispatch(getUserProfile())
-    }
-  }, [user, userProfile, membershipStatus, dispatch, redirect, navigate])
+  useEffect(
+    () => {
+      if (
+        userStatus === 'succeeded' &&
+        userProfileStatus === 'succeeded' &&
+        membershipStatus === 'succeeded'
+      ) {
+        dispatch(resetUserStatus())
+        dispatch(resetUserProfileStatus())
+        dispatch(resetMembershipStatus())
+        navigate(redirect)
+      } else if (userStatus === 'succeeded' && userProfileStatus === 'idle') {
+        dispatch(getUserProfile())
+      } else if (userStatus === 'succeeded' && membershipStatus === 'idle') {
+        dispatch(getMemberships())
+      }
 
-  useEffect(() => {
-    if (userStatus === 'failed') {
-      toast.error(userError)
-      dispatch(resetUserStatus())
-    }
-  }, [userStatus, dispatch])
+      if (userStatus === 'failed') {
+        toast.error(userError)
+        dispatch(resetUserStatus())
+      }
+      if (userProfileStatus === 'failed') {
+        toast.error(userProfileError)
+        dispatch(resetUserProfileStatus())
+      }
+      if (membershipStatus === 'failed') {
+        toast.error(membershipError)
+        dispatch(resetMembershipStatus)
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      userStatus,
+      userProfileStatus,
+      membershipStatus,
+      dispatch,
+      navigate,
+      redirect,
+    ]
+  )
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     dispatch(
