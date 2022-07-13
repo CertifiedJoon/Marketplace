@@ -38,13 +38,12 @@ export const profileUpdateSchema = yup
     name: yup
       .string()
       .required('Name is a required field.')
-      .min(10, 'Name must be at least 3 characters long.')
-      .max(30, 'Name must be at least 30 characters long.'),
+      .min(3, 'Name must be at least 3 characters long.')
+      .max(30, 'Name must be at most 30 characters long.'),
     email: yup
       .string()
       .email('Incorrent email format.')
       .required('Email is a required field.'),
-    profile_image: yup.string().ensure(),
     nickname: yup
       .string()
       .min(2, 'Nickname must be at least two characters.')
@@ -68,18 +67,12 @@ function ProfileScreen() {
   const profileStatus = useAppSelector(selectUserProfileStatus)
   const profileError = useAppSelector(selectUserProfileError)
   const redirect = location.search ? location.search.split('=')[1] : '/'
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ProfileUpdate>({
-    resolver: yupResolver(profileUpdateSchema),
-  })
-
-  const {
-    register: registerLaptop,
-    handleSubmit: handleSubmit2,
-    formState: { errors: error2 },
+    reset,
   } = useForm<ProfileUpdate>({
     resolver: yupResolver(profileUpdateSchema),
   })
@@ -89,23 +82,24 @@ function ProfileScreen() {
     setEditStatus(false)
   }
 
-  const onSubmitLaptop = (data: ProfileUpdate) => {
-    dispatch(updateUserProfile(data))
-    setEditStatus(false)
-  }
-
   useEffect(() => {
     if (!user) {
       navigate(redirect)
+    } else {
+      reset({
+        name: user.name,
+        email: user.email,
+        nickname: profile.nickname,
+        introduction: profile.introduction,
+      })
     }
-  }, [user, redirect, navigate])
+  }, [user, redirect, navigate, reset])
 
   useEffect(() => {
     if (profileStatus === 'failed') {
       toast.error(profileError)
       dispatch(resetUserProfileStatus)
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileStatus, dispatch])
 
@@ -129,12 +123,11 @@ function ProfileScreen() {
 
   return (
     <>
-      <div className="hidden md:block">
-        <Header />
-      </div>
-
-      {/* Mobile */}
+      {/* Tablet or bigger */}
       <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="hidden md:block">
+          <Header />
+        </div>
         <div className="md:hidden sticky top-0 bg-white z-50 relative">
           <div className="absolute left-6 top-3">
             <button onClick={() => navigate(-1)}>
@@ -160,153 +153,10 @@ function ProfileScreen() {
           </div>
           <h3 className="font-bold border-b text-center py-2 mx-20">Profile</h3>
         </div>
-        <div className="md:hidden mx-3">
-          <div className="grid grid-cols-3 justify-tiems-stretch mx-auto py-5 border-b border-gray-300">
-            <div className="col-span-1 justify-self-end">
-              <div className="avatar px-2">
-                <div className="w-full max-w-40 rounded-full">
-                  <img src={profile.profile_image} alt="" />
-                </div>
-              </div>
-            </div>
-            <div className="col-span-2 flex flex-cols items-center">
-              <div className="grid grid-rows ml-3">
-                <input
-                  type="text"
-                  placeholder="Name"
-                  defaultValue={user?.name}
-                  className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent item-input-xl w-full disabled:text-black disabled:input-ghost disabled:border-none"
-                  disabled={!editStatus}
-                  {...register('name')}
-                />
-                <p className="text-error text-xs">{errors.name?.message}</p>
-                <input
-                  type="text"
-                  placeholder="E-mail"
-                  defaultValue={user?.email}
-                  className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent item-input-lg w-full disabled:text-black disabled:input-ghost disabled:border-none"
-                  disabled={!editStatus}
-                  {...register('email')}
-                />
-                <p className="text-error text-xs">{errors.email?.message}</p>
-                <Link to="/edit-password">
-                  <h3 className="btn btn-ghost btn-outline btn-xs rounded-sm w-2/3 ">
-                    Edit Password
-                  </h3>
-                </Link>
-              </div>
-            </div>
-          </div>
-          <div className="border-b border-gray-300 py-5">
-            <label className="text-lg text-gray-500">One word nickname:</label>
-            <input
-              type="text"
-              placeholder="Nickname"
-              defaultValue={profile.nickname}
-              className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent text-lg w-full disabled:text-black disabled:input-ghost disabled:border-none"
-              disabled={!editStatus}
-              {...register('nickname')}
-            />
-            <p>{errors.nickname?.message}</p>
-            <label className="text-lg text-gray-500">
-              Introduce yourself to your community:
-            </label>
-            <textarea
-              className="p-0 rounded-none textarea textarea-ghost text-accent placeholder-accent w-full text-lg h-60 rounded-sm disabled:text-black disabled:textarea-ghost disabled:border-none"
-              defaultValue={profile.introduction}
-              disabled={!editStatus}
-              {...register('introduction')}
-            ></textarea>
-            <p className="text-error text-xs">{errors.introduction?.message}</p>
-          </div>
-          <div className="py-5">
-            <div>
-              <label className="text-md text-gray-500">Badge Earned</label>
-              <div className="flex mt-2">
-                {profile.badges.map((badge, i) => (
-                  <ProfileBadge key={i} name={badge.name} />
-                ))}
-              </div>
-              <label className="text-md text-gray-500">Badge Progress</label>
-              <div>
-                <div
-                  className="tooltip tooltip-secondary"
-                  data-tip="Sold and Bought 10 items"
-                >
-                  <div className="badge badge-secondary badge-outline">
-                    <FaMedal />
-                    &nbsp;PowerHost
-                  </div>
-                </div>
-                <p className="inline ml-3">7 / 10 Events Hosted</p>
-                <progress
-                  className="progress progress-secondary h-4 w-full"
-                  value="70"
-                  max="100"
-                ></progress>
-              </div>
-              <div>
-                <div
-                  className="tooltip tooltip-accent"
-                  data-tip="Sold and Bought 10 items"
-                >
-                  <div className="badge badge-accent badge-outline">
-                    <FaMedal />
-                    &nbsp;Celebrity
-                  </div>
-                </div>
-                <p className="inline ml-3">20 / 100 Peaple Hosted</p>
-                <progress
-                  className="progress progress-accent h-4 w-full"
-                  value="20"
-                  max="100"
-                ></progress>
-              </div>
-              <div>
-                <div
-                  className="tooltip tooltip-primary"
-                  data-tip="Sold and Bought 10 items"
-                >
-                  <div className="badge badge-primary badge-outline">
-                    <FaMedal />
-                    &nbsp;PowerUser
-                  </div>
-                </div>
-                <p className="inline ml-3">10 / 10 Items Sold</p>
-                <progress
-                  className="progress progress-primary h-4 w-full"
-                  value="100"
-                  max="100"
-                ></progress>
-              </div>
-              <div>
-                <div
-                  className="tooltip tooltip-info"
-                  data-tip="Sold and Bought 10 items"
-                >
-                  <div className="badge badge-info badge-outline">
-                    <FaMedal />
-                    &nbsp;Clean
-                  </div>
-                </div>
-                <p className="inline ml-3">102 / 102 Clean Transactions</p>
-                <progress
-                  className="progress progress-info h-4 w-full"
-                  value="100"
-                  max="100"
-                ></progress>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
 
-      {/* Tablet or bigger */}
-
-      <div className="2xl:container 2xl:mx-auto lg:mx-10 md:mx-3 hidden md:block">
-        <form onSubmit={handleSubmit2(onSubmitLaptop)}>
-          <div className="grid grid-cols-3 min-h-content my-5">
-            <div className="col-span-1 mr-6 border-r border-gray-300">
+        <div className="xl:container xl:mx-auto mx-3">
+          <div className="grid grid-cols-3 min-h-content lg:my-5">
+            <div className="hidden md:block md:col-span-1 md:mr-6 md:border-r md:border-gray-300">
               <div className="sticky top-1/2 z-50">
                 <div className="flex flex-col justify-center">
                   <div>
@@ -338,47 +188,51 @@ function ProfileScreen() {
                 </div>
               </div>
             </div>
-            <div className="col-span-2 min-h-screen mx-10">
+            <div className="col-span-3 min-h-screen md:col-span-2 md:mx-10">
               <div className="grid grid-cols-3 justify-tiems-stretch mx-auto pb-5 border-b border-gray-300">
-                <div className="col-span-1 justify-self-end">
+                <div className="col-span-1 flex items-end">
                   <div className="avatar">
-                    <div className="w-2/3 rounded-full">
-                      <img src={profile.profile_image} alt="" />
+                    <div className="w-24 mask mask-circle">
+                      <img
+                        src={profile.profile_image}
+                        alt=""
+                        className="object-fill mask mask-circle"
+                      />
                     </div>
                   </div>
                 </div>
                 <div className="col-span-2">
                   <div className="grid grid-rows-2 h-full">
-                    <div>
+                    <div className="flex items-end">
                       <input
                         type="text"
                         placeholder="Name"
                         defaultValue={user?.name}
                         className="p-0 w-full rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent item-input-2xl w-full disabled:text-black disabled:input-ghost disabled:border-none"
                         disabled={!editStatus}
-                        {...registerLaptop('name')}
+                        {...register('name')}
                       />
                       <p className="text-error text-xs">
-                        {error2.name?.message}
+                        {errors.name?.message}
                       </p>
                     </div>
-                    <div className="grid grid-cols-3">
-                      <div className="col-span-2">
+                    <div className="row-span-1">
+                      <div>
                         <input
                           type="text"
                           placeholder="Name"
                           defaultValue={user?.email}
                           className="p-0 w-full rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent item-input-lg w-full disabled:text-black disabled:input-ghost disabled:border-none"
                           disabled={!editStatus}
-                          {...registerLaptop('email')}
+                          {...register('email')}
                         />
                         <p className="text-error text-xs">
-                          {error2.email?.message}
+                          {errors.email?.message}
                         </p>
                       </div>
-                      <div className="flex justify-end">
+                      <div>
                         <Link to="/edit-password">
-                          <h3 className="btn btn-ghost btn-xs rounded-sm">
+                          <h3 className="btn btn-ghost btn-xs rounded-sm px-0">
                             Edit Password
                           </h3>
                         </Link>
@@ -386,7 +240,13 @@ function ProfileScreen() {
                     </div>
                   </div>
                 </div>
-                {editStatus && <input type="file" onChange={handleUpload} />}
+                {editStatus && (
+                  <input
+                    type="file"
+                    className="my-1 col-span-3 text-black file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-white-50 file:text-accent"
+                    onChange={handleUpload}
+                  />
+                )}
               </div>
 
               <div className="border-b border-gray-300 py-5">
@@ -401,10 +261,10 @@ function ProfileScreen() {
                       defaultValue={profile.nickname}
                       className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent text-lg w-full disabled:text-black disabled:input-ghost disabled:border-none"
                       disabled={!editStatus}
-                      {...registerLaptop('nickname')}
+                      {...register('nickname')}
                     />
                     <p className="text-error text-xs">
-                      {error2.nickname?.message}
+                      {errors.nickname?.message}
                     </p>
                   </div>
                   <div className="col-span-3"></div>
@@ -424,16 +284,16 @@ function ProfileScreen() {
                   defaultValue={profile.introduction}
                   placeholder="Describe your listing."
                   disabled={!editStatus}
-                  {...registerLaptop('introduction')}
+                  {...register('introduction')}
                 ></textarea>
                 <p className="text-error text-xs">
-                  {error2.introduction?.message}
+                  {errors.introduction?.message}
                 </p>
               </div>
               <div className="py-5">
                 <div>
                   <label className="text-md text-gray-500">Badge Earned</label>
-                  <div className="flex mt-2">
+                  <div className="flex flex-wrap mt-2">
                     {profile.badges.map((badge, i) => (
                       <ProfileBadge key={i} name={badge.name} />
                     ))}
@@ -441,80 +301,98 @@ function ProfileScreen() {
                   <label className="text-md text-gray-500">
                     Badge Progress
                   </label>
-                  <div>
-                    <progress
-                      className="progress progress-secondary h-4 w-56"
-                      value="70"
-                      max="100"
-                    ></progress>
-                    <p className="inline ml-3">7 / 10 Events Hosted</p>
-                    <div
-                      className="tooltip tooltip-secondary"
-                      data-tip="Sold and Bought 10 items"
-                    >
-                      <div className="badge badge-secondary badge-outline ml-3">
-                        <FaMedal />
-                        &nbsp;PowerHost
+                  <div className="flex flex-wrap">
+                    <div>
+                      <div
+                        className="tooltip tooltip-secondary"
+                        data-tip="Sold and Bought 10 items"
+                      >
+                        <div className="badge badge-secondary badge-outline">
+                          <FaMedal />
+                          &nbsp;PowerHost
+                        </div>
                       </div>
+                      <p className="inline ml-3">7 / 10 Events Hosted</p>
+                    </div>
+                    <div className="ml-3">
+                      <progress
+                        className="progress progress-secondary h-4 w-56"
+                        value="70"
+                        max="100"
+                      ></progress>
                     </div>
                   </div>
-                  <div>
-                    <progress
-                      className="progress progress-accent h-4 w-56"
-                      value="20"
-                      max="100"
-                    ></progress>
-                    <p className="inline ml-3">20 / 100 Peaple Hosted</p>
-                    <div
-                      className="tooltip tooltip-accent"
-                      data-tip="Sold and Bought 10 items"
-                    >
-                      <div className="badge badge-accent badge-outline ml-3">
-                        <FaMedal />
-                        &nbsp;Celebrity
+                  <div className="flex flex-wrap">
+                    <div>
+                      <div
+                        className="tooltip tooltip-accent"
+                        data-tip="Sold and Bought 10 items"
+                      >
+                        <div className="badge badge-accent badge-outline">
+                          <FaMedal />
+                          &nbsp;Celebrity
+                        </div>
                       </div>
+                      <p className="inline ml-3">20 / 100 Peaple Hosted</p>
+                    </div>
+                    <div>
+                      <progress
+                        className="progress progress-accent h-4 w-56 ml-3"
+                        value="20"
+                        max="100"
+                      ></progress>
                     </div>
                   </div>
-                  <div>
-                    <progress
-                      className="progress progress-primary h-4 w-56"
-                      value="100"
-                      max="100"
-                    ></progress>
-                    <p className="inline ml-3">10 / 10 Items Sold</p>
-                    <div
-                      className="tooltip tooltip-primary"
-                      data-tip="Sold and Bought 10 items"
-                    >
-                      <div className="badge badge-primary badge-outline ml-3">
-                        <FaMedal />
-                        &nbsp;PowerUser
+                  <div className="flex flex-wrap">
+                    <div>
+                      <div
+                        className="tooltip tooltip-primary"
+                        data-tip="Sold and Bought 10 items"
+                      >
+                        <div className="badge badge-primary badge-outline">
+                          <FaMedal />
+                          &nbsp;PowerUser
+                        </div>
                       </div>
+                      <p className="inline ml-3">10 / 10 Items Sold</p>
+                    </div>
+                    <div>
+                      <progress
+                        className="progress progress-primary h-4 w-56 ml-3"
+                        value="100"
+                        max="100"
+                      ></progress>
                     </div>
                   </div>
-                  <div>
-                    <progress
-                      className="progress progress-info h-4 w-56"
-                      value="100"
-                      max="100"
-                    ></progress>
-                    <p className="inline ml-3">102 / 102 Clean Transactions</p>
-                    <div
-                      className="tooltip tooltip-info"
-                      data-tip="Sold and Bought 10 items"
-                    >
-                      <div className="badge badge-info badge-outline ml-3">
-                        <FaMedal />
-                        &nbsp;Clean
+                  <div className="flex flex-wrap">
+                    <div>
+                      <div
+                        className="tooltip tooltip-info"
+                        data-tip="Sold and Bought 10 items"
+                      >
+                        <div className="badge badge-info badge-outline">
+                          <FaMedal />
+                          &nbsp;Clean
+                        </div>
                       </div>
+                      <p className="inline ml-3">
+                        102 / 102 Clean Transactions
+                      </p>
+                    </div>
+                    <div>
+                      <progress
+                        className="progress progress-info h-4 w-56 ml-3"
+                        value="100"
+                        max="100"
+                      ></progress>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
       <Footer active="mypage" />
     </>
   )

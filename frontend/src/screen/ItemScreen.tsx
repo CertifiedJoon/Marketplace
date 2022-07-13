@@ -539,7 +539,7 @@ function ItemScreen() {
                 bg-white border shadow-xl ml-auto"
                 >
                   <div className="card-body">
-                    <div className="grid grid-cols-2">
+                    <div className="grid grid-cols-1 w-full">
                       <div className="col-span-1">
                         <h2 className="card-title">
                           <span className="text-gray-500">

@@ -22,6 +22,7 @@ interface CardDetail {
   price: number
   profile: string
   badges: Array<Badge>
+  saleMode: boolean
 }
 
 type Props = {
@@ -31,7 +32,13 @@ type Props = {
 function ItemCard({ cardDetail }: Props) {
   return (
     <LazyLoad height={200} once offset={-100} placeholder={<PlaceholderCard />}>
-      <Link to={`/item/${cardDetail._id}`}>
+      <Link
+        to={
+          cardDetail.saleMode
+            ? `/sell/edit/${cardDetail._id}`
+            : `/item/${cardDetail._id}`
+        }
+      >
         <div className="card item-card w-full">
           <figure>
             <div className="figure-container">

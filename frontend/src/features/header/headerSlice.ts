@@ -1,16 +1,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../../app/store'
+import { CommunityBrief } from '../../interface/communityInterface'
 
 interface HeaderState {
   saleMode: boolean
-  communityKey: string
-  communityId: string
+  community: CommunityBrief
 }
 
 const initialState: HeaderState = {
   saleMode: false,
-  communityKey: 'all',
-  communityId: '0',
+  community: {
+    _id: '0',
+    key: 'ALL',
+    name: 'Explore All Communities',
+    thumbnail_image: '/community/placeholder.jpg',
+  },
 }
 
 export const headerSlice = createSlice({
@@ -20,23 +24,25 @@ export const headerSlice = createSlice({
     setSaleMode: (state: HeaderState, action: PayloadAction<boolean>) => {
       state.saleMode = action.payload
     },
-    setCommunityKey: (state: HeaderState, action: PayloadAction<string>) => {
-      state.communityKey = action.payload
-    },
-    setCommunityId: (state: HeaderState, action: PayloadAction<string>) => {
-      state.communityId = action.payload
+    setCommunity: (
+      state: HeaderState,
+      action: PayloadAction<CommunityBrief>
+    ) => {
+      state.community = action.payload
     },
   },
 })
 
-export const { setSaleMode, setCommunityKey, setCommunityId } =
-  headerSlice.actions
+export const { setSaleMode, setCommunity } = headerSlice.actions
 
 export const selectSaleMode = (state: RootState) => state.header.saleMode
 
 export const selectCommunityKey = (state: RootState) =>
-  state.header.communityKey
+  state.header.community.key
 
-export const selectCommunityId = (state: RootState) => state.header.communityId
+export const selectCommunityId = (state: RootState) =>
+  state.header.community._id
+
+export const selectCommunity = (state: RootState) => state.header.community
 
 export default headerSlice.reducer

@@ -32,7 +32,6 @@ export const UserProfilePlaceholder = {
 export interface ProfileUpdate {
   name: string
   email: string
-  profile_image: string
   nickname: string
   introduction: string
 }

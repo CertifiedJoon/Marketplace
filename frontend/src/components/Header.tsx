@@ -6,13 +6,11 @@ import { useAppSelector, useAppDispatch } from '../app/hook'
 import {
   selectCommunityKey,
   selectSaleMode,
-  setCommunityKey,
-  setCommunityId,
+  setCommunity,
   setSaleMode,
 } from '../features/header/headerSlice'
 import { selectUser } from '../features/user/userSlice'
 import { selectUserImage } from '../features/user/userProfileSlice'
-import profile from '../static/images/profile.png'
 import SearchBar from './SearchBar'
 import { CommunityBrief } from '../interface/communityInterface'
 import { selectMemberships } from '../features/community/membershipSlice'
@@ -28,6 +26,7 @@ function Header({ sell = false }: Props) {
   const communityKey = useAppSelector(selectCommunityKey)
   const user = useAppSelector(selectUser)
   const profile_image = useAppSelector(selectUserImage)
+  const memberships = useAppSelector(selectMemberships)
   const [selectedCommunity, setSelectedCommunity] = useState<CommunityBrief>({
     _id: '0',
     key: 'ALL',
@@ -43,11 +42,10 @@ function Header({ sell = false }: Props) {
 
   const handleCommunityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.checked) {
-      dispatch(setCommunityKey(selectedCommunity.key))
-      dispatch(setCommunityId(selectedCommunity._id))
+      dispatch(setCommunity(selectedCommunity))
     }
   }
-  const memberships = useAppSelector(selectMemberships)
+
   const handleCommunitySelect = (community: { key: string; _id: string }) => {
     const selected = memberships.find(
       (membership) => membership.community._id === community._id
@@ -55,7 +53,7 @@ function Header({ sell = false }: Props) {
     setSelectedCommunity({
       _id: selected?.community._id ?? '0',
       key: selected?.community.key ?? 'ALL',
-      name: selected?.community.name ?? 'All of your communities',
+      name: selected?.community.name ?? 'Explore all communities.',
       thumbnail_image:
         selected?.community.thumbnail_image ?? '/community/placeholder.jpg',
     })

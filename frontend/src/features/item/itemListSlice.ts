@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import type { RootState } from '../../app/store'
 import { ItemBrief } from '../../interface/itemInterface'
 import axios from 'axios'
+import { string } from 'yup'
 
 interface itemListState {
   itemList: Array<ItemBrief>
@@ -15,24 +16,6 @@ const initialState = {
   error: '',
 } as itemListState
 
-export const getItems = createAsyncThunk('itemList/getItems', async () => {
-  const config = {
-    headers: {
-      'Content-type': 'application/json',
-    },
-  }
-  const { data } = await axios.get('/api/items/', config)
-  return data
-})
-
-export const getItemsByType = createAsyncThunk(
-  'itemList/getItemsByType',
-  async (type: string) => {
-    const { data } = await axios.get(`/api/items/?type=${type}`)
-    return data
-  }
-)
-
 export const getItemsFiltered = createAsyncThunk(
   'itemList/getItemsFiltered',
   async (args: { community: string; type: string }) => {
@@ -43,11 +26,25 @@ export const getItemsFiltered = createAsyncThunk(
   }
 )
 
-export const getMyItems = createAsyncThunk(
+export const getMyItems = createAsyncThunk<
+  Array<ItemBrief>,
+  { community: string; type: string },
+  {
+    state: RootState
+  }
+>(
   'itemList/getMyItems',
-  async (args: { community: string; type: string }) => {
+  async (args: { community: string; type: string }, thunkApi) => {
+    let token = thunkApi.getState().user.user?.token
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }
     const { data } = await axios.get(
-      `/api/items/?community=${args.community}&type=${args.type}`
+      `/api/items/my-items/?community=${args.community}&type=${args.type}`,
+      config
     )
     return data
   }
@@ -59,25 +56,14 @@ const itemListSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getItems.pending, (state, action) => {
+      .addCase(getMyItems.pending, (state, action) => {
         state.status = 'pending'
       })
-      .addCase(getItems.fulfilled, (state, action) => {
+      .addCase(getMyItems.fulfilled, (state, action) => {
         state.status = 'succeeded'
         state.itemList = action.payload
       })
-      .addCase(getItems.rejected, (state, action) => {
-        state.status = 'failed'
-        state.error = action.error.message
-      })
-      .addCase(getItemsByType.pending, (state, action) => {
-        state.status = 'pending'
-      })
-      .addCase(getItemsByType.fulfilled, (state, action) => {
-        state.status = 'succeeded'
-        state.itemList = action.payload
-      })
-      .addCase(getItemsByType.rejected, (state, action) => {
+      .addCase(getMyItems.rejected, (state, action) => {
         state.status = 'failed'
         state.error = action.error.message
       })

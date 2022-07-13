@@ -41,9 +41,9 @@ function MyPageScreen() {
         <div className="grid grid-rows-6 divide-y divide-gray-300 justify-items-stretch">
           <div className="row-span-1 py-6">
             <div className="grid grid-cols-3 justify-tiems-stretch">
-              <div className="col-span-1 justify-self-end">
+              <div className="col-span-1 flex items-end">
                 <div className="avatar">
-                  <div className="w-2/3 rounded-full">
+                  <div className="w-2/3 my-auto rounded-full">
                     <img src={profile.profile_image} alt="" />
                   </div>
                 </div>

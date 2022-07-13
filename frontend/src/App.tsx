@@ -42,7 +42,7 @@ function App() {
           <Route path="/wishlist/userId" element={<SavedScreen />}></Route>
           <Route path="/item/:itemId" element={<ItemScreen />}></Route>
           <Route path="/sell/post" element={<ItemUploadScreen />}></Route>
-          <Route path="/sell/edit/itemId" element={<ItemEditScreen />}></Route>
+          <Route path="/sell/edit/:itemId" element={<ItemEditScreen />}></Route>
           <Route path="/login" element={<LoginScreen />}></Route>
           <Route path="/signup" element={<SignupScreen />}></Route>
           <Route
