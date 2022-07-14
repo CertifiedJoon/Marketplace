@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import Select, { SingleValue } from 'react-select'
+import Select from 'react-select'
 
-import { useAppSelector, useAppDispatch } from '../app/hook'
-import {
-  getMemberships,
-  selectMemberships,
-  selectMembershipStatus,
-} from '../features/community/membershipSlice'
-import { Membership } from '../interface/communityInterface'
+import { useAppSelector } from '../app/hook'
+import { selectMemberships } from '../features/community/membershipSlice'
 
 interface UniOption {
   readonly value: string
@@ -17,15 +12,15 @@ interface UniOption {
 
 type Props = {
   defaultOpen?: boolean
-  onChangeFunction: (community: { key: string; _id: string }) => void
+  onChangeFunction: (communities: Array<{ key: string; _id: string }>) => void
 }
 let uniOptions: UniOption[] = [
   { value: 'ALL', label: 'All of your communities.', _id: '0' },
 ]
 
-function SearchBar({ defaultOpen = true, onChangeFunction }: Props) {
+function SearchBarMultiple({ defaultOpen = false, onChangeFunction }: Props) {
   const [selectedOption, setSelectedOption] =
-    useState<SingleValue<UniOption>>(null)
+    useState<ReadonlyArray<UniOption>>()
   const memberships = useAppSelector(selectMemberships)
 
   useEffect(() => {
@@ -40,17 +35,21 @@ function SearchBar({ defaultOpen = true, onChangeFunction }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [memberships])
 
-  const handleChange = (value: UniOption | null) => {
-    setSelectedOption(value)
-    if (value) {
-      onChangeFunction({ key: value.value, _id: value._id })
+  const handleChange = (values: ReadonlyArray<UniOption> | null) => {
+    if (values) {
+      setSelectedOption(values)
+      onChangeFunction(
+        values.map((value) => ({ key: value.value, _id: value._id }))
+      )
     }
   }
+
   return (
     <Select
       value={selectedOption}
       name="Your Communities"
       options={uniOptions}
+      isMulti
       onChange={handleChange}
       defaultMenuIsOpen={defaultOpen}
       closeMenuOnSelect
@@ -58,4 +57,4 @@ function SearchBar({ defaultOpen = true, onChangeFunction }: Props) {
   )
 }
 
-export default SearchBar
+export default SearchBarMultiple

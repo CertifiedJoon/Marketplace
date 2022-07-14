@@ -29,7 +29,7 @@ const imageSchema = yup.object().shape({
       return value && value.size <= 1000000
     })
     .test('type', 'File must be either .jpeg or .png', (value) => {
-      return value && value.type === ('image/jpeg' || 'image/png')
+      return value && ['image/jpeg', 'image/png'].includes(value.type)
     }),
 })
 

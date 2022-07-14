@@ -8,12 +8,15 @@ import {
   FaUpload,
 } from 'react-icons/fa'
 import { useForm, useFieldArray } from 'react-hook-form'
+import { Link, useParams } from 'react-router-dom'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { toast } from 'react-toastify'
 
 import { useAppSelector, useAppDispatch } from '../app/hook'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import { ItemUpdate, types } from '../interface/itemInterface'
 import PhotoGallery from '../components/PhotoGallery'
 import {
   selectItem,
@@ -22,19 +25,17 @@ import {
   selectThumbnail,
   resetItemStatus,
   getItemById,
+  uploadImages,
+  updateItem,
 } from '../features/item/itemSlice'
 import { selectUserImage } from '../features/user/userProfileSlice'
 import ProfileBadge from '../components/ProfileBadge'
-import { Link, useParams } from 'react-router-dom'
-import { toast } from 'react-toastify'
 import { selectCommunity } from '../features/header/headerSlice'
-import { current } from '@reduxjs/toolkit'
+import SearchBarMultiple from '../components/SearchBarMultiple'
 
 type FormInput = {
   heading: string
   sub_heading: string
-  // communities: Array<string>
-  // type: string
   reason: string
   description: string
   price: number
@@ -73,18 +74,6 @@ export const InputSchema = yup
       .required('Subheading is a required field.')
       .min(3, 'Subheading must be at least 3 characters long.')
       .max(50, 'Subheading must be at most 30 characters long.'),
-    // communities: yup
-    //   .array()
-    //   .of(yup.string())
-    //   .min(1, 'You must select at least one community')
-    //   .required('You must select at least one community'),
-    // type: yup
-    //   .string()
-    //   .matches(
-    //     /(all|event|stationery|note|book|tutoring|clothing|shoes|accessary|sports|fitness|quidditch|umbrella|bath-cosmetics|ikia|travel|electronics|ridebutnotcar|pet')/,
-    //     'Select valid item type.'
-    //   )
-    //   .required('You must select item type.'),
     reason: yup
       .string()
       .required('Reason is a required field.')
@@ -107,6 +96,10 @@ export const InputSchema = yup
 function ItemEditScreen() {
   const dispatch = useAppDispatch()
   const params = useParams()
+  const [selectedCommunities, setSelectedCommunities] = useState<Array<string>>(
+    []
+  )
+  const [selectedType, setSelectedType] = useState<string>('')
   const item = useAppSelector(selectItem)
   const itemThumbnail = useAppSelector(selectThumbnail)
   const itemStatus = useAppSelector(selectItemStatus)
@@ -126,10 +119,6 @@ function ItemEditScreen() {
     control: controlLaptop,
     name: 'details',
   })
-
-  const onSubmitLaptop = (data: FormInput) => {
-    console.log(data)
-  }
 
   useEffect(() => {
     if (params.itemId) dispatch(getItemById(params.itemId))
@@ -151,23 +140,54 @@ function ItemEditScreen() {
         negotiability: item.negotiability,
         details: item.details,
       })
+      setSelectedType(item.type)
+      setSelectedCommunities(item.communities)
       dispatch(resetItemStatus())
     }
     // eslint-disable-next-line
   }, [itemStatus, resetLaptop, dispatch, appendLaptop])
 
+  const onSubmitLaptop = (data: FormInput) => {
+    if (selectedCommunities.length !== 0 && selectedType !== '') {
+      const update: ItemUpdate = {
+        _id: params.itemId as string,
+        type: selectedType,
+        communities: selectedCommunities,
+        heading: data.heading,
+        sub_heading: data.sub_heading,
+        reason: data.reason,
+        price: data.price,
+        negotiability: data.negotiability,
+        description: data.description,
+        details: data.details,
+      }
+      dispatch(updateItem(update))
+    } else {
+      toast.error('Community & Type fields are must!')
+    }
+  }
+
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      console.log(event.target.files)
       try {
         await imagesSchema.validate({ images: event.target.files })
       } catch (err) {
         if (err instanceof yup.ValidationError) toast.error(err.message)
         return
       }
-      console.log(event.target.files)
-      // dispatch(uploadProfileImage(event.target.files[0]))
+      dispatch(
+        uploadImages({
+          images: event.target.files,
+          item_id: params.itemId as string,
+        })
+      )
     }
+  }
+
+  const handleCommunitySelect = (
+    communities: ReadonlyArray<{ key: string; _id: string }>
+  ) => {
+    setSelectedCommunities(communities.map((community) => community._id))
   }
 
   return (
@@ -347,7 +367,7 @@ function ItemEditScreen() {
                       </div>
                     </div>
                   </div>
-                  <div className="row-span-2 py-5">
+                  <div className="row-span-3 py-5">
                     {fieldsLaptop.map((field, index) => (
                       <div key={field.id}>
                         <input
@@ -376,6 +396,36 @@ function ItemEditScreen() {
                     <p className="text-error text-xs">
                       {errorsLaptop.description?.message}
                     </p>
+                    <div className="grid grid-cols-2">
+                      <div className="mr-2">
+                        <label className="block mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">
+                          Select Communities to Post
+                        </label>
+                        <SearchBarMultiple
+                          onChangeFunction={handleCommunitySelect}
+                        />
+                      </div>
+                      <div className="ml-2">
+                        <label
+                          htmlFor="type"
+                          className="block mb-2 text-sm font-medium text-gray-500 dark:text-gray-400"
+                        >
+                          Select Item Type
+                        </label>
+                        <select
+                          id="type"
+                          onChange={(e) => setSelectedType(e.target.value)}
+                          defaultValue={item.type}
+                          className="block p-2 mb-6 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        >
+                          {types.map((type: string, i) => (
+                            <option key={i} value={type}>
+                              {type}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
                   </div>
                   <div className="row-span-2 py-5">
                     <label className="text-lg text-gray-500 mb-5">

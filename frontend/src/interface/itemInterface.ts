@@ -28,6 +28,19 @@ export interface Item {
   details: Array<ItemDetail>
 }
 
+export interface ItemUpdate {
+  _id: string
+  type: string
+  communities: Array<string>
+  heading: string
+  sub_heading: string
+  reason: string
+  price: number
+  negotiability: boolean
+  description: string
+  details: Array<{ label: string; value: string }>
+}
+
 export interface ItemBrief {
   _id: string
   user: UserBrief
@@ -65,3 +78,24 @@ export const ItemPlaceholder: Item = {
   images: [],
   details: [],
 }
+
+export const types: Array<string> = [
+  'event',
+  'stationery',
+  'note',
+  'book',
+  'tutoring',
+  'clothing',
+  'shoes',
+  'accessary',
+  'sports',
+  'fitness',
+  'quidditch',
+  'umbrella',
+  'bath-cosmetics',
+  'ikia',
+  'travel',
+  'electronics',
+  'ridebutnotcar',
+  'pet',
+]

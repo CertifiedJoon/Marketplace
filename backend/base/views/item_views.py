@@ -1,11 +1,11 @@
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from rest_framework.exceptions import NotFound
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
-from base.serializers import ItemBriefSerializer, ItemSerializer, LiveEventSerializer
-from base.models import Item, UserProfile
+from base.serializers import ItemBriefSerializer, ItemSerializer, LiveEventSerializer, ItemImageSerializer
+from base.models import Item, UserProfile, ItemImage, Community, ItemDetail
 # Create your views here.
 
 @api_view(['GET'])
@@ -56,3 +56,73 @@ def getItem(request, pk):
     raise NotFound("Item does not exist.", 404) 
   serializer = ItemSerializer(item)
   return Response(serializer.data)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def uploadImages(request, pk):
+  user = request.user
+  profile = UserProfile.objects.get(user=user)
+  try:
+    item = Item.objects.get(pk=pk)
+
+    #Check if posted bt the same user
+    if item.user != profile:
+      raise PermissionDenied
+    
+    #Delete Previous Images
+    ItemImage.objects.filter(item=item).delete()
+    
+    # Create New Images
+    reqImages = request.FILES.getlist('images')
+    for i, reqImage in enumerate(reqImages):
+      ItemImage.objects.create(
+        item = item,
+        image = reqImage,
+        thumbnail = ( i < 5),
+      )
+    
+    savedImages = ItemImage.objects.filter(item=item)
+    serializer = ItemImageSerializer(savedImages, many=True)
+    return Response(serializer.data)
+  
+  except ObjectDoesNotExist or PermissionDenied:
+    if ObjectDoesNotExist:
+      raise NotFound('Item Not Found.')
+    elif PermissionDenied:
+      raise PermissionDenied('Item is not yours.')
+  
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updateItem(request, pk):
+  user = request.user
+  profile = UserProfile.objects.get(user=user)
+  data = request.data
+  try:
+    item = Item.objects.get(pk=pk)
+    if (item.user != profile): raise PermissionDenied
+    item.heading = data['heading']
+    item.sub_heading = data['sub_heading']
+    item.type = data['type']
+    item.reason = data['reason']
+    item.price = data['price']
+    item.negotiability = data['negotiability']
+    item.description = data['description']
+    item.communities.clear()
+    ItemDetail.objects.filter(item=item).delete()
+    for communityId in data['communities']:
+      community = Community.objects.get(pk=communityId)
+      item.communities.add(community)
+    for detail in data['details']:
+      ItemDetail.objects.create(
+        item = item,
+        label = detail['label'],
+        value = detail['value']
+      )
+    item.save()
+    serializer = ItemSerializer(item)
+    return Response(serializer.data)
+  except PermissionDenied or ObjectDoesNotExist:
+    if PermissionDenied:
+      raise PermissionDenied('Item is not yours.')
+    elif ObjectDoesNotExist:
+      raise ObjectDoesNotExist('Item does not exist.')

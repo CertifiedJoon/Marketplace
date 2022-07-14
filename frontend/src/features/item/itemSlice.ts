@@ -2,7 +2,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { RootState } from '../../app/store'
 
-import { Item, ItemPlaceholder } from '../../interface/itemInterface'
+import {
+  Item,
+  ItemImage,
+  ItemPlaceholder,
+  ItemUpdate,
+} from '../../interface/itemInterface'
 
 interface ItemState {
   item: Item
@@ -46,6 +51,78 @@ export const getItemById = createAsyncThunk<
   return data as Item
 })
 
+export const uploadImages = createAsyncThunk<
+  Array<ItemImage>,
+  { images: FileList; item_id: string },
+  {
+    state: RootState
+    rejectValue: KnownError
+  }
+>('item/uploadImages', async (update, thunkApi) => {
+  let token = thunkApi.getState().user.user
+    ? thunkApi.getState().user.user?.token
+    : ''
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const formData = new FormData()
+  for (let i = 0; i < update.images.length; i++) {
+    formData.append('images', update.images[i])
+  }
+  let data: Array<ItemImage> | null = null
+  try {
+    const response = await axios.put(
+      `/api/items/upload-images/${update.item_id}/`,
+      formData,
+      config
+    )
+    data = response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response)
+        return thunkApi.rejectWithValue(error.response.data as KnownError)
+    }
+  }
+  return data as Array<ItemImage>
+})
+
+export const updateItem = createAsyncThunk<
+  Item,
+  ItemUpdate,
+  {
+    state: RootState
+    rejectValue: KnownError
+  }
+>('item/updateItem', async (update, thunkApi) => {
+  let token = thunkApi.getState().user.user
+    ? thunkApi.getState().user.user?.token
+    : ''
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  let data: Item | null = null
+  try {
+    const response = await axios.put(
+      `/api/items/update/${update._id}/`,
+      update,
+      config
+    )
+    data = response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response)
+        return thunkApi.rejectWithValue(error.response.data as KnownError)
+    }
+  }
+  return data as Item
+})
+
 const ItemSlice = createSlice({
   name: 'item',
   initialState,
@@ -65,6 +142,36 @@ const ItemSlice = createSlice({
         state.item = action.payload
       })
       .addCase(getItemById.rejected, (state, action) => {
+        state.status = 'failed'
+        if (action.payload) {
+          state.error = action.payload.error.details.detail
+        } else {
+          state.error = action.error.message
+        }
+      })
+      .addCase(uploadImages.pending, (state, action) => {
+        state.status = 'pending'
+      })
+      .addCase(uploadImages.fulfilled, (state, action) => {
+        state.item.images = action.payload
+        state.status = 'idle'
+      })
+      .addCase(uploadImages.rejected, (state, action) => {
+        state.status = 'failed'
+        if (action.payload) {
+          state.error = action.payload.error.details.detail
+        } else {
+          state.error = action.error.message
+        }
+      })
+      .addCase(updateItem.pending, (state, action) => {
+        state.status = 'pending'
+      })
+      .addCase(updateItem.fulfilled, (state, action) => {
+        state.item = action.payload
+        state.status = 'succeeded'
+      })
+      .addCase(updateItem.rejected, (state, action) => {
         state.status = 'failed'
         if (action.payload) {
           state.error = action.payload.error.details.detail
