@@ -1,8 +1,10 @@
-from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from turtle import heading
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied, ValidationError
 from rest_framework.exceptions import NotFound
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
+import json
 
 from base.serializers import ItemBriefSerializer, ItemSerializer, LiveEventSerializer, ItemImageSerializer
 from base.models import Item, UserProfile, ItemImage, Community, ItemDetail
@@ -126,3 +128,60 @@ def updateItem(request, pk):
       raise PermissionDenied('Item is not yours.')
     elif ObjectDoesNotExist:
       raise ObjectDoesNotExist('Item does not exist.')
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def createItem(request):
+  user = request.user
+  profile = UserProfile.objects.get(user=user)
+  data = json.loads(request.data['json'])
+  try:
+    item = Item.objects.create(
+      user = profile,
+      type = data['type'],
+      heading = data['heading'],
+      sub_heading = data['sub_heading'],
+      reason = data['reason'],
+      price = data['price'],
+      negotiability = data['negotiability'],
+      description = data['description']
+    )
+    for communityId in data['communities']:
+      community = Community.objects.get(pk=communityId)
+      item.communities.add(community)
+    for detail in data['details']:
+      ItemDetail.objects.create(
+        item = item,
+        label = detail['label'],
+        value = detail['value']
+      )
+    reqImages = request.FILES.getlist('images')
+    for i, reqImage in enumerate(reqImages):
+      ItemImage.objects.create(
+        item= item,
+        image = reqImage,
+        thumbnail = (i < 5)
+      )
+    
+    item.save()
+    serializer = ItemSerializer(item)
+    return Response(serializer.data)
+  except ValidationError:
+    raise ValidationError('Data is in wrong format.')
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deleteItem(request, pk):
+  user = request.user
+  profile = UserProfile.objects.get(user = user)
+  try:
+    item = Item.objects.get(pk=pk)
+    if (profile != item.user):
+      raise PermissionDenied
+    item.delete()
+    return Response()
+  except PermissionDenied or ObjectDoesNotExist:
+    if PermissionDenied:
+      raise PermissionDenied('This item does not belong to you.')
+    elif ObjectDoesNotExist:
+      raise ObjectDoesNotExist('Object Deleted Already.')

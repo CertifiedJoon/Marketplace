@@ -92,21 +92,6 @@ function CategoryMenu({ activeType }: Props) {
           </Link>
         </SwiperSlide>
         <SwiperSlide>
-          <Link to="/explore/stationery">
-            <button className="btn btn-ghost">
-              <div className="card py-1">
-                <figure>
-                  <FaPencilAlt />
-                </figure>
-                <div className="card-body py-0 px-1 text-xs">Stationery</div>
-                {activeType === 'stationery' && (
-                  <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
-                )}
-              </div>
-            </button>
-          </Link>
-        </SwiperSlide>
-        <SwiperSlide>
           <Link to="/explore/note">
             <button className="btn btn-ghost">
               <div className="card py-1">
@@ -130,21 +115,6 @@ function CategoryMenu({ activeType }: Props) {
                 </figure>
                 <div className="card-body py-0 px-1 text-xs">Book</div>
                 {activeType === 'book' && (
-                  <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
-                )}
-              </div>
-            </button>
-          </Link>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Link to="/explore/tutoring">
-            <button className="btn btn-ghost">
-              <div className="card py-1">
-                <figure>
-                  <FaUserGraduate />
-                </figure>
-                <div className="card-body py-0 px-1 text-xs">Tutoring</div>
-                {activeType === 'tutoring' && (
                   <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
                 )}
               </div>
@@ -197,21 +167,6 @@ function CategoryMenu({ activeType }: Props) {
           </Link>
         </SwiperSlide>
         <SwiperSlide>
-          <Link to="/explore/sports">
-            <button className="btn btn-ghost">
-              <div className="card py-1">
-                <figure>
-                  <FaBasketballBall />
-                </figure>
-                <div className="card-body py-0 px-1 text-xs">Sports</div>
-                {activeType === 'sports' && (
-                  <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
-                )}
-              </div>
-            </button>
-          </Link>
-        </SwiperSlide>
-        <SwiperSlide>
           <Link to="/explore/fitness">
             <button className="btn btn-ghost">
               <div className="card py-1">
@@ -235,38 +190,6 @@ function CategoryMenu({ activeType }: Props) {
                 </figure>
                 <div className="card-body py-0 px-1 text-xs">Quidditch</div>
                 {activeType === 'quidditch' && (
-                  <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
-                )}
-              </div>
-            </button>
-          </Link>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Link to="/explore/umbrella">
-            <button className="btn btn-ghost">
-              <div className="card py-1">
-                <figure>
-                  <FaUmbrella />
-                </figure>
-                <div className="card-body py-0 px-1 text-xs">Umbrella</div>
-                {activeType === 'umbrella' && (
-                  <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
-                )}
-              </div>
-            </button>
-          </Link>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Link to="/explore/bath-cosmetics">
-            <button className="btn btn-ghost">
-              <div className="card py-1">
-                <figure>
-                  <FaBath />
-                </figure>
-                <div className="card-body py-0 px-1 text-xs">
-                  Bath/Cosmetics
-                </div>
-                {activeType === 'bath-cosmetics' && (
                   <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
                 )}
               </div>
@@ -312,36 +235,6 @@ function CategoryMenu({ activeType }: Props) {
                 </figure>
                 <div className="card-body py-0 px-1 text-xs">Electronics</div>
                 {activeType === 'electronics' && (
-                  <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
-                )}
-              </div>
-            </button>
-          </Link>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Link to="/explore/ridebutnotcar">
-            <button className="btn btn-ghost">
-              <div className="card py-1">
-                <figure>
-                  <FaBicycle />
-                </figure>
-                <div className="card-body py-0 px-1 text-xs">RideButNotCar</div>
-                {activeType === 'ridebutnotcar' && (
-                  <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
-                )}
-              </div>
-            </button>
-          </Link>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Link to="/explore/pet">
-            <button className="btn btn-ghost">
-              <div className="card py-1">
-                <figure>
-                  <FaPaw />
-                </figure>
-                <div className="card-body py-0 px-1 text-xs">Pet</div>
-                {activeType === 'pet' && (
                   <hr className="w-1/2 mx-auto bg-primary border border-t-2 border-primary rounded" />
                 )}
               </div>

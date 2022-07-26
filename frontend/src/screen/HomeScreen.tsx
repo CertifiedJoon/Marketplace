@@ -62,14 +62,14 @@ function HomeScreen({ sell = false }: Props) {
         {saleMode && (
           <div className="grid grid-cols-2 gap-4 mb-7">
             <div>
-              <Link to="/sell/post">
+              <Link to="/select-posting-category">
                 <button className="btn btn-block btn-sm btn-secondary">
                   Post an Item
                 </button>
               </Link>
             </div>
             <div>
-              <Link to="/event/host">
+              <Link to="/post/event">
                 <button className="btn btn-block btn-sm btn-secondary">
                   Host an Event
                 </button>

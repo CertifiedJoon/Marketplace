@@ -22,7 +22,7 @@ import ItemEditScreen from './screen/ItemEditScreen'
 import TermsScreen from './screen/TermsScreen'
 import PrivacyScreen from './screen/PrivacyScreen'
 import CommunityJoinScreen from './screen/CommunityJoinScreen'
-import EventHostScreen from './screen/EventHostScreen'
+import SelectPostingCategoryScreen from './screen/SelectPostingCategoryScreen'
 import MyCommunityScreen from './screen/MyCommunityScreen'
 import ScrollToTop from './components/ScrollToTop'
 import MyEventScreen from './screen/MyEventScreen'
@@ -37,14 +37,16 @@ function App() {
         <Routes>
           <Route path="/" element={<HomeScreen />}></Route>
           <Route path="/explore/:itemType" element={<HomeScreen />}></Route>
-          <Route path="*" element={<NoMatchScreen />}></Route>
-          <Route path="/sell" element={<HomeScreen sell />}></Route>
-          <Route path="/wishlist/userId" element={<SavedScreen />}></Route>
           <Route path="/item/:itemId" element={<ItemScreen />}></Route>
-          <Route path="/sell/post" element={<ItemUploadScreen />}></Route>
-          <Route path="/sell/edit/:itemId" element={<ItemEditScreen />}></Route>
+          <Route
+            path="/select-posting-category"
+            element={<SelectPostingCategoryScreen />}
+          ></Route>
+          <Route path="/post/:type" element={<ItemUploadScreen />}></Route>
+          <Route path="/edit/:itemId" element={<ItemEditScreen />}></Route>
           <Route path="/login" element={<LoginScreen />}></Route>
           <Route path="/signup" element={<SignupScreen />}></Route>
+          <Route path="/wishlist/userId" element={<SavedScreen />}></Route>
           <Route
             path="/event/signup/eventId"
             element={<EventSignupScreen />}
@@ -53,7 +55,6 @@ function App() {
             path="/event/create-signup"
             element={<CreateSignupScreen />}
           ></Route>
-          <Route path="/event/host" element={<EventHostScreen />}></Route>
           <Route
             path="/event/manage/eventId"
             element={<EventManageScreen />}
@@ -90,6 +91,7 @@ function App() {
           <Route path="/order/orderId" element={<OrderDetailScreen />}></Route>
           <Route path="/terms" element={<TermsScreen />}></Route>
           <Route path="/privacy" element={<PrivacyScreen />}></Route>
+          <Route path="*" element={<NoMatchScreen />}></Route>
         </Routes>
       </Router>
       <ToastContainer />

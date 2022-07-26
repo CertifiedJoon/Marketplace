@@ -35,7 +35,7 @@ function ItemCard({ cardDetail }: Props) {
       <Link
         to={
           cardDetail.saleMode
-            ? `/sell/edit/${cardDetail._id}`
+            ? `/edit/${cardDetail._id}`
             : `/item/${cardDetail._id}`
         }
       >

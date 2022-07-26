@@ -1,3 +1,4 @@
+import { StringSchema } from 'yup'
 import { UserBrief } from './userInterface'
 import { UserProfile, UserProfilePlaceholder } from './userProfileInterface'
 export interface ItemDetail {
@@ -11,6 +12,19 @@ export interface ItemImage {
   _id: string
   image: string
   thumbnail: boolean
+}
+
+export interface NewItem {
+  type: string
+  communities: Array<string>
+  heading: string
+  sub_heading: string
+  reason: string
+  price: number
+  negotiability: boolean
+  description: string
+  details: Array<{ label: string; value: string }>
+  images: FileList
 }
 
 export interface Item {

@@ -6,6 +6,11 @@ module.exports = {
     },
   ],
   theme: {
+    extend: {
+      backgroundImage: {
+        placeholder: "url('/src/static/images/placeholder.png')",
+      },
+    },
     placeholderColor: {
       accent: '#D89313',
     },

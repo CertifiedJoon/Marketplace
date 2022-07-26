@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import {
-  FaHandSparkles,
   FaHeart,
-  FaMedal,
   FaShare,
   FaInfoCircle,
   FaUpload,
+  FaRegTrashAlt,
 } from 'react-icons/fa'
 import { useForm, useFieldArray } from 'react-hook-form'
-import { Link, useParams } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { toast } from 'react-toastify'
@@ -27,6 +26,7 @@ import {
   getItemById,
   uploadImages,
   updateItem,
+  deleteItem,
 } from '../features/item/itemSlice'
 import { selectUserImage } from '../features/user/userProfileSlice'
 import ProfileBadge from '../components/ProfileBadge'
@@ -95,6 +95,7 @@ export const InputSchema = yup
 
 function ItemEditScreen() {
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const params = useParams()
   const [selectedCommunities, setSelectedCommunities] = useState<Array<string>>(
     []
@@ -134,8 +135,6 @@ function ItemEditScreen() {
       resetLaptop({
         heading: item.heading,
         sub_heading: item.sub_heading,
-        // communities: Array<string>
-        // type: string
         reason: item.reason,
         description: item.description,
         price: item.price,
@@ -145,9 +144,19 @@ function ItemEditScreen() {
       setSelectedType(item.type)
       setSelectedCommunities(item.communities)
       dispatch(resetItemStatus())
+    } else if (itemStatus === 'updated') {
+      dispatch(resetItemStatus())
+      navigate(`/item/${item._id}`)
+    } else if (itemStatus === 'deleted') {
+      dispatch(resetItemStatus())
+      navigate('/')
     }
     // eslint-disable-next-line
   }, [itemStatus, resetLaptop, dispatch, appendLaptop])
+
+  const handleDelete = () => {
+    if (window.confirm('Delete Item?')) dispatch(deleteItem(item._id))
+  }
 
   const onSubmitLaptop = (data: FormInput) => {
     if (selectedCommunities.length !== 0 && selectedType !== '') {
@@ -226,6 +235,17 @@ function ItemEditScreen() {
               <div className="hidden lg:block col-span-1 grid justify-item-stretch">
                 <div className="flex justify-end">
                   <button
+                    onClick={() => handleDelete()}
+                    className="btn rounded btn-error rounded-full text-xs px-3 mr-2"
+                  >
+                    <FaRegTrashAlt
+                      style={{
+                        backgroundColor: 'rgba(0, 0, 0, 0)',
+                      }}
+                    />
+                    &nbsp;Delete
+                  </button>
+                  <button
                     type="submit"
                     className="btn rounded btn-primary rounded-full text-xs px-3"
                   >
@@ -253,6 +273,7 @@ function ItemEditScreen() {
                     <input
                       type="file"
                       className="text-black file:input-xs file:py-1 file:px-1 file:rounded-full file:border-0 file:text-xs file:bg-white-50 file:text-accent-focus"
+                      onChange={(e) => handleUpload(e)}
                     />
                   </button>
                 </div>
@@ -435,7 +456,7 @@ function ItemEditScreen() {
                     <label className="text-lg text-gray-500 mb-5">
                       Seller Description &nbsp;
                     </label>
-                    {item.user.badges.map((badge, i) => (
+                    {item.user.badges.slice(0, 2).map((badge, i) => (
                       <ProfileBadge key={i} name={badge.name} />
                     ))}
                   </div>
@@ -593,22 +614,26 @@ function ItemEditScreen() {
               </div>
             </div>
           </div>
-          <div
-            className="hidden lg:block hero min-h-full rounded-2xl"
-            style={{
-              backgroundImage: `url(
+          <div className="hidden lg:block">
+            <div
+              className="hero min-h-full rounded-2xl"
+              style={{
+                backgroundImage: `url(
               ${community.thumbnail_image}
           )`,
-            }}
-          >
-            <div className="hero-overlay bg-opacity-60 rounded-2xl"></div>
-            <div className="hero-content text-center text-neutral-content">
-              <div className="max-w-md">
-                <h1 className="mb-5 text-5xl font-bold">{community.key}</h1>
-                <p className="mb-5">{community.name}</p>
-                <Link to={`/community/${community._id}`}>
-                  <button className="btn btn-primary">Explore Community</button>
-                </Link>
+              }}
+            >
+              <div className="hero-overlay bg-opacity-60 rounded-2xl"></div>
+              <div className="hero-content text-center text-neutral-content">
+                <div className="max-w-md">
+                  <h1 className="mb-5 text-5xl font-bold">{community.key}</h1>
+                  <p className="mb-5">{community.name}</p>
+                  <Link to={`/community/${community._id}`}>
+                    <button className="btn btn-primary">
+                      Explore Community
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
