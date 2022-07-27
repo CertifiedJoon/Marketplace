@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   FaInfoCircle,
   FaPlusCircle,
@@ -12,25 +12,20 @@ import * as yup from 'yup'
 import CustomInput from '../components/CustomInput'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
-import { updateItem } from '../features/item/itemSlice'
 import { toast } from 'react-toastify'
-import { selectUserProfileStatus } from '../features/user/userProfileSlice'
 import placeholder from '../static/images/placeholder.png'
+import { useAppDispatch, useAppSelector } from '../app/hook'
+import {
+  createForm,
+  selectEventForm,
+  selectEventFormError,
+  selectEventFormStatus,
+} from '../features/event/eventFormSlice'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Input } from '../interface/eventInterface'
 
 interface IFormInput {
   [key: string]: any
-}
-
-interface Input {
-  inputType: string
-  label: string
-  info: string
-  lengthRange: Array<number>
-  range: Array<number>
-  pattern: string
-  checkboxOptions: Array<string>
-  radioOptions: Array<string>
-  selectOptions: Array<string>
 }
 
 const imageSchema = yup.object().shape({
@@ -46,9 +41,13 @@ const imageSchema = yup.object().shape({
 })
 
 function CreateSignupScreen() {
+  const dispatch = useAppDispatch()
+  const status = useAppSelector(selectEventFormStatus)
+  const error = useAppSelector(selectEventFormError)
+  const params = useParams()
+  const navigate = useNavigate()
   const [createMode, setCreateMode] = useState(false)
   const [inputList, setInputList] = useState<Array<Input>>([])
-
   const [heading, setHeading] = useState('')
   const [description, setDescription] = useState('')
   const [thumbnail, setThumbnail] = useState<string>()
@@ -67,6 +66,14 @@ function CreateSignupScreen() {
   const [files, setFiles] = useState<FileList>()
   const { register } = useForm<IFormInput>()
 
+  useEffect(() => {
+    if (status === 'succeeded') {
+      navigate(`/event/manage/${params.eventId}`)
+    } else if (status === 'failed') {
+      toast.error(error)
+    }
+  }, [params, navigate, status, error])
+
   const handleCreate = () => {
     console.log({
       heading,
@@ -74,11 +81,31 @@ function CreateSignupScreen() {
       files,
       inputList,
     })
+    if (!heading || heading === '') {
+      toast.error('Heading is required.')
+    } else if (!description || description === '') {
+      toast.error('Description is required.')
+    } else if (!files) {
+      toast.error('Background Image is required.')
+    } else if (!inputList || inputList.length === 0) {
+      toast.error('At least one input is required.')
+    }
+    if (files && params.eventId) {
+      dispatch(
+        createForm({
+          _id: params.eventId,
+          heading,
+          description,
+          thumbnail: files,
+          inputs: inputList,
+        })
+      )
+    }
   }
 
   const handleCheck = (checked: boolean) => {
     if (checked === false) {
-      const newInput = {
+      const newInput: Input = {
         inputType,
         label: label === '' ? '_' : label,
         info,

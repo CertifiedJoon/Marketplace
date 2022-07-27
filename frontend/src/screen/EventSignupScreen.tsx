@@ -1,90 +1,79 @@
-import React from 'react'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
+import React, { useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 
+import Footer from '../components/Footer'
+import Header from '../components/Header'
 import CustomInput from '../components/CustomInput'
+import { getForm, selectEventForm } from '../features/event/eventFormSlice'
+import { useAppDispatch, useAppSelector } from '../app/hook'
+import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { Input } from '../interface/eventInterface'
+import { FaSpinner } from 'react-icons/fa'
+import axios from 'axios'
+import { selectUserToken } from '../features/user/userSlice'
 
 export interface IFormInput {
   [key: string]: any
 }
 
 function EventSignupScreen() {
-  const inputList = [
-    {
-      inputType: 'Text',
-      label: 'Name',
-      info: 'Name must be all caps',
-      lengthRange: [0, 50],
-      range: [0, 100],
-      pattern: '',
-      checkboxOptions: [],
-      radioOptions: [],
-      selectOptions: [],
-    },
-    {
-      inputType: 'Toggle',
-      label: 'Vegan',
-      info: 'Check if you are vegan',
-      lengthRange: [0, 50],
-      range: [0, 100],
-      pattern: '',
-      checkboxOptions: [],
-      radioOptions: [],
-      selectOptions: [],
-    },
-    {
-      inputType: 'Radio',
-      label: 'Gender',
-      info: 'Choose either of two',
-      lengthRange: [0, 50],
-      range: [0, 100],
-      pattern: '',
-      checkboxOptions: [],
-      radioOptions: ['Female', 'Male'],
-      selectOptions: [],
-    },
-    {
-      inputType: 'Checkbox',
-      label: 'Allergies',
-      info: 'Choose at least 2',
-      lengthRange: [0, 50],
-      range: [0, 100],
-      pattern: '',
-      checkboxOptions: ['Nuts', 'Fish', 'Dust', 'Red Meat'],
-      radioOptions: [],
-      selectOptions: [],
-    },
-    {
-      inputType: 'Select',
-      label: 'Dish',
-      info: 'Choose a dish',
-      lengthRange: [0, 50],
-      range: [0, 100],
-      pattern: '',
-      checkboxOptions: [],
-      radioOptions: [],
-      selectOptions: ['Beef', 'Chicken', 'Lamb'],
-    },
-    {
-      inputType: 'PassCode',
-      label: 'Secret PassCode',
-      info: 'Passcode is renewed everyweek, invite-only',
-      lengthRange: [0, 50],
-      range: [0, 100],
-      pattern: 'liverpool',
-      checkboxOptions: [],
-      radioOptions: [],
-      selectOptions: [],
-    },
-  ]
+  const { form, status, error } = useAppSelector(selectEventForm)
+  let token = useAppSelector(selectUserToken)
+  const dispatch = useAppDispatch()
+  const params = useParams()
+  const navigate = useNavigate()
+  const [inputs, setInputs] = useState<Array<Input>>([])
 
-  const { register, handleSubmit } = useForm<IFormInput>()
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data)
+  useEffect(() => {
+    if (params.eventId) dispatch(getForm(params.eventId))
+  }, [params, dispatch, getForm])
+
+  useEffect(() => {
+    if (status === 'succeeded') {
+      setInputs(JSON.parse(form.inputs))
+    } else if (status === 'failed') {
+      toast.error(error)
+    }
+  }, [status, error])
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<IFormInput>()
+
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    let config
+    if (token !== '') {
+      config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    } else {
+      config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    }
+    await axios
+      .post(
+        `/api/events/signup/${params.eventId}/`,
+        {
+          details: JSON.stringify(data),
+        },
+        config
+      )
+      .then((res) => {
+        if (window.confirm('Signed Up! Check your events page?')) navigate('/')
+      })
+      .catch((err) => toast.error(err))
   }
 
-  return (
+  return status === 'succeeded' ? (
     <>
       <Header />
       <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3 min-h-screen">
@@ -99,13 +88,9 @@ function EventSignupScreen() {
             <div className="hero-content text-center text-neutral-content">
               <div className="max-w-md">
                 <h1 className="mb-5 text-5xl text-secondary font-bold">
-                  HKU Quidditch Practice
+                  {form.heading}
                 </h1>
-                <p className="mb-5 text-secondary">
-                  Event Description : Provident cupiditate voluptatem et in.
-                  Quaerat fugiat ut assumenda excepturi exercitationem quasi. In
-                  deleniti eaque aut repudiandae et a id nisi.
-                </p>
+                <p className="mb-5 text-secondary">{form.description}</p>
               </div>
             </div>
           </div>
@@ -115,10 +100,11 @@ function EventSignupScreen() {
             <div className="flex justify-center">
               <div className="w-full max-w-md">
                 <form onSubmit={handleSubmit(onSubmit)}>
-                  {inputList.map((inputDetail, i) => (
+                  {inputs.map((inputDetail, i) => (
                     <div key={i}>
                       <CustomInput
                         inputDetail={inputDetail}
+                        errors={errors}
                         register={register}
                       />
                     </div>
@@ -137,6 +123,10 @@ function EventSignupScreen() {
       </div>
       <Footer active="explore" />
     </>
+  ) : (
+    <div className="flex min-h-screen w-full justify-center items-center">
+      <FaSpinner className="animate-spin text-4xl" />
+    </div>
   )
 }
 export default EventSignupScreen

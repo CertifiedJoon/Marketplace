@@ -4,19 +4,19 @@ export interface EventForm {
   heading: string
   description: string
   thumbnail: string
-  inputs: Array<Input>
+  inputs: string
 }
 
 export interface Input {
   inputType: string
   label: string
   info: string
-  lengthRange: Array<number>[]
-  range: Array<number>[]
+  lengthRange: Array<number>
+  range: Array<number>
   pattern: string
   checkboxOptions: Array<string>
   radioOptions: Array<string>
-  selectOptions: Array<String>
+  selectOptions: Array<string>
 }
 
 export interface NewForm {
@@ -31,5 +31,5 @@ export const EventFormPlaceholder: EventForm = {
   heading: 'Event Heading',
   description: 'Event Description',
   thumbnail: '/default.png',
-  inputs: [],
+  inputs: '',
 }

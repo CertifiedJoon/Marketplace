@@ -48,15 +48,15 @@ function App() {
           <Route path="/signup" element={<SignupScreen />}></Route>
           <Route path="/wishlist/userId" element={<SavedScreen />}></Route>
           <Route
-            path="/event/signup/eventId"
+            path="/event/signup/:eventId"
             element={<EventSignupScreen />}
           ></Route>
           <Route
-            path="/event/create-signup"
+            path="/event/create-signup/:eventId"
             element={<CreateSignupScreen />}
           ></Route>
           <Route
-            path="/event/manage/eventId"
+            path="/event/manage/:eventId"
             element={<EventManageScreen />}
           ></Route>
           <Route path="/mypage" element={<MyPageScreen />}></Route>

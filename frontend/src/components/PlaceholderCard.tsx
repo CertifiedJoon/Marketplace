@@ -3,7 +3,7 @@ import React from 'react'
 function PlaceholderCard() {
   return (
     <>
-      <div className="card item-card min-h-content min-w-full">
+      <div className="animate-pulse card item-card min-h-content min-w-full">
         <figure>
           <div className="figure-container">
             <div className="figure bg-gray-200"></div>

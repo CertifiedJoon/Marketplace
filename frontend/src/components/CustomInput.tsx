@@ -1,23 +1,13 @@
 import React from 'react'
-
-interface Input {
-  inputType: string
-  label: string
-  info: string
-  lengthRange: Array<number>
-  range: Array<number>
-  pattern: string
-  checkboxOptions: Array<string>
-  radioOptions: Array<string>
-  selectOptions: Array<string>
-}
+import { Input } from '../interface/eventInterface'
 
 type Props = {
   inputDetail: Input
+  errors?: any
   register: any
 }
 
-function CustomInput({ inputDetail, register }: Props) {
+function CustomInput({ inputDetail, errors, register }: Props) {
   return (
     <div>
       {inputDetail.inputType === 'Text' && (
@@ -39,6 +29,21 @@ function CustomInput({ inputDetail, register }: Props) {
                   maxLength: inputDetail.lengthRange[1],
                 })}
               />
+              {errors[inputDetail.label]?.type === 'required' && (
+                <p className="text-error">This field is required</p>
+              )}
+              {errors[inputDetail.label]?.type === 'maxLength' && (
+                <p className="text-error">
+                  {inputDetail.label} cannot exceed {inputDetail.lengthRange[1]}{' '}
+                  characters
+                </p>
+              )}
+              {errors[inputDetail.label]?.type === 'minLength' && (
+                <p className="text-error">
+                  {inputDetail.label} must be at least{' '}
+                  {inputDetail.lengthRange[0]} characters
+                </p>
+              )}
             </div>
           </div>
         </>
@@ -60,6 +65,18 @@ function CustomInput({ inputDetail, register }: Props) {
                   maxLength: inputDetail.lengthRange[1],
                 })}
               />
+              {errors[inputDetail.label]?.type === 'maxLength' && (
+                <p className="text-error">
+                  {inputDetail.label} cannot exceed {inputDetail.lengthRange[1]}{' '}
+                  characters
+                </p>
+              )}
+              {errors[inputDetail.label]?.type === 'minLength' && (
+                <p className="text-error">
+                  {inputDetail.label} must be at least{' '}
+                  {inputDetail.lengthRange[0]} characters
+                </p>
+              )}
             </div>
           </div>
         </>
@@ -83,6 +100,21 @@ function CustomInput({ inputDetail, register }: Props) {
                   max: inputDetail.range[1],
                 })}
               />
+              {errors[inputDetail.label]?.type === 'required' && (
+                <p className="text-error">This field is required</p>
+              )}
+              {errors[inputDetail.label]?.type === 'maxLength' && (
+                <p className="text-error">
+                  {inputDetail.label} cannot exceed {inputDetail.lengthRange[1]}{' '}
+                  characters
+                </p>
+              )}
+              {errors[inputDetail.label]?.type === 'minLength' && (
+                <p className="text-error">
+                  {inputDetail.label} must be at least{' '}
+                  {inputDetail.lengthRange[0]} characters
+                </p>
+              )}
             </div>
           </div>
         </>
@@ -102,9 +134,17 @@ function CustomInput({ inputDetail, register }: Props) {
                 className="input input-bordered rounded-xl rounded-t-none"
                 {...register(inputDetail.label, {
                   required: true,
-                  pattern: '^[w-.]+@([w-]+.)+[w-]{2,4}$',
+                  pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                 })}
               />
+              {errors[inputDetail.label]?.type === 'required' && (
+                <p className="text-error">This field is required</p>
+              )}
+              {errors[inputDetail.label]?.type === 'pattern' && (
+                <p className="text-error">
+                  {inputDetail.label} is in wrong format.
+                </p>
+              )}
             </div>
           </div>
         </>
@@ -124,9 +164,15 @@ function CustomInput({ inputDetail, register }: Props) {
                 className="input input-bordered rounded-xl rounded-t-none"
                 {...register(inputDetail.label, {
                   required: true,
-                  pattern: inputDetail.pattern,
+                  pattern: new RegExp(inputDetail.pattern),
                 })}
               />
+              {errors[inputDetail.label]?.type === 'required' && (
+                <p className="text-error">This field is required</p>
+              )}
+              {errors[inputDetail.label]?.type === 'pattern' && (
+                <p className="text-error">Wrong {inputDetail.label}</p>
+              )}
             </div>
           </div>
         </>
@@ -167,7 +213,11 @@ function CustomInput({ inputDetail, register }: Props) {
                   {inputDetail.label}
                 </span>
                 <span className="label-text text-xs">{inputDetail.info}</span>
-                <input type="checkbox" className="toggle toggle-sm" />
+                <input
+                  type="checkbox"
+                  className="toggle toggle-sm"
+                  {...register(inputDetail.label)}
+                />
               </label>
             </div>
           </div>

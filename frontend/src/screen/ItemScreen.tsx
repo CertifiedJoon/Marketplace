@@ -263,7 +263,7 @@ function ItemScreen() {
               <Link
                 to={
                   item.type === 'event'
-                    ? '/event/signup/eventId'
+                    ? `/event/signup/${item._id}`
                     : '/messages/chatId'
                 }
               >
@@ -576,7 +576,7 @@ function ItemScreen() {
                       <Link
                         to={
                           item.type === 'event'
-                            ? '/event/signup/eventId'
+                            ? `/event/signup/${item._id}`
                             : '/messages/chatId'
                         }
                         className="w-full"

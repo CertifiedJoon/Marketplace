@@ -7,6 +7,8 @@ import {
   NewForm,
 } from '../../interface/eventInterface'
 import { KnownError } from '../../interface/exceptionInterface'
+import { FaAcquisitionsIncorporated } from 'react-icons/fa'
+import { sortAndDeduplicateDiagnostics } from 'typescript'
 
 interface EventFormState {
   form: EventForm
@@ -20,7 +22,32 @@ const initialState = {
   error: '',
 } as EventFormState
 
-const createForm = createAsyncThunk<
+export const getForm = createAsyncThunk<
+  EventForm,
+  string,
+  {
+    rejectValue: KnownError
+  }
+>('eventForm/getForm', async (id, thunkApi) => {
+  let data: EventForm | null = null
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+    const response = await axios.get(`/api/events/get-form/${id}/`, config)
+    data = response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response)
+        return thunkApi.rejectWithValue(error.response.data as KnownError)
+    }
+  }
+  return data as EventForm
+})
+
+export const createForm = createAsyncThunk<
   EventForm,
   NewForm,
   {
@@ -70,5 +97,44 @@ const eventFormSlice = createSlice({
       state.error = ''
     },
   },
-  extraReducers: (builder) => {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(createForm.pending, (state, action) => {
+        state.status = 'pending'
+      })
+      .addCase(createForm.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        state.form = action.payload
+      })
+      .addCase(createForm.rejected, (state, action) => {
+        state.status = 'failed'
+        if (action.payload) {
+          state.error = action.payload.error.details.detail
+        } else {
+          state.error = action.error.message
+        }
+      })
+      .addCase(getForm.pending, (state, action) => {
+        state.status = 'pending'
+      })
+      .addCase(getForm.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        state.form = action.payload
+      })
+      .addCase(getForm.rejected, (state, action) => {
+        state.status = 'failed'
+        if (action.payload) {
+          state.error = action.payload.error.details.detail
+        } else {
+          state.error = action.error.message
+        }
+      })
+  },
 })
+
+export const { resetEventFormStatus } = eventFormSlice.actions
+export const selectEventForm = (state: RootState) => state.eventForm
+export const selectEventFormStatus = (state: RootState) =>
+  state.eventForm.status
+export const selectEventFormError = (state: RootState) => state.eventForm.error
+export default eventFormSlice.reducer

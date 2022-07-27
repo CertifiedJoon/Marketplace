@@ -109,7 +109,11 @@ function ItemUploadScreen() {
 
   useEffect(() => {
     if (itemStatus === 'succeeded') {
-      navigate(`/item/${uploadedItem._id}`)
+      if (type === 'event') {
+        navigate(`/event/create-signup/${uploadedItem._id}`)
+      } else {
+        navigate(`/item/${uploadedItem._id}`)
+      }
     } else if (itemStatus === 'failed') {
       toast(itemError)
     }
