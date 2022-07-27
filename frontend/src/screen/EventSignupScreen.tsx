@@ -80,7 +80,9 @@ function EventSignupScreen() {
   ]
 
   const { register, handleSubmit } = useForm<IFormInput>()
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data)
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    console.log(data)
+  }
 
   return (
     <>

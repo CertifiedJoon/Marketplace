@@ -118,6 +118,16 @@ class ItemSerializer(serializers.ModelSerializer):
   class Meta:
     model = Item
     fields = (
-      '__all__'
+      'heading', 'description', 'thumbnail', 'inputs'
     )
-  
+
+# Event
+class EventFormSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = EventForm
+    fields = ('__all__')
+
+class EventGuestSerializer(serializers.ModelSerializer):
+  profile = UserProfileSerializer(read_only=True)
+  class Meta:
+    fields = ('profile', 'details')

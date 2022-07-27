@@ -82,3 +82,20 @@ class ItemDetail(models.Model):
 
   def __str__(self):
     return self.item.heading
+
+class EventForm(models.Model):
+  _id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+  event = models.OneToOneField(Item, on_delete=models.CASCADE, null=True)
+  heading = models.CharField(max_length=100)
+  description = models.TextField()
+  thumbnail = models.ImageField(upload_to='event')
+  inputs = models.JSONField()
+
+  def __str__(self):
+    return self.event.heading
+  
+class EventGuest(models.Model):
+  _id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+  event = models.ForeignKey(Item, on_delete=models.CASCADE,related_name='event_guest')
+  profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True, related_name='profile_guest')
+  details = models.JSONField()

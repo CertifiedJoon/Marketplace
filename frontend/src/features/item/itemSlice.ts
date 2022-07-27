@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { NodeWithTypeArguments } from 'typescript'
 import { RootState } from '../../app/store'
 
 import {

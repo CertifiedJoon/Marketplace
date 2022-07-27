@@ -1,8 +1,7 @@
-from turtle import heading
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied, ValidationError
 from rest_framework.exceptions import NotFound
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 import json
 

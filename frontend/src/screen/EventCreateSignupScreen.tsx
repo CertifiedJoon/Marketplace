@@ -7,10 +7,15 @@ import {
   FaUpload,
 } from 'react-icons/fa'
 import { useForm } from 'react-hook-form'
+import * as yup from 'yup'
 
 import CustomInput from '../components/CustomInput'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
+import { updateItem } from '../features/item/itemSlice'
+import { toast } from 'react-toastify'
+import { selectUserProfileStatus } from '../features/user/userProfileSlice'
+import placeholder from '../static/images/placeholder.png'
 
 interface IFormInput {
   [key: string]: any
@@ -28,13 +33,25 @@ interface Input {
   selectOptions: Array<string>
 }
 
+const imageSchema = yup.object().shape({
+  image: yup
+    .mixed()
+    .required('Background image required.')
+    .test('fileSize', 'The file must be smaller than 1MB.', (value) => {
+      return value[0].size < 1000000
+    })
+    .test('type', 'File must be either .jpeg or .png', (value) => {
+      return value[0].type == ('image/jpeg' || 'image/png')
+    }),
+})
+
 function CreateSignupScreen() {
   const [createMode, setCreateMode] = useState(false)
   const [inputList, setInputList] = useState<Array<Input>>([])
 
   const [heading, setHeading] = useState('')
   const [description, setDescription] = useState('')
-  const [thumbnail, setThumbnail] = useState('')
+  const [thumbnail, setThumbnail] = useState<string>()
   const [inputType, setInputType] = useState('Text')
   const [quantity, setQuantity] = useState(0)
   const [label, setLabel] = useState('')
@@ -47,14 +64,14 @@ function CreateSignupScreen() {
   const [checkboxOptions, setCheckboxOptions] = useState<Array<string>>([])
   const [radioOptions, setRadioOptions] = useState<Array<string>>(['', ''])
   const [selectOptions, setSelectOptions] = useState<Array<string>>([])
-
+  const [files, setFiles] = useState<FileList>()
   const { register } = useForm<IFormInput>()
 
   const handleCreate = () => {
     console.log({
       heading,
       description,
-      thumbnail,
+      files,
       inputList,
     })
   }
@@ -120,6 +137,20 @@ function CreateSignupScreen() {
     setInputList((currentImg) => currentImg.filter((img, i) => i !== index))
   }
 
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    try {
+      await imageSchema.validate({ image: event.target.files })
+    } catch (error) {
+      if (error instanceof yup.ValidationError) toast.error(error.message)
+      return
+    }
+    event.target.files && setFiles(event.target.files)
+    event.target.files &&
+      setThumbnail(URL.createObjectURL(event.target.files[0]))
+  }
+
   return (
     <>
       <Header />
@@ -152,7 +183,9 @@ function CreateSignupScreen() {
             <div
               className="hero max-h-96 my-5 relative"
               style={{
-                backgroundImage: `url('https://180dc.org/wp-content/uploads/2015/03/HKU.jpg')`,
+                backgroundImage: `url(
+                  ${thumbnail ? thumbnail : placeholder}
+                )`,
               }}
             >
               <div className="hero-overlay bg-opacity-60"></div>
@@ -184,7 +217,9 @@ function CreateSignupScreen() {
       file:bg-violet-50 file:text-violet-700
       hover:file:bg-violet-100
     "
-                onChange={(e) => setThumbnail(e.target.value)}
+                onChange={(e) => {
+                  handleImageUpload(e)
+                }}
               />
             </div>
             <div className="my-5">
