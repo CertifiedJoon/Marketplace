@@ -46,7 +46,7 @@ function EventSignupScreen() {
 
   useEffect(() => {
     if (signupStatus === 'succeeded') {
-      navigate('/event-receipt')
+      navigate('/event/receipt')
     } else if (signupStatus === 'failed') {
       toast.error(signupError)
       dispatch(resetEventGuestStatus())

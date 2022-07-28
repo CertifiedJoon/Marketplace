@@ -81,6 +81,11 @@ const eventGuestSlice = createSlice({
       state.status = 'idle'
       state.error = ''
     },
+    resetEventGuest: (state: EventGuestState) => {
+      state.signupDetail = { details: '' }
+      state.status = 'idle'
+      state.error = ''
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -102,8 +107,11 @@ const eventGuestSlice = createSlice({
   },
 })
 
-export const { resetEventGuestStatus } = eventGuestSlice.actions
+export const { resetEventGuestStatus, resetEventGuest } =
+  eventGuestSlice.actions
 export const selectEventGuest = (state: RootState) => state.eventGuest
+export const selectEventGuestDetails = (state: RootState) =>
+  state.eventGuest.signupDetail
 export const selectEventGuestStatus = (state: RootState) =>
   state.eventGuest.status
 export const selectEventGuestError = (state: RootState) =>
