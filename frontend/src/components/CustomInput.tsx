@@ -29,16 +29,16 @@ function CustomInput({ inputDetail, errors, register }: Props) {
                   maxLength: inputDetail.lengthRange[1],
                 })}
               />
-              {errors[inputDetail.label]?.type === 'required' && (
+              {errors && errors[inputDetail.label]?.type === 'required' && (
                 <p className="text-error">This field is required</p>
               )}
-              {errors[inputDetail.label]?.type === 'maxLength' && (
+              {errors && errors[inputDetail.label]?.type === 'maxLength' && (
                 <p className="text-error">
                   {inputDetail.label} cannot exceed {inputDetail.lengthRange[1]}{' '}
                   characters
                 </p>
               )}
-              {errors[inputDetail.label]?.type === 'minLength' && (
+              {errors && errors[inputDetail.label]?.type === 'minLength' && (
                 <p className="text-error">
                   {inputDetail.label} must be at least{' '}
                   {inputDetail.lengthRange[0]} characters
@@ -65,13 +65,13 @@ function CustomInput({ inputDetail, errors, register }: Props) {
                   maxLength: inputDetail.lengthRange[1],
                 })}
               />
-              {errors[inputDetail.label]?.type === 'maxLength' && (
+              {errors && errors[inputDetail.label]?.type === 'maxLength' && (
                 <p className="text-error">
                   {inputDetail.label} cannot exceed {inputDetail.lengthRange[1]}{' '}
                   characters
                 </p>
               )}
-              {errors[inputDetail.label]?.type === 'minLength' && (
+              {errors && errors[inputDetail.label]?.type === 'minLength' && (
                 <p className="text-error">
                   {inputDetail.label} must be at least{' '}
                   {inputDetail.lengthRange[0]} characters
@@ -100,16 +100,16 @@ function CustomInput({ inputDetail, errors, register }: Props) {
                   max: inputDetail.range[1],
                 })}
               />
-              {errors[inputDetail.label]?.type === 'required' && (
+              {errors && errors[inputDetail.label]?.type === 'required' && (
                 <p className="text-error">This field is required</p>
               )}
-              {errors[inputDetail.label]?.type === 'maxLength' && (
+              {errors && errors[inputDetail.label]?.type === 'maxLength' && (
                 <p className="text-error">
                   {inputDetail.label} cannot exceed {inputDetail.lengthRange[1]}{' '}
                   characters
                 </p>
               )}
-              {errors[inputDetail.label]?.type === 'minLength' && (
+              {errors && errors[inputDetail.label]?.type === 'minLength' && (
                 <p className="text-error">
                   {inputDetail.label} must be at least{' '}
                   {inputDetail.lengthRange[0]} characters
@@ -137,10 +137,10 @@ function CustomInput({ inputDetail, errors, register }: Props) {
                   pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                 })}
               />
-              {errors[inputDetail.label]?.type === 'required' && (
+              {errors && errors[inputDetail.label]?.type === 'required' && (
                 <p className="text-error">This field is required</p>
               )}
-              {errors[inputDetail.label]?.type === 'pattern' && (
+              {errors && errors[inputDetail.label]?.type === 'pattern' && (
                 <p className="text-error">
                   {inputDetail.label} is in wrong format.
                 </p>
@@ -167,10 +167,10 @@ function CustomInput({ inputDetail, errors, register }: Props) {
                   pattern: new RegExp(inputDetail.pattern),
                 })}
               />
-              {errors[inputDetail.label]?.type === 'required' && (
+              {errors && errors[inputDetail.label]?.type === 'required' && (
                 <p className="text-error">This field is required</p>
               )}
-              {errors[inputDetail.label]?.type === 'pattern' && (
+              {errors && errors[inputDetail.label]?.type === 'pattern' && (
                 <p className="text-error">Wrong {inputDetail.label}</p>
               )}
             </div>

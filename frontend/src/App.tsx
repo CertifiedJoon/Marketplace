@@ -27,6 +27,8 @@ import MyCommunityScreen from './screen/MyCommunityScreen'
 import ScrollToTop from './components/ScrollToTop'
 import MyEventScreen from './screen/MyEventScreen'
 import EventDetail from './screen/EventDetailScreen'
+import EventEditSignupScreen from './screen/EventEditSignupScreen'
+import EventReceiptScreen from './screen/EventReceiptScreen'
 
 function App() {
   return (
@@ -56,9 +58,14 @@ function App() {
             element={<CreateSignupScreen />}
           ></Route>
           <Route
+            path="/event/edit-signup/:eventId"
+            element={<EventEditSignupScreen />}
+          ></Route>
+          <Route
             path="/event/manage/:eventId"
             element={<EventManageScreen />}
           ></Route>
+          <Route path="/event/receipt" element={<EventReceiptScreen />}></Route>
           <Route path="/mypage" element={<MyPageScreen />}></Route>
           <Route path="/profile" element={<ProfileScreen />}></Route>
           <Route

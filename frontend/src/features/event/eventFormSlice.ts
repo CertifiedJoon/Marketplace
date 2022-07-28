@@ -9,6 +9,7 @@ import {
 import { KnownError } from '../../interface/exceptionInterface'
 import { FaAcquisitionsIncorporated } from 'react-icons/fa'
 import { sortAndDeduplicateDiagnostics } from 'typescript'
+import { Form } from 'react-bootstrap'
 
 interface EventFormState {
   form: EventForm
@@ -36,7 +37,7 @@ export const getForm = createAsyncThunk<
         'Content-Type': 'application/json',
       },
     }
-    const response = await axios.get(`/api/events/get-form/${id}/`, config)
+    const response = await axios.post(`/api/events/get-form/${id}/`, config)
     data = response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -88,6 +89,45 @@ export const createForm = createAsyncThunk<
   return data as EventForm
 })
 
+export const editForm = createAsyncThunk<
+  EventForm,
+  NewForm,
+  {
+    state: RootState
+    rejectValue: KnownError
+  }
+>('eventForm/editForm', async (newForm, thunkApi) => {
+  const formData = new FormData()
+  formData.set('heading', newForm.heading)
+  formData.set('description', newForm.description)
+  if (newForm.thumbnail) formData.set('thumbnail', newForm.thumbnail[0])
+  formData.set('inputs', JSON.stringify(newForm.inputs))
+  let data: EventForm | null = null
+  let token = thunkApi.getState().user.user
+    ? thunkApi.getState().user.user?.token
+    : ''
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  try {
+    const response = await axios.put(
+      `/api/events/update-form/${newForm._id}/`,
+      formData,
+      config
+    )
+    data = response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response)
+        return thunkApi.rejectWithValue(error.response.data as KnownError)
+    }
+  }
+  return data as EventForm
+})
+
 const eventFormSlice = createSlice({
   name: 'eventForm',
   initialState,
@@ -122,6 +162,21 @@ const eventFormSlice = createSlice({
         state.form = action.payload
       })
       .addCase(getForm.rejected, (state, action) => {
+        state.status = 'failed'
+        if (action.payload) {
+          state.error = action.payload.error.details.detail
+        } else {
+          state.error = action.error.message
+        }
+      })
+      .addCase(editForm.pending, (state, action) => {
+        state.status = 'pending'
+      })
+      .addCase(editForm.fulfilled, (state, action) => {
+        state.status = 'updated'
+        state.form = action.payload
+      })
+      .addCase(editForm.rejected, (state, action) => {
         state.status = 'failed'
         if (action.payload) {
           state.error = action.payload.error.details.detail

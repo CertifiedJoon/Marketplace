@@ -5,9 +5,10 @@ import {
   FaInfoCircle,
   FaUpload,
   FaRegTrashAlt,
+  FaPencilAlt,
 } from 'react-icons/fa'
 import { useForm, useFieldArray } from 'react-hook-form'
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { toast } from 'react-toastify'
@@ -220,7 +221,7 @@ function ItemEditScreen() {
           </div>
           <div className="grid grid-rows-10">
             <div className="row-span-1 row-start-10 grid grid-cols-5 my-4 lg:row-start-1">
-              <div className="col-span-5 border-b-2 border-gray-200 flex items-start lg:col-span-4 lg:border-0">
+              <div className="col-span-5 border-b-2 border-gray-200 flex items-start lg:col-span-3 lg:border-0">
                 <input
                   type="text"
                   placeholder="Fill In Item Heading"
@@ -232,7 +233,7 @@ function ItemEditScreen() {
                   {errorsLaptop.heading?.message}
                 </p>
               </div>
-              <div className="hidden lg:block col-span-1 grid justify-item-stretch">
+              <div className="hidden lg:block col-span-2 grid justify-item-stretch">
                 <div className="flex justify-end">
                   <button
                     onClick={() => handleDelete()}
@@ -245,6 +246,18 @@ function ItemEditScreen() {
                     />
                     &nbsp;Delete
                   </button>
+                  {item.type === 'event' && (
+                    <Link to={`/event/edit-signup/${item._id}`}>
+                      <button className="btn rounded btn-secondary rounded-full text-xs px-3 mr-2">
+                        <FaPencilAlt
+                          style={{
+                            backgroundColor: 'rgba(0, 0, 0, 0)',
+                          }}
+                        />
+                        &nbsp;Edit Signup Form
+                      </button>
+                    </Link>
+                  )}
                   <button
                     type="submit"
                     className="btn rounded btn-primary rounded-full text-xs px-3"

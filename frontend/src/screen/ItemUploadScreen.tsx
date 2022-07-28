@@ -15,6 +15,7 @@ import {
   selectItemError,
   uploadItem,
   selectItem,
+  resetItemStatus,
 } from '../features/item/itemSlice'
 import { selectUserProfile } from '../features/user/userProfileSlice'
 import ProfileBadge from '../components/ProfileBadge'
@@ -110,11 +111,14 @@ function ItemUploadScreen() {
   useEffect(() => {
     if (itemStatus === 'succeeded') {
       if (type === 'event') {
+        dispatch(resetItemStatus)
         navigate(`/event/create-signup/${uploadedItem._id}`)
       } else {
+        dispatch(resetItemStatus())
         navigate(`/item/${uploadedItem._id}`)
       }
     } else if (itemStatus === 'failed') {
+      dispatch(resetItemStatus())
       toast(itemError)
     }
   }, [itemStatus, itemError])
@@ -221,7 +225,8 @@ function ItemUploadScreen() {
                         backgroundColor: 'rgba(0, 0, 0, 0)',
                       }}
                     />
-                    &nbsp;Save
+                    &nbsp;Save&nbsp;
+                    {params.type === 'event' && '& Create Signup Form'}
                   </button>
                 </div>
               </div>
@@ -616,12 +621,8 @@ function ItemUploadScreen() {
             </div>
             <div className="col-span-1">
               <button className="btn btn-primary btn-md w-full" type="submit">
-                <FaUpload
-                  style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0)',
-                  }}
-                />
                 &nbsp;Save
+                {params.type === 'event' && ' & Create Signup'}
               </button>
             </div>
           </div>

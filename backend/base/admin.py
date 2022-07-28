@@ -23,9 +23,12 @@ class ItemImageInline(admin.TabularInline):
   model = ItemImage
   extra = 5
 
+class EventGuestInline(admin.TabularInline):
+  model = EventGuest
+
 class ItemAdmin(admin.ModelAdmin):
   filter_horizontal = ('communities',)
-  inlines = [ItemImageInline, ItemDetailInline]
+  inlines = [ItemImageInline, ItemDetailInline, EventGuestInline]
   list_display = ('heading','createdAt')
   list_filter = ['createdAt','communities']
   search_fields = ['heading']
@@ -35,4 +38,5 @@ admin.site.register(Item, ItemAdmin)
 admin.site.register(Community)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Badge, BadgeAdmin)
+admin.site.register(EventForm)
 # Register your models here.
