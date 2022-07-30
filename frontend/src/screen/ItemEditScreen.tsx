@@ -6,6 +6,7 @@ import {
   FaUpload,
   FaRegTrashAlt,
   FaPencilAlt,
+  FaUserCheck,
 } from 'react-icons/fa'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -221,6 +222,32 @@ function ItemEditScreen() {
           </div>
           <div className="grid grid-rows-10">
             <div className="row-span-1 row-start-10 grid grid-cols-5 my-4 lg:row-start-1">
+              <div className="col-span-5">
+                {item.type === 'event' && (
+                  <div className="grid grid-cols-2 gap-4 mb-2">
+                    <Link to={`/event/edit-signup/${item._id}`}>
+                      <button className="btn btn-block btn-sm rounded btn-secondary rounded-full text-xs">
+                        <FaPencilAlt
+                          style={{
+                            backgroundColor: 'rgba(0, 0, 0, 0)',
+                          }}
+                        />
+                        &nbsp;Edit Signup Form
+                      </button>
+                    </Link>
+                    <Link to={`/event/manage/${item._id}`}>
+                      <button className="btn btn-block btn-sm rounded btn-secondary rounded-full text-xs">
+                        <FaUserCheck
+                          style={{
+                            backgroundColor: 'rgba(0, 0, 0, 0)',
+                          }}
+                        />
+                        &nbsp;Manage Event
+                      </button>
+                    </Link>
+                  </div>
+                )}
+              </div>
               <div className="col-span-5 border-b-2 border-gray-200 flex items-start lg:col-span-3 lg:border-0">
                 <input
                   type="text"
@@ -246,18 +273,6 @@ function ItemEditScreen() {
                     />
                     &nbsp;Delete
                   </button>
-                  {item.type === 'event' && (
-                    <Link to={`/event/edit-signup/${item._id}`}>
-                      <button className="btn rounded btn-secondary rounded-full text-xs px-3 mr-2">
-                        <FaPencilAlt
-                          style={{
-                            backgroundColor: 'rgba(0, 0, 0, 0)',
-                          }}
-                        />
-                        &nbsp;Edit Signup Form
-                      </button>
-                    </Link>
-                  )}
                   <button
                     type="submit"
                     className="btn rounded btn-primary rounded-full text-xs px-3"

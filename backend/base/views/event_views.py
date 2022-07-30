@@ -98,3 +98,21 @@ def signup(request, pk):
       raise ValidationError('Item is not an events')
     elif ObjectDoesNotExist:
       raise ObjectDoesNotExist('Event no longer exists.')
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getGuests(request, pk):
+  user = request.user
+  try:
+    event = Item.objects.get(pk=pk)
+    profile = UserProfile.objects.get(user=user)
+    if event.type != 'event': raise ValidationError
+    if event.user != profile: raise PermissionDenied
+    guests = event.event_guest.all()
+    serializer = EventGuestSerializer(guests, many=True)
+    return Response(serializer.data)
+  except ValidationError or PermissionDenied:
+    if ValidationError:
+      raise('Item is not an event.')
+    elif PermissionDenied:
+      raise('Item is not yours.')

@@ -49,6 +49,7 @@ def getLiveEvents(request, community):
   serializer = LiveEventSerializer(events, many=True)
   return Response(serializer.data)
 
+
 @api_view(['GET'])
 def getItem(request, pk):
   try:

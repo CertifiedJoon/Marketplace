@@ -18,6 +18,7 @@ import userProfileSlice from '../features/user/userProfileSlice'
 import userSlice from '../features/user/userSlice'
 import eventFormSlice from '../features/event/eventFormSlice'
 import eventGuestSlice from '../features/event/eventGuestSlice'
+import eventManageSlice from '../features/event/eventManageSlice'
 const persistConfig = {
   key: 'root',
   version: 1,
@@ -34,6 +35,7 @@ export const rootReducer = combineReducers({
   membership: membershipSlice,
   eventForm: eventFormSlice,
   eventGuest: eventGuestSlice,
+  eventManage: eventManageSlice,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

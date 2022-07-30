@@ -6,4 +6,5 @@ urlpatterns = [
   path('update-form/<str:pk>/', views.updateForm, name='update-form'),
   path('create-form/<str:pk>/', views.createForm, name='create-form'),
   path('signup/<str:pk>/', views.signup, name='signup'),
+  path('get-guests/<str:pk>/', views.getGuests, name='get-guests')
 ]

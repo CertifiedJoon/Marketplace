@@ -27,6 +27,16 @@ export interface NewForm {
   thumbnail: FileList
 }
 
+export interface Guests {
+  details: string
+}
+
+export interface ManagedEvent {
+  _id: string
+  heading: string
+  image: string
+}
+
 export const EventFormPlaceholder: EventForm = {
   heading: 'Event Heading',
   description: 'Event Description',

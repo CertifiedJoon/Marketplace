@@ -1,14 +1,57 @@
 import React, { useEffect, useState } from 'react'
+import { FaNpm } from 'react-icons/fa'
+import { useNavigate, useParams } from 'react-router-dom'
+import { colors } from 'react-select/dist/declarations/src/theme'
 import { toast } from 'react-toastify'
+import { json } from 'stream/consumers'
+
+import { useAppDispatch, useAppSelector } from '../app/hook'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
+import {
+  getGuestDetails,
+  resetEventManageStatus,
+  selectEventManage,
+} from '../features/event/eventManageSlice'
+import itemListSlice from '../features/item/itemListSlice'
+import { selectItem } from '../features/item/itemSlice'
+import { Guests } from '../interface/eventInterface'
 
 function EventManageScreen() {
   const [copySuccess, setCopySuccess] = useState(false)
+  const [stats, setStats] = useState<Array<Guests>>([])
+  const sessionItem = useAppSelector(selectItem)
+  const { guestDetails, status, error } = useAppSelector(selectEventManage)
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const params = useParams()
 
   useEffect(() => {
     if (copySuccess === true) toast.success('Invitation copied.')
   }, [copySuccess])
+
+  useEffect(() => {
+    if (!params.eventId || params.eventId !== sessionItem._id) {
+      toast.error('Sesseion expired, try again.')
+      navigate(`/edit/${params.eventId}`)
+    } else {
+      dispatch(getGuestDetails(params.eventId))
+    }
+  }, [params, dispatch, navigate, getGuestDetails])
+
+  useEffect(() => {
+    if (status === 'failed') {
+      toast.error(error)
+      dispatch(resetEventManageStatus())
+    } else if (status === 'succeeded') {
+      const summary: { [key: string]: any } = { memCnt: guestDetails.length }
+      guestDetails.forEach((guestDetail) => {
+        Object.keys(JSON.parse(guestDetail.details)).forEach((label) => {
+          summary[label] ? (summary['label'] += 1) : (summary['label'] = 1)
+        })
+      })
+    }
+  }, [status, error])
 
   const handleSendInvitation = async () => {
     await navigator.clipboard.writeText('Link')
@@ -31,19 +74,19 @@ function EventManageScreen() {
             <div
               className="hero max-h-96 rounded-2xl"
               style={{
-                backgroundImage: `url('https://180dc.org/wp-content/uploads/2015/03/HKU.jpg')`,
+                backgroundImage: `url(
+                  ${sessionItem.images[0]}
+                )`,
               }}
             >
               <div className="hero-overlay bg-opacity-60 rounded-2xl"></div>
               <div className="hero-content text-center text-neutral-content">
                 <div className="max-w-md">
                   <h1 className="mb-5 text-5xl text-secondary font-bold">
-                    HKU Quidditch Practice
+                    {sessionItem.heading}
                   </h1>
                   <p className="mb-5 text-secondary">
-                    Event Description : Provident cupiditate voluptatem et in.
-                    Quaerat fugiat ut assumenda excepturi exercitationem quasi.
-                    In deleniti eaque aut repudiandae et a id nisi.
+                    {sessionItem.description}
                   </p>
                 </div>
               </div>
@@ -83,43 +126,7 @@ function EventManageScreen() {
               <div className="stats shadow mx-3 my-3 w-full sm:max-w-fit">
                 <div className="stat">
                   <div className="stat-title">Total Members Joined</div>
-                  <div className="stat-value">89,400</div>
-                </div>
-              </div>
-              <div className="stats shadow mx-3 my-3 w-full sm:max-w-fit">
-                <div className="stat">
-                  <div className="stat-title">Female</div>
-                  <div className="stat-value">39,400</div>
-                </div>
-              </div>
-              <div className="stats shadow mx-3 my-3 w-full sm:max-w-fit">
-                <div className="stat">
-                  <div className="stat-title">Male</div>
-                  <div className="stat-value">40,000</div>
-                </div>
-              </div>
-              <div className="stats shadow mx-3 my-3 w-full sm:max-w-fit">
-                <div className="stat">
-                  <div className="stat-title">Vegetarian</div>
-                  <div className="stat-value">9,400</div>
-                </div>
-              </div>
-              <div className="stats shadow mx-3 my-3 w-full sm:max-w-fit">
-                <div className="stat">
-                  <div className="stat-title">Beef</div>
-                  <div className="stat-value">40,000</div>
-                </div>
-              </div>
-              <div className="stats shadow mx-3 my-3 w-full sm:max-w-fit">
-                <div className="stat">
-                  <div className="stat-title">Chicken</div>
-                  <div className="stat-value">40,000</div>
-                </div>
-              </div>
-              <div className="stats shadow mx-3 my-3 w-full sm:max-w-fit">
-                <div className="stat">
-                  <div className="stat-title">Total Ticket Sales</div>
-                  <div className="stat-value">$40,000</div>
+                  <div className="stat-value">{stats.length}</div>
                 </div>
               </div>
             </div>
@@ -134,26 +141,24 @@ function EventManageScreen() {
                   {/* LazyLoad to be implemented */}
                   <tr>
                     <th></th>
-                    <th>Name</th>
-                    <th>Job</th>
-                    <th>company</th>
-                    <th>location</th>
-                    <th>Last Login</th>
-                    <th>Favorite Color</th>
+                    {Object.keys(stats[0]).map((label, i) => (
+                      <th key={i}>label</th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {Array.from({ length: 30 }, () => '').map((e, i) => (
-                    <tr>
-                      <th>{i}</th>
-                      <td>Cy Ganderton</td>
-                      <td>Quality Control Specialist</td>
-                      <td>Littel, Schaden and Vandervort</td>
-                      <td>Canada</td>
-                      <td>12/16/2020</td>
-                      <td>Blue</td>
-                    </tr>
-                  ))}
+                  {guestDetails.map((guestDetail, i) => {
+                    return (
+                      <tr key={i}>
+                        <th>{i}</th>
+                        {Object.values(JSON.parse(guestDetail.details)).map(
+                          (value, j) => (
+                            <th key={j}> {value as string} </th>
+                          )
+                        )}
+                      </tr>
+                    )
+                  })}
                 </tbody>
                 <tfoot>
                   <tr>
