@@ -117,9 +117,13 @@ class ItemSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = Item
-    fields = (
-      '__all__'
-    )
+    fields = '__all__'
+  
+
+class LikeSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Like
+    fields= '__all__'
 
 # Event
 class EventFormSerializer(serializers.ModelSerializer):

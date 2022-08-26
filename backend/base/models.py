@@ -96,6 +96,11 @@ class EventForm(models.Model):
   
 class EventGuest(models.Model):
   _id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-  event = models.ForeignKey(Item, on_delete=models.CASCADE,related_name='event_guest')
+  event = models.ForeignKey(Item, on_delete=models.CASCADE, null=True, related_name='event_guest')
   profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True, related_name='profile_guest')
   details = models.JSONField()
+
+class Like(models.Model):
+  _id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+  item = models.ForeignKey(Item, on_delete=models.CASCADE, null=False, related_name='like_item')
+  profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=False, related_name='like_profile')

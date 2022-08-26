@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { FaNpm } from 'react-icons/fa'
+import React, { useEffect, useState, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { colors } from 'react-select/dist/declarations/src/theme'
 import { toast } from 'react-toastify'
-import { json } from 'stream/consumers'
+import { DownloadTableExcel } from 'react-export-table-to-excel';
 
 import { useAppDispatch, useAppSelector } from '../app/hook'
 import Footer from '../components/Footer'
@@ -18,6 +16,7 @@ import { selectItem } from '../features/item/itemSlice'
 import { Guests } from '../interface/eventInterface'
 
 function EventManageScreen() {
+  const tableRef = useRef(null);
   const [copySuccess, setCopySuccess] = useState(false)
   const [stats, setStats] = useState<Array<Guests>>([])
   const sessionItem = useAppSelector(selectItem)
@@ -44,12 +43,13 @@ function EventManageScreen() {
       toast.error(error)
       dispatch(resetEventManageStatus())
     } else if (status === 'succeeded') {
-      const summary: { [key: string]: any } = { memCnt: guestDetails.length }
+      const parsedDetails : Array<Guests> = []
       guestDetails.forEach((guestDetail) => {
-        Object.keys(JSON.parse(guestDetail.details)).forEach((label) => {
-          summary[label] ? (summary['label'] += 1) : (summary['label'] = 1)
-        })
+        const parsedDetail = JSON.parse(guestDetail.details)
+        parsedDetails.push(parsedDetail)
       })
+      setStats(parsedDetails)
+      console.log(parsedDetails)
     }
   }, [status, error])
 
@@ -65,8 +65,9 @@ function EventManageScreen() {
   const handleDownloadCell = () => {
     console.log('Download Member Details')
   }
-  return (
-    <div className="min-h-screen">
+  if (status === 'succeeded' && stats !== []){
+    return (
+      <div className="min-h-screen">
       <Header />
       <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3 min-h-screen">
         <div className="my-5 min-h-content">
@@ -75,10 +76,10 @@ function EventManageScreen() {
               className="hero max-h-96 rounded-2xl"
               style={{
                 backgroundImage: `url(
-                  ${sessionItem.images[0]}
-                )`,
+                  ${sessionItem.images[0].image}
+                  )`,
               }}
-            >
+              >
               <div className="hero-overlay bg-opacity-60 rounded-2xl"></div>
               <div className="hero-content text-center text-neutral-content">
                 <div className="max-w-md">
@@ -98,7 +99,7 @@ function EventManageScreen() {
                 <button
                   className="btn btn-block btn-outline rounded-none"
                   onClick={handleSendInvitation}
-                >
+                  >
                   Send Invitation
                 </button>
               </div>
@@ -106,17 +107,18 @@ function EventManageScreen() {
                 <button
                   className="btn btn-block btn-outline rounded-none"
                   onClick={handleMessageAll}
-                >
+                  >
                   Send a message to all members
                 </button>
               </div>
               <div className="px-3 w-full my-1">
-                <button
-                  className="btn btn-block btn-outline rounded-none"
-                  onClick={handleDownloadCell}
+              <DownloadTableExcel
+                    filename="guest_details"
+                    sheet="users"
+                    currentTableRef={tableRef.current}
                 >
-                  Download Event Members' Detail
-                </button>
+                   <button className="btn btn-block btn-outline rounded-none">Download Excel File</button>
+                </DownloadTableExcel>
               </div>
             </div>
           </div>
@@ -136,41 +138,36 @@ function EventManageScreen() {
               Member Joined
             </h1>
             <div className="overflow-x-auto overflow-y-auto vh80">
-              <table className="table table-compact w-full">
+                <DownloadTableExcel
+                    filename="guest_details"
+                    sheet="users"
+                    currentTableRef={tableRef.current}
+                >
+                   <button className="btn btn-sm btn-secondary my-1">Download Excel File</button>
+                </DownloadTableExcel>
+              <table className="table table-compact w-full" ref={tableRef}>
                 <thead>
-                  {/* LazyLoad to be implemented */}
                   <tr>
                     <th></th>
-                    {Object.keys(stats[0]).map((label, i) => (
-                      <th key={i}>label</th>
-                    ))}
+                    {stats && Object.keys({...stats[0]}).map((label, i) => (
+                      <th key={i}>{label}</th>
+                      ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {guestDetails.map((guestDetail, i) => {
+                  {stats && stats.map((stat, i) => {
                     return (
                       <tr key={i}>
                         <th>{i}</th>
-                        {Object.values(JSON.parse(guestDetail.details)).map(
+                        {stat && Object.values({...stat}).map(
                           (value, j) => (
-                            <th key={j}> {value as string} </th>
-                          )
-                        )}
+                            <th key={j}> {value} </th>
+                            )
+                            )}
                       </tr>
                     )
                   })}
                 </tbody>
-                <tfoot>
-                  <tr>
-                    <th></th>
-                    <th>Name</th>
-                    <th>Job</th>
-                    <th>company</th>
-                    <th>location</th>
-                    <th>Last Login</th>
-                    <th>Favorite Color</th>
-                  </tr>
-                </tfoot>
               </table>
             </div>
           </div>
@@ -179,6 +176,9 @@ function EventManageScreen() {
       <Footer active="mypage" />
     </div>
   )
+} else {
+  return <p>loading</p>
+}
 }
 
 export default EventManageScreen

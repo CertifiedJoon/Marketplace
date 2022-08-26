@@ -43,6 +43,9 @@ export const selectCommunityKey = (state: RootState) =>
 export const selectCommunityId = (state: RootState) =>
   state.header.community._id
 
+export const selectCommunityThumbnail = (state: RootState) =>
+  state.header.community.thumbnail_image
+
 export const selectCommunity = (state: RootState) => state.header.community
 
 export default headerSlice.reducer

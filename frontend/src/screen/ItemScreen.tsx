@@ -17,6 +17,7 @@ import {
   resetItemStatus,
   getItemById,
 } from '../features/item/itemSlice'
+import { selectCommunityThumbnail } from '../features/header/headerSlice'
 import ProfileBadge from '../components/ProfileBadge'
 
 function ItemScreen() {
@@ -26,6 +27,7 @@ function ItemScreen() {
   const itemStatus = useAppSelector(selectItemStatus)
   const itemError = useAppSelector(selectItemError)
   const itemThumbnail = useAppSelector(selectThumbnail)
+  const communityThumbnail = useAppSelector(selectCommunityThumbnail)
   const dispatch = useAppDispatch()
 
   const handleShare = async () => {
@@ -643,7 +645,7 @@ function ItemScreen() {
             className="hero min-h-full rounded-2xl"
             style={{
               backgroundImage: `url(
-              'https://180dc.org/wp-content/uploads/2015/03/HKU.jpg'
+              ${communityThumbnail}
               )`,
             }}
           >
