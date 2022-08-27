@@ -27,7 +27,7 @@ class UserProfile(models.Model):
   nickname = models.CharField(max_length=10, blank=True, null=True)
   createdAt = models.DateTimeField(auto_now_add=True)
   introduction = models.TextField(blank=True, null=True)
-    
+
   def __str__(self):
     return self.nickname
 
@@ -103,4 +103,4 @@ class EventGuest(models.Model):
 class Like(models.Model):
   _id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
   item = models.ForeignKey(Item, on_delete=models.CASCADE, null=False, related_name='like_item')
-  profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=False, related_name='like_profile')
+  profile = models.ManyToManyField(UserProfile, null=False, related_name='like_profile')

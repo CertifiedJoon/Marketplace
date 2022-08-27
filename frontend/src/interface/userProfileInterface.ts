@@ -35,3 +35,7 @@ export interface ProfileUpdate {
   nickname: string
   introduction: string
 }
+
+export interface Like {
+  item: string
+}
