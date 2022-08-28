@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 import json
 
-from base.serializers import ItemBriefSerializer, ItemSerializer, LiveEventSerializer, ItemImageSerializer, LikeSerializer
+from base.serializers import ItemBriefSerializer, ItemSerializer, LiveEventSerializer, ItemImageSerializer, LikeSerializer, LikedItemSerializer
 from base.models import Item, UserProfile, ItemImage, Community, ItemDetail, Like
 # Create your views here.
 
@@ -193,7 +193,9 @@ def likeItem(request, pk):
   try:
     profile = UserProfile.objects.get(user=user)
     item = Item.objects.get(pk=pk)
-    like = Like.objects.create(profile = profile, item=item)
+    like = Like.objects.create(item=item)
+    like.profiles.add(profile)
+    like.save()
     serializer = LikeSerializer(like)
     return Response(serializer.data)
   except PermissionDenied or ObjectDoesNotExist:
@@ -202,16 +204,15 @@ def likeItem(request, pk):
     elif ObjectDoesNotExist:
       raise ObjectDoesNotExist('Object Does Not Exist.')
 
-@api_view(['DELETE'])
+@api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def unlikeItem(request, pk):
   user = request.user
   try:
-    profile = UserProfile.objects.get(user=user)
-    item = Item.objects.get(pk=pk)
-    like = Like.objects.prefetch_related('profile', 'item').filter(profile=profile).filter(item=item)
-    like.delete()
-    return Response()
+    pf = UserProfile.objects.get(user=user)
+    like = pf.like_profile.get(item=pk)
+    like.profiles.remove(pf)
+    return Response(True)
   except PermissionDenied or ObjectDoesNotExist:
     if PermissionDenied:
       raise PermissionDenied('Login First')
@@ -226,7 +227,7 @@ def isLiked(request, pk):
     user = request.user
     profile = UserProfile.objects.get(user=user)
     item = Item.objects.get(pk=pk)
-    if Like.objects.filter(profile=profile).filter(item=item):
+    if profile.like_profile.all().filter(item=item):
       return Response(True)
     return Response(False)
   except PermissionDenied or ObjectDoesNotExist:
@@ -236,13 +237,14 @@ def isLiked(request, pk):
       raise ObjectDoesNotExist('Object Does not Exist.')
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def getLiked(request):
   try:
     if not request.user:
       raise PermissionDenied
     user = request.user
     profile = UserProfile.objects.get(user=user)
-    wishlist = Like.objects.filter(profile=profile)
+    wishlist = profile.like_profile.all()
     serializer = LikeSerializer(wishlist, many=True)
     return Response(serializer.data)
   except PermissionDenied or ObjectDoesNotExist:
@@ -250,3 +252,22 @@ def getLiked(request):
       raise PermissionDenied('You must sign up to wishlist.')
     elif ObjectDoesNotExist:
       raise ObjectDoesNotExist('Object Does not Exist.')
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getWishlistItems(request):
+  try:
+    if not request.user:
+      raise PermissionDenied
+    user = request.user
+    profile = UserProfile.objects.get(user=user)
+    wishlist = profile.like_profile.all()
+    serializer = LikedItemSerializer(wishlist, many=True)
+    return Response(serializer.data)
+  except PermissionDenied or ObjectDoesNotExist:
+    if PermissionDenied:
+      raise PermissionDenied('You must sign up to wishlist.')
+    elif ObjectDoesNotExist:
+      raise ObjectDoesNotExist('Object Does not Exist.')
+
+    

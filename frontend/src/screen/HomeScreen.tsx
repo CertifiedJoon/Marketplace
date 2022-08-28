@@ -1,53 +1,62 @@
-import React, { useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import React, { useEffect } from "react";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 
-import CategoryMenu from '../components/CategoryMenu'
-import Card from '../components/ItemCard'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import { useAppSelector, useAppDispatch } from '../app/hook'
+import CategoryMenu from "../components/CategoryMenu";
+import Card from "../components/ItemCard";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import { useAppSelector, useAppDispatch } from "../app/hook";
 import {
   selectCommunityId,
   selectSaleMode,
-} from '../features/header/headerSlice'
+  setSaleMode,
+} from "../features/header/headerSlice";
 import {
   selectItems,
   getItemsFiltered,
   getMyItems,
-} from '../features/item/itemListSlice'
-import { ItemBrief } from '../interface/itemInterface'
-import persistCombineReducers from 'redux-persist/es/persistCombineReducers'
+} from "../features/item/itemListSlice";
+import { ItemBrief } from "../interface/itemInterface";
+import { selectUser } from "../features/user/userSlice";
+import { toast } from "react-toastify";
 
 type Props = {
-  sell?: boolean
-}
+  sell?: boolean;
+};
 
 function HomeScreen({ sell = false }: Props) {
-  const saleMode = useAppSelector(selectSaleMode)
-  const items = useAppSelector(selectItems)
-  const community = useAppSelector(selectCommunityId)
-  const dispatch = useAppDispatch()
-  const params = useParams()
+  const saleMode = useAppSelector(selectSaleMode);
+  const user = useAppSelector(selectUser);
+  const items = useAppSelector(selectItems);
+  const community = useAppSelector(selectCommunityId);
+  const dispatch = useAppDispatch();
+  const params = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (saleMode) {
-      if (params.itemType && community === '0')
-        dispatch(getMyItems({ type: params.itemType, community: 'all' }))
-      else if (params.itemType && community !== '0')
-        dispatch(getMyItems({ type: params.itemType, community }))
-      else if (community !== '0')
-        dispatch(getMyItems({ type: 'all', community }))
-      else dispatch(getMyItems({ type: 'all', community: 'all' }))
+      if (!user) {
+        toast.error("You must login first");
+        dispatch(setSaleMode(false));
+        navigate("/login");
+      }
+      if (params.itemType && community === "0")
+        dispatch(getMyItems({ type: params.itemType, community: "all" }));
+      else if (params.itemType && community !== "0")
+        dispatch(getMyItems({ type: params.itemType, community }));
+      else if (community !== "0")
+        dispatch(getMyItems({ type: "all", community }));
+      else dispatch(getMyItems({ type: "all", community: "all" }));
     } else {
-      if (params.itemType && community === '0')
-        dispatch(getItemsFiltered({ type: params.itemType, community: 'all' }))
-      else if (params.itemType && community !== '0')
-        dispatch(getItemsFiltered({ type: params.itemType, community }))
-      else if (community !== '0')
-        dispatch(getItemsFiltered({ type: 'all', community }))
-      else dispatch(getItemsFiltered({ type: 'all', community: 'all' }))
+      if (params.itemType && community === "0")
+        dispatch(getItemsFiltered({ type: params.itemType, community: "all" }));
+      else if (params.itemType && community !== "0")
+        dispatch(getItemsFiltered({ type: params.itemType, community }));
+      else if (community !== "0")
+        dispatch(getItemsFiltered({ type: "all", community }));
+      else dispatch(getItemsFiltered({ type: "all", community: "all" }));
     }
-  }, [dispatch, params, community, saleMode])
+  }, [dispatch, params, community, saleMode]);
 
   return (
     <>
@@ -100,7 +109,7 @@ function HomeScreen({ sell = false }: Props) {
       </div>
       <Footer active="explore" />
     </>
-  )
+  );
 }
 
-export default HomeScreen
+export default HomeScreen;

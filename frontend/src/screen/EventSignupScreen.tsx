@@ -1,76 +1,87 @@
-import React, { useEffect, useState } from 'react'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import React, { useEffect, useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
 
-import Footer from '../components/Footer'
-import Header from '../components/Header'
-import CustomInput from '../components/CustomInput'
-import { getForm, selectEventForm } from '../features/event/eventFormSlice'
-import { useAppDispatch, useAppSelector } from '../app/hook'
-import { useNavigate, useParams } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import { Input } from '../interface/eventInterface'
-import { FaSpinner } from 'react-icons/fa'
-import { selectUserToken } from '../features/user/userSlice'
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import CustomInput from "../components/CustomInput";
+import { getForm, selectEventForm } from "../features/event/eventFormSlice";
+import { useAppDispatch, useAppSelector } from "../app/hook";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Input } from "../interface/eventInterface";
+import { FaSpinner } from "react-icons/fa";
+import { selectUserToken } from "../features/user/userSlice";
 import {
   eventSignup,
   resetEventGuestStatus,
   selectEventGuestError,
   selectEventGuestStatus,
-} from '../features/event/eventGuestSlice'
+} from "../features/event/eventGuestSlice";
+import { HashLoader } from "react-spinners";
 
 export interface IFormInput {
-  [key: string]: any
+  [key: string]: any;
 }
 
 function EventSignupScreen() {
-  const { form, status, error } = useAppSelector(selectEventForm)
-  const signupStatus = useAppSelector(selectEventGuestStatus)
-  const signupError = useAppSelector(selectEventGuestError)
-  let token = useAppSelector(selectUserToken)
-  const dispatch = useAppDispatch()
-  const params = useParams()
-  const navigate = useNavigate()
-  const [inputs, setInputs] = useState<Array<Input>>([])
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
+  const { form, status, error } = useAppSelector(selectEventForm);
+  const signupStatus = useAppSelector(selectEventGuestStatus);
+  const signupError = useAppSelector(selectEventGuestError);
+  let token = useAppSelector(selectUserToken);
+  const dispatch = useAppDispatch();
+  const params = useParams();
+  const navigate = useNavigate();
+  const [inputs, setInputs] = useState<Array<Input>>([]);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (params.eventId) dispatch(getForm(params.eventId))
-  }, [params, dispatch, getForm])
+    if (params.eventId) dispatch(getForm(params.eventId));
+  }, [params, dispatch, getForm]);
 
   useEffect(() => {
-    if (status === 'succeeded') {
-      setInputs(JSON.parse(form.inputs))
+    if (status === "succeeded") {
+      setInputs(JSON.parse(form.inputs));
     }
-  }, [status, error])
+  }, [status, error]);
 
   useEffect(() => {
-    if (signupStatus === 'succeeded') {
-      navigate('/event/receipt')
-    } else if (signupStatus === 'failed') {
-      toast.error(signupError)
-      dispatch(resetEventGuestStatus())
+    if (signupStatus === "succeeded") {
+      setLoading(false);
+      toast.success("Signed up successfully!");
+      navigate("/event/receipt");
+    } else if (signupStatus === "failed") {
+      toast.error(signupError);
+      setLoading(false);
+      dispatch(resetEventGuestStatus());
     }
-  }, [params, signupStatus, signupError])
+  }, [params, signupStatus, signupError]);
 
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<IFormInput>()
+  } = useForm<IFormInput>();
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    setLoading(true);
     dispatch(
       eventSignup({
         _id: params.eventId as string,
         details: JSON.stringify(data),
       })
-    )
-  }
+    );
+  };
 
-  if (status === 'succeeded')
+  if (status === "succeeded")
     return (
-      <>
+      <div className="relative">
+        {loading && (
+          <div className="h-screen flex justify-center items-center bg-base-content opacity-40 fixed top-0 right-0 left-0 z-100">
+            <HashLoader color="#54bab9" size={40} />
+          </div>
+        )}
         <Header />
         <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3 min-h-screen">
           <div>
@@ -118,13 +129,13 @@ function EventSignupScreen() {
           <div></div>
         </div>
         <Footer active="explore" />
-      </>
-    )
+      </div>
+    );
   else
     return (
       <div className="flex min-h-screen w-full justify-center items-center">
         <FaSpinner className="animate-spin text-4xl" />
       </div>
-    )
+    );
 }
-export default EventSignupScreen
+export default EventSignupScreen;

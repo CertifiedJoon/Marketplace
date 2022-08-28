@@ -1,34 +1,34 @@
-import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { ToastContainer } from 'react-toastify'
-import ItemScreen from './screen/ItemScreen'
-import HomeScreen from './screen/HomeScreen'
-import LoginScreen from './screen/LoginScreen'
-import SignupScreen from './screen/SignupScreen'
-import MyPageScreen from './screen/MyPageScreen'
-import SavedScreen from './screen/MySavedScreen'
-import NoMatchScreen from './screen/NoMatchScreen'
-import EventSignupScreen from './screen/EventSignupScreen'
-import HistoryScreen from './screen/MyHistoryScreen'
-import OrderDetailScreen from './screen/MyOrderDetailScreen'
-import ProfileScreen from './screen/MyProfileScreen'
-import ItemUploadScreen from './screen/ItemUploadScreen'
-import PaymentMethodScreen from './screen/MyPaymentMethodScreen'
-import 'react-toastify/dist/ReactToastify.min.css'
-import CommunityScreen from './screen/CommunityScreen'
-import CreateSignupScreen from './screen/EventCreateSignupScreen'
-import EventManageScreen from './screen/EventManageScreen'
-import ItemEditScreen from './screen/ItemEditScreen'
-import TermsScreen from './screen/TermsScreen'
-import PrivacyScreen from './screen/PrivacyScreen'
-import CommunityJoinScreen from './screen/CommunityJoinScreen'
-import SelectPostingCategoryScreen from './screen/SelectPostingCategoryScreen'
-import MyCommunityScreen from './screen/MyCommunityScreen'
-import ScrollToTop from './components/ScrollToTop'
-import MyEventScreen from './screen/MyEventScreen'
-import EventDetail from './screen/EventDetailScreen'
-import EventEditSignupScreen from './screen/EventEditSignupScreen'
-import EventReceiptScreen from './screen/EventReceiptScreen'
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import ItemScreen from "./screen/ItemScreen";
+import HomeScreen from "./screen/HomeScreen";
+import LoginScreen from "./screen/LoginScreen";
+import SignupScreen from "./screen/SignupScreen";
+import MyPageScreen from "./screen/MyPageScreen";
+import SavedScreen from "./screen/MySavedScreen";
+import NoMatchScreen from "./screen/NoMatchScreen";
+import EventSignupScreen from "./screen/EventSignupScreen";
+import HistoryScreen from "./screen/MyHistoryScreen";
+import OrderDetailScreen from "./screen/MyOrderDetailScreen";
+import ProfileScreen from "./screen/MyProfileScreen";
+import ItemUploadScreen from "./screen/ItemUploadScreen";
+import PaymentMethodScreen from "./screen/MyPaymentMethodScreen";
+import "react-toastify/dist/ReactToastify.min.css";
+import CommunityScreen from "./screen/CommunityScreen";
+import CreateSignupScreen from "./screen/EventCreateSignupScreen";
+import EventManageScreen from "./screen/EventManageScreen";
+import ItemEditScreen from "./screen/ItemEditScreen";
+import TermsScreen from "./screen/TermsScreen";
+import PrivacyScreen from "./screen/PrivacyScreen";
+import CommunityJoinScreen from "./screen/CommunityJoinScreen";
+import SelectPostingCategoryScreen from "./screen/SelectPostingCategoryScreen";
+import MyCommunityScreen from "./screen/MyCommunityScreen";
+import ScrollToTop from "./components/ScrollToTop";
+import MyEventScreen from "./screen/MyEventScreen";
+import EventDetail from "./screen/EventDetailScreen";
+import EventEditSignupScreen from "./screen/EventEditSignupScreen";
+import EventReceiptScreen from "./screen/EventReceiptScreen";
 
 function App() {
   return (
@@ -48,7 +48,7 @@ function App() {
           <Route path="/edit/:itemId" element={<ItemEditScreen />}></Route>
           <Route path="/login" element={<LoginScreen />}></Route>
           <Route path="/signup" element={<SignupScreen />}></Route>
-          <Route path="/wishlist/userId" element={<SavedScreen />}></Route>
+          <Route path="/wishlist" element={<SavedScreen />}></Route>
           <Route
             path="/event/signup/:eventId"
             element={<EventSignupScreen />}
@@ -103,7 +103,7 @@ function App() {
       </Router>
       <ToastContainer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,5 +1,5 @@
 module.exports = {
-  content: ['./src/**/*.{html,js,jsx,ts,tsx}'],
+  content: ["./src/**/*.{html,js,jsx,ts,tsx}"],
   safelist: [
     {
       pattern: /./,
@@ -10,22 +10,25 @@ module.exports = {
       backgroundImage: {
         placeholder: "url('/src/static/images/placeholder.png')",
       },
+      zIndex: {
+        100: "100",
+      },
     },
     placeholderColor: {
-      accent: '#D89313',
+      accent: "#D89313",
     },
     container: {
       padding: {
-        DEFAULT: '1rem',
-        sm: '2rem',
-        md: '10rem',
-        lg: '15rem',
-        xl: '15rem',
+        DEFAULT: "1rem",
+        sm: "2rem",
+        md: "10rem",
+        lg: "15rem",
+        xl: "15rem",
       },
     },
   },
   daisyui: {
-    themes: ['cupcake', 'cupcake'],
+    themes: ["cupcake", "cupcake"],
   },
-  plugins: [require('daisyui')],
-}
+  plugins: [require("daisyui")],
+};

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import {
   FaHeart,
   FaShare,
@@ -7,18 +7,18 @@ import {
   FaRegTrashAlt,
   FaPencilAlt,
   FaUserCheck,
-} from 'react-icons/fa'
-import { useForm, useFieldArray } from 'react-hook-form'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { toast } from 'react-toastify'
+} from "react-icons/fa";
+import { useForm, useFieldArray } from "react-hook-form";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-toastify";
 
-import { useAppSelector, useAppDispatch } from '../app/hook'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import { ItemUpdate, types } from '../interface/itemInterface'
-import PhotoGallery from '../components/PhotoGallery'
+import { useAppSelector, useAppDispatch } from "../app/hook";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import { ItemUpdate, types } from "../interface/itemInterface";
+import PhotoGallery from "../components/PhotoGallery";
 import {
   selectItem,
   selectItemStatus,
@@ -29,86 +29,89 @@ import {
   uploadImages,
   updateItem,
   deleteItem,
-} from '../features/item/itemSlice'
-import { selectUserImage } from '../features/user/userProfileSlice'
-import ProfileBadge from '../components/ProfileBadge'
-import { selectCommunity } from '../features/header/headerSlice'
-import SearchBarMultiple from '../components/SearchBarMultiple'
+} from "../features/item/itemSlice";
+import { selectUserImage } from "../features/user/userProfileSlice";
+import ProfileBadge from "../components/ProfileBadge";
+import { selectCommunity } from "../features/header/headerSlice";
+import SearchBarMultiple from "../components/SearchBarMultiple";
+import { HashLoader, PacmanLoader } from "react-spinners";
 
 type FormInput = {
-  heading: string
-  sub_heading: string
-  reason: string
-  description: string
-  price: number
-  negotiability: boolean
-  details: Array<{ label: string; value: string }>
-}
+  heading: string;
+  sub_heading: string;
+  reason: string;
+  description: string;
+  price: number;
+  negotiability: boolean;
+  details: Array<{ label: string; value: string }>;
+};
 
 const imagesSchema = yup.object().shape({
   images: yup
     .mixed()
-    .required('Images are required.')
-    .test('fileSize', 'The file must be smaller than 1MB', (value) => {
-      let total = 0
+    .required("Images are required.")
+    .test("fileSize", "The file must be smaller than 1MB", (value) => {
+      let total = 0;
       for (let i = 0; i < value.length; i += 1) {
-        total += value[i].size
+        total += value[i].size;
       }
-      return total <= 10000000
+      return total <= 10000000;
     })
-    .test('type', 'File must be either .jpeg or .png', (value) => {
+    .test("type", "File must be either .jpeg or .png", (value) => {
       for (let i = 0; i < value.length; i += 1) {
-        if (value[i].type !== ('image/jpeg' || 'image/png')) return false
+        if (value[i].type !== ("image/jpeg" || "image/png")) return false;
       }
-      return true
+      return true;
     }),
-})
+});
 
 export const InputSchema = yup
   .object({
     heading: yup
       .string()
-      .required('Heading is a required field.')
-      .min(3, 'Heading must be at least 3 characters long.')
-      .max(50, 'Name must be at most 30 characters long.'),
+      .required("Heading is a required field.")
+      .min(3, "Heading must be at least 3 characters long.")
+      .max(50, "Name must be at most 30 characters long."),
     sub_heading: yup
       .string()
-      .required('Subheading is a required field.')
-      .min(3, 'Subheading must be at least 3 characters long.')
-      .max(50, 'Subheading must be at most 30 characters long.'),
+      .required("Subheading is a required field.")
+      .min(3, "Subheading must be at least 3 characters long.")
+      .max(50, "Subheading must be at most 30 characters long."),
     reason: yup
       .string()
-      .required('Reason is a required field.')
-      .min(3, 'Reason must be at least 3 characters long.')
-      .max(50, 'Reason must be at most 30 characters long.'),
+      .required("Reason is a required field.")
+      .min(3, "Reason must be at least 3 characters long.")
+      .max(50, "Reason must be at most 30 characters long."),
     price: yup
       .number()
-      .min(0, 'Enter a valid price.')
-      .max(100000000, 'Enter a valid price.')
+      .min(0, "Enter a valid price.")
+      .max(100000000, "Enter a valid price.")
       .required(),
-    negotiability: yup.boolean().required('Select Negotiablity'),
+    negotiability: yup.boolean().required("Select Negotiablity"),
     description: yup
       .string()
-      .max(500, 'Description cannot exceed 500 characters.')
-      .required('Description is required.'),
+      .max(500, "Description cannot exceed 500 characters.")
+      .required("Description is required."),
     details: yup.mixed(),
   })
-  .required()
+  .required();
 
 function ItemEditScreen() {
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
-  const params = useParams()
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const params = useParams();
   const [selectedCommunities, setSelectedCommunities] = useState<Array<string>>(
     []
-  )
-  const [selectedType, setSelectedType] = useState<string>('')
-  const item = useAppSelector(selectItem)
-  const itemThumbnail = useAppSelector(selectThumbnail)
-  const itemStatus = useAppSelector(selectItemStatus)
-  const itemError = useAppSelector(selectItemError)
-  const community = useAppSelector(selectCommunity)
-  const profile = useAppSelector(selectUserImage)
+  );
+  const [selectedType, setSelectedType] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [imgUploading, setImgUploading] = useState(false);
+  const item = useAppSelector(selectItem);
+  const itemThumbnail = useAppSelector(selectThumbnail);
+  const itemStatus = useAppSelector(selectItemStatus);
+  const itemError = useAppSelector(selectItemError);
+  const community = useAppSelector(selectCommunity);
+  const profile = useAppSelector(selectUserImage);
   const {
     control: controlLaptop,
     register: registerLaptop,
@@ -117,23 +120,25 @@ function ItemEditScreen() {
     reset: resetLaptop,
   } = useForm<FormInput>({
     resolver: yupResolver(InputSchema),
-  })
+  });
   const { fields: fieldsLaptop, append: appendLaptop } = useFieldArray({
     control: controlLaptop,
-    name: 'details',
-  })
+    name: "details",
+  });
 
   useEffect(() => {
-    if (params.itemId) dispatch(getItemById(params.itemId))
-    const myScreenOrientation = window.screen.orientation
-    myScreenOrientation.lock('portrait')
-  }, [params, dispatch])
+    if (params.itemId) dispatch(getItemById(params.itemId));
+    const myScreenOrientation = window.screen.orientation;
+    myScreenOrientation.lock("portrait");
+  }, [params, dispatch]);
 
   useEffect(() => {
-    if (itemStatus === 'failed') {
-      toast.error(itemError)
-      dispatch(resetItemStatus())
-    } else if (itemStatus === 'succeeded') {
+    if (itemStatus === "failed") {
+      toast.error(itemError);
+      imgUploading && setImgUploading(false);
+      loading && setLoading(false);
+      dispatch(resetItemStatus());
+    } else if (itemStatus === "succeeded") {
       resetLaptop({
         heading: item.heading,
         sub_heading: item.sub_heading,
@@ -142,26 +147,32 @@ function ItemEditScreen() {
         price: item.price,
         negotiability: item.negotiability,
         details: item.details,
-      })
-      setSelectedType(item.type)
-      setSelectedCommunities(item.communities)
-      dispatch(resetItemStatus())
-    } else if (itemStatus === 'updated') {
-      dispatch(resetItemStatus())
-      navigate(`/item/${item._id}`)
-    } else if (itemStatus === 'deleted') {
-      dispatch(resetItemStatus())
-      navigate('/')
+      });
+      setSelectedType(item.type);
+      setSelectedCommunities(item.communities);
+      dispatch(resetItemStatus());
+    } else if (itemStatus === "updated") {
+      setLoading(false);
+      dispatch(resetItemStatus());
+      navigate(`/item/${item._id}`);
+    } else if (itemStatus === "deleted") {
+      setLoading(false);
+      dispatch(resetItemStatus());
+      navigate("/");
+    } else if (itemStatus === "uploaded") {
+      setImgUploading(false);
+      dispatch(resetItemStatus());
     }
     // eslint-disable-next-line
-  }, [itemStatus, resetLaptop, dispatch, appendLaptop])
+  }, [itemStatus, resetLaptop, dispatch, appendLaptop]);
 
   const handleDelete = () => {
-    if (window.confirm('Delete Item?')) dispatch(deleteItem(item._id))
-  }
+    setLoading(true);
+    if (window.confirm("Delete Item?")) dispatch(deleteItem(item._id));
+  };
 
   const onSubmitLaptop = (data: FormInput) => {
-    if (selectedCommunities.length !== 0 && selectedType !== '') {
+    if (selectedCommunities.length !== 0 && selectedType !== "") {
       const update: ItemUpdate = {
         _id: params.itemId as string,
         type: selectedType,
@@ -173,38 +184,45 @@ function ItemEditScreen() {
         negotiability: data.negotiability,
         description: data.description,
         details: data.details,
-      }
-      dispatch(updateItem(update))
+      };
+      setLoading(true);
+      dispatch(updateItem(update));
     } else {
-      toast.error('Community & Type fields are must!')
+      toast.error("Community & Type fields are must!");
     }
-  }
+  };
 
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       try {
-        await imagesSchema.validate({ images: event.target.files })
+        await imagesSchema.validate({ images: event.target.files });
       } catch (err) {
-        if (err instanceof yup.ValidationError) toast.error(err.message)
-        return
+        if (err instanceof yup.ValidationError) toast.error(err.message);
+        return;
       }
+      setImgUploading(true);
       dispatch(
         uploadImages({
           images: event.target.files,
           item_id: params.itemId as string,
         })
-      )
+      );
     }
-  }
+  };
 
   const handleCommunitySelect = (
     communities: ReadonlyArray<{ key: string; _id: string }>
   ) => {
-    setSelectedCommunities(communities.map((community) => community._id))
-  }
+    setSelectedCommunities(communities.map((community) => community._id));
+  };
 
   return (
-    <>
+    <div className="relative">
+      {loading && (
+        <div className="h-screen flex justify-center items-center bg-base-content opacity-40 fixed top-0 right-0 left-0 z-100">
+          <HashLoader color="#54bab9" size={40} />
+        </div>
+      )}
       <Header sell />
       <form onSubmit={handleSubmitLaptop(onSubmitLaptop)}>
         <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3">
@@ -214,7 +232,7 @@ function ItemEditScreen() {
               <span>
                 <span className="underline">
                   This page is replica of what others will see!
-                </span>{' '}
+                </span>{" "}
                 Edit your item by filling out the details instead of yellow
                 texts and buttons.
               </span>
@@ -223,13 +241,13 @@ function ItemEditScreen() {
           <div className="grid grid-rows-10">
             <div className="row-span-1 row-start-10 grid grid-cols-5 my-4 lg:row-start-1">
               <div className="col-span-5">
-                {item.type === 'event' && (
+                {item.type === "event" && (
                   <div className="grid grid-cols-2 gap-4 mb-2">
                     <Link to={`/event/edit-signup/${item._id}`}>
                       <button className="btn btn-block btn-sm rounded btn-secondary rounded-full text-xs">
                         <FaPencilAlt
                           style={{
-                            backgroundColor: 'rgba(0, 0, 0, 0)',
+                            backgroundColor: "rgba(0, 0, 0, 0)",
                           }}
                         />
                         &nbsp;Edit Signup Form
@@ -239,7 +257,7 @@ function ItemEditScreen() {
                       <button className="btn btn-block btn-sm rounded btn-secondary rounded-full text-xs">
                         <FaUserCheck
                           style={{
-                            backgroundColor: 'rgba(0, 0, 0, 0)',
+                            backgroundColor: "rgba(0, 0, 0, 0)",
                           }}
                         />
                         &nbsp;Manage Event
@@ -254,7 +272,7 @@ function ItemEditScreen() {
                   placeholder="Fill In Item Heading"
                   defaultValue={item.heading}
                   className="input input-ghost text-accent input-md placeholder-accent item-input-lg lg:item-input-2xl w-full"
-                  {...registerLaptop('heading')}
+                  {...registerLaptop("heading")}
                 />
                 <p className="text-error text-xs">
                   {errorsLaptop.heading?.message}
@@ -268,7 +286,7 @@ function ItemEditScreen() {
                   >
                     <FaRegTrashAlt
                       style={{
-                        backgroundColor: 'rgba(0, 0, 0, 0)',
+                        backgroundColor: "rgba(0, 0, 0, 0)",
                       }}
                     />
                     &nbsp;Delete
@@ -279,7 +297,7 @@ function ItemEditScreen() {
                   >
                     <FaUpload
                       style={{
-                        backgroundColor: 'rgba(0, 0, 0, 0)',
+                        backgroundColor: "rgba(0, 0, 0, 0)",
                       }}
                     />
                     &nbsp;Save
@@ -298,11 +316,16 @@ function ItemEditScreen() {
                   }}
                 >
                   <button className="btn glass btn-sm w-1/2 max-w-xs z-40 absolute top-1 left-1">
-                    <input
-                      type="file"
-                      className="text-black file:input-xs file:py-1 file:px-1 file:rounded-full file:border-0 file:text-xs file:bg-white-50 file:text-accent-focus"
-                      onChange={(e) => handleUpload(e)}
-                    />
+                    {imgUploading ? (
+                      <PacmanLoader color="#000000" size={10} />
+                    ) : (
+                      <input
+                        type="file"
+                        multiple
+                        className="text-black file:input-xs file:py-1 file:px-1 file:rounded-full file:border-0 file:text-xs file:bg-white-50 file:text-accent-focus"
+                        onChange={(e) => handleUpload(e)}
+                      />
+                    )}
                   </button>
                 </div>
                 <div className="hidden lg:block lg:col-span-1">
@@ -396,7 +419,7 @@ function ItemEditScreen() {
                           placeholder="Fill In Item SubHeading"
                           defaultValue={item.sub_heading}
                           className="input input-ghost input-md text-accent text-right placeholder-accent item-input-sm w-full lg:item-input-lg"
-                          {...registerLaptop('sub_heading')}
+                          {...registerLaptop("sub_heading")}
                         />
                         <p className="text-error text-xs">
                           {errorsLaptop.sub_heading?.message}
@@ -408,7 +431,7 @@ function ItemEditScreen() {
                           placeholder="Fill In Your Reason For Sale"
                           defaultValue={item.reason}
                           className="input input-ghost input-sm text-accent text-right placeholder-accent item-input-sm w-full mb-1 ml-3 lg:item-input-lg"
-                          {...registerLaptop('reason')}
+                          {...registerLaptop("reason")}
                         />
                         <p className="text-error text-xs">
                           {errorsLaptop.reason?.message}
@@ -443,7 +466,7 @@ function ItemEditScreen() {
                   <textarea
                     className="textarea textarea-ghost placeholder-accent w-full h-40 text-accent text-lg lg:text-md"
                     placeholder="Describe your listing."
-                    {...registerLaptop('description')}
+                    {...registerLaptop("description")}
                   ></textarea>
                   <p className="text-error text-xs">
                     {errorsLaptop.description?.message}
@@ -489,7 +512,7 @@ function ItemEditScreen() {
                     ))}
                   </div>
                   <div className="flex stats shadow">
-                    {item.type === 'event' ? (
+                    {item.type === "event" ? (
                       <div className="stat place-items-center">
                         <div className="stat-title">Events Hosted</div>
                         <div className="stat-value">
@@ -506,7 +529,7 @@ function ItemEditScreen() {
                         <div className="stat-desc">100% of Transactions</div>
                       </div>
                     )}
-                    {item.type === 'event' ? (
+                    {item.type === "event" ? (
                       <div className="stat place-items-center">
                         <div className="stat-title">People Hosted</div>
                         <div className="stat-value text-secondary">
@@ -538,7 +561,7 @@ function ItemEditScreen() {
                       <div className="col-span-1">
                         <h2 className="card-title">
                           <span className="text-gray-500">
-                            {item.type === 'event' ? 'Join for' : 'Listed for'}
+                            {item.type === "event" ? "Join for" : "Listed for"}
                           </span>
                           <input
                             type="number"
@@ -546,7 +569,7 @@ function ItemEditScreen() {
                             placeholder="Price"
                             defaultValue={item.price}
                             className="input input-ghost text-accent input-xs placeholder-lg placeholder-accent font-bold item-input-base w-5/12"
-                            {...registerLaptop('price')}
+                            {...registerLaptop("price")}
                           />
                           <p className="text-error text-xs">
                             {errorsLaptop.price?.message}
@@ -558,12 +581,12 @@ function ItemEditScreen() {
                           <input
                             type="checkbox"
                             defaultChecked={item.negotiability}
-                            {...registerLaptop('negotiability')}
+                            {...registerLaptop("negotiability")}
                           />
                           <p className="text-error text-xs">
                             {errorsLaptop.negotiability?.message}
                           </p>
-                          {item.type === 'event' ? (
+                          {item.type === "event" ? (
                             <div className="swap-on badge badge-accent ">
                               Open House
                             </div>
@@ -572,7 +595,7 @@ function ItemEditScreen() {
                               Negotiable
                             </div>
                           )}
-                          {item.type === 'event' ? (
+                          {item.type === "event" ? (
                             <div className="swap-off badge badge-accent ">
                               Private Hosting
                             </div>
@@ -586,13 +609,13 @@ function ItemEditScreen() {
                     </div>
                     <div className="card-actions justify-stretch">
                       <button className="btn btn-primary w-full">
-                        {item.type === 'event' ? 'Join' : 'Chat & Buy'}
+                        {item.type === "event" ? "Join" : "Chat & Buy"}
                       </button>
                     </div>
                     <div className="grid grid-cols-5 border-b border-gray-300">
                       <div className="col-span-3">
                         <p className="underline">
-                          {item.type === 'event' ? 'Ticket' : 'Item'}
+                          {item.type === "event" ? "Ticket" : "Item"}
                         </p>
                       </div>
                       <div className="col-span-2 justify-self-end">
@@ -690,8 +713,8 @@ function ItemEditScreen() {
                 <button className="btn btn-xs rounded btn-ghost text-sm">
                   <FaHeart
                     style={{
-                      backgroundColor: 'rgba(0, 0, 0, 0)',
-                      color: 'hsl(var(--sf))',
+                      backgroundColor: "rgba(0, 0, 0, 0)",
+                      color: "hsl(var(--sf))",
                     }}
                   />
                 </button>
@@ -699,7 +722,7 @@ function ItemEditScreen() {
                 <button className="btn btn-xs rounded btn-ghost text-sm">
                   <FaShare
                     style={{
-                      backgroundColor: 'rgba(0, 0, 0, 0)',
+                      backgroundColor: "rgba(0, 0, 0, 0)",
                     }}
                   />
                 </button>
@@ -709,7 +732,7 @@ function ItemEditScreen() {
               <button className="btn btn-primary btn-md w-full" type="submit">
                 <FaUpload
                   style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    backgroundColor: "rgba(0, 0, 0, 0)",
                   }}
                 />
                 &nbsp;Save
@@ -719,8 +742,8 @@ function ItemEditScreen() {
         </div>
       </form>
       <Footer active="explore" />
-    </>
-  )
+    </div>
+  );
 }
 
-export default ItemEditScreen
+export default ItemEditScreen;

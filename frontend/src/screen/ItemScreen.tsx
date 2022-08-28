@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
-import { FaHeart, FaShare } from 'react-icons/fa'
-import LazySwiper from '../components/LazySwiper'
-import PhotoGallery from '../components/PhotoGallery'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import PublicProfile from '../components/PublicProfile'
-import { useAppSelector, useAppDispatch } from '../app/hook'
+import { FaHeart, FaShare } from "react-icons/fa";
+import LazySwiper from "../components/LazySwiper";
+import PhotoGallery from "../components/PhotoGallery";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import PublicProfile from "../components/PublicProfile";
+import { useAppSelector, useAppDispatch } from "../app/hook";
 import {
   selectThumbnail,
   selectItem,
@@ -16,43 +16,70 @@ import {
   selectItemStatus,
   resetItemStatus,
   getItemById,
-} from '../features/item/itemSlice'
-import { selectCommunityThumbnail } from '../features/header/headerSlice'
-import ProfileBadge from '../components/ProfileBadge'
+} from "../features/item/itemSlice";
+import {
+  selectWishlist,
+  saveToWishlist,
+  resetWishlistStatus,
+  unlike,
+} from "../features/user/userWishlistSlice";
+import { selectUser } from "../features/user/userSlice";
+import { selectCommunityThumbnail } from "../features/header/headerSlice";
+import ProfileBadge from "../components/ProfileBadge";
 
 function ItemScreen() {
-  const [copySuccess, setCopySuccess] = useState(false)
-  const params = useParams()
-  const item = useAppSelector(selectItem)
-  const itemStatus = useAppSelector(selectItemStatus)
-  const itemError = useAppSelector(selectItemError)
-  const itemThumbnail = useAppSelector(selectThumbnail)
-  const communityThumbnail = useAppSelector(selectCommunityThumbnail)
-  const dispatch = useAppDispatch()
+  const [copySuccess, setCopySuccess] = useState(false);
+  const params = useParams();
+  const navigate = useNavigate();
+  const user = useAppSelector(selectUser);
+  const item = useAppSelector(selectItem);
+  const itemStatus = useAppSelector(selectItemStatus);
+  const itemError = useAppSelector(selectItemError);
+  const itemThumbnail = useAppSelector(selectThumbnail);
+  const communityThumbnail = useAppSelector(selectCommunityThumbnail);
+  const { wishlist, status: wishlistStatus } = useAppSelector(selectWishlist);
+  const [liked, setLiked] = useState<boolean>(() => {
+    return wishlist?.includes(params.itemId ? params.itemId : "") as boolean;
+  });
+  const dispatch = useAppDispatch();
 
   const handleShare = async () => {
-    await navigator.clipboard.writeText(window.location.href)
-    setCopySuccess(true)
-  }
+    await navigator.clipboard.writeText(window.location.href);
+    setCopySuccess(true);
+  };
 
   const handleLike = () => {
-    toast.success('Item saved.')
-  }
-
-  useEffect(() => {
-    if (params.itemId) dispatch(getItemById(params.itemId))
-  }, [params, dispatch])
-
-  useEffect(() => {
-    if (itemStatus === 'failed') {
-      toast.error(itemError)
-      dispatch(resetItemStatus)
+    if (!user) {
+      toast.error("You must login to save items.");
+      navigate("/login");
     }
-  }, [itemStatus])
+    if (!liked) dispatch(saveToWishlist(params.itemId ? params.itemId : ""));
+    else dispatch(unlike(params.itemId ? params.itemId : ""));
+  };
 
   useEffect(() => {
-    if (copySuccess === true) toast.success('Link copied.')
-  }, [copySuccess])
+    if (params.itemId) dispatch(getItemById(params.itemId));
+    setLiked(wishlist?.includes(params.itemId ? params.itemId : "") as boolean);
+  }, [params, dispatch, wishlist]);
+
+  useEffect(() => {
+    if (itemStatus === "failed") {
+      toast.error(itemError);
+      dispatch(resetItemStatus());
+    }
+  }, [itemStatus, itemError, dispatch]);
+
+  useEffect(() => {
+    if (copySuccess === true) toast.success("Link copied.");
+  }, [copySuccess]);
+
+  useEffect(() => {
+    if (wishlistStatus === "succeeded") {
+      toast.success(liked ? "Removed from Wishlist" : "Saved to Wishlist");
+      setLiked(!liked);
+      dispatch(resetWishlistStatus());
+    }
+  }, [wishlistStatus, dispatch, liked]);
 
   return (
     <>
@@ -100,12 +127,21 @@ function ItemScreen() {
                     className="btn btn-xs rounded btn-ghost text-xs px-0"
                     onClick={handleLike}
                   >
-                    <FaHeart
-                      style={{
-                        backgroundColor: 'rgba(0, 0, 0, 0)',
-                        color: 'hsl(var(--sf))',
-                      }}
-                    />
+                    {liked ? (
+                      <FaHeart
+                        style={{
+                          backgroundColor: "rgba(0, 0, 0, 0)",
+                          color: "hsl(var(--sf))",
+                        }}
+                      />
+                    ) : (
+                      <FaHeart
+                        style={{
+                          backgroundColor: "rgba(0, 0, 0, 0)",
+                          color: "gray",
+                        }}
+                      />
+                    )}
                     &nbsp;Save
                   </button>
                   &nbsp;
@@ -115,7 +151,7 @@ function ItemScreen() {
                   >
                     <FaShare
                       style={{
-                        backgroundColor: 'rgba(0, 0, 0, 0)',
+                        backgroundColor: "rgba(0, 0, 0, 0)",
                       }}
                     />
                     &nbsp;Share
@@ -180,7 +216,7 @@ function ItemScreen() {
                   ))}
                 </label>
                 <div className="flex stats shadow mt-2">
-                  {item.type === 'event' ? (
+                  {item.type === "event" ? (
                     <>
                       <div className="stat place-items-center">
                         <div className="stat-title">Events Hosted</div>
@@ -225,15 +261,15 @@ function ItemScreen() {
             <div className="col-span-2">
               <div>
                 <span className="text-gray-500">
-                  {item.type === 'event' ? 'Join for' : 'Listed for'}
-                </span>{' '}
+                  {item.type === "event" ? "Join for" : "Listed for"}
+                </span>{" "}
                 {Number(item.price) === 0 ? (
                   <div className="badge badge-info badge-outline">Free</div>
                 ) : (
                   `$${item.price}`
                 )}
               </div>
-              {item.type === 'event' ? (
+              {item.type === "event" ? (
                 item.negotiability ? (
                   <div className="badge badge-info">Open House</div>
                 ) : (
@@ -247,8 +283,8 @@ function ItemScreen() {
               <button className="btn btn-xs rounded btn-ghost text-sm">
                 <FaHeart
                   style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0)',
-                    color: 'hsl(var(--sf))',
+                    backgroundColor: "rgba(0, 0, 0, 0)",
+                    color: "hsl(var(--sf))",
                   }}
                 />
               </button>
@@ -256,7 +292,7 @@ function ItemScreen() {
               <button className="btn btn-xs rounded btn-ghost text-sm">
                 <FaShare
                   style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    backgroundColor: "rgba(0, 0, 0, 0)",
                   }}
                 />
               </button>
@@ -264,13 +300,13 @@ function ItemScreen() {
             <div className="col-span-1">
               <Link
                 to={
-                  item.type === 'event'
+                  item.type === "event"
                     ? `/event/signup/${item._id}`
-                    : '/messages/chatId'
+                    : "/messages/chatId"
                 }
               >
                 <button className="btn btn-primary btn-md w-full">
-                  {item.type === 'event' ? 'Join' : 'Chat & Buy'}
+                  {item.type === "event" ? "Join" : "Chat & Buy"}
                 </button>
               </Link>
             </div>
@@ -292,12 +328,21 @@ function ItemScreen() {
                   className="btn rounded btn-ghost text-xs px-0"
                   onClick={handleLike}
                 >
-                  <FaHeart
-                    style={{
-                      backgroundColor: 'rgba(0, 0, 0, 0)',
-                      color: 'hsl(var(--sf))',
-                    }}
-                  />
+                  {liked ? (
+                    <FaHeart
+                      style={{
+                        backgroundColor: "rgba(0, 0, 0, 0)",
+                        color: "hsl(var(--sf))",
+                      }}
+                    />
+                  ) : (
+                    <FaHeart
+                      style={{
+                        backgroundColor: "rgba(0, 0, 0, 0)",
+                        color: "gray",
+                      }}
+                    />
+                  )}
                   &nbsp;Save
                 </button>
                 <button
@@ -306,7 +351,7 @@ function ItemScreen() {
                 >
                   <FaShare
                     style={{
-                      backgroundColor: 'rgba(0, 0, 0, 0)',
+                      backgroundColor: "rgba(0, 0, 0, 0)",
                     }}
                   />
                   &nbsp;Share
@@ -322,7 +367,7 @@ function ItemScreen() {
                   backgroundImage: `url(
                     '${itemThumbnail[0]}'
                     )`,
-                  backgroundColor: 'lightgray',
+                  backgroundColor: "lightgray",
                 }}
               ></div>
               <div className="col-span-1">
@@ -333,7 +378,7 @@ function ItemScreen() {
                       backgroundImage: `url(
                       '${itemThumbnail[1]}'
                       )`,
-                      backgroundColor: 'lightgray',
+                      backgroundColor: "lightgray",
                     }}
                   ></div>
                   <div
@@ -342,7 +387,7 @@ function ItemScreen() {
                       backgroundImage: `url(
                       '${itemThumbnail[2]}'
                       )`,
-                      backgroundColor: 'lightgray',
+                      backgroundColor: "lightgray",
                     }}
                   ></div>
                 </div>
@@ -355,7 +400,7 @@ function ItemScreen() {
                       backgroundImage: `url(
                       '${itemThumbnail[3]}'
                       )`,
-                      backgroundColor: 'lightgray',
+                      backgroundColor: "lightgray",
                     }}
                   ></div>
                   <div
@@ -364,7 +409,7 @@ function ItemScreen() {
                       backgroundImage: `url(
                       '${itemThumbnail[4]}'
                       )`,
-                      backgroundColor: 'lightgray',
+                      backgroundColor: "lightgray",
                     }}
                   ></div>
                 </div>
@@ -448,7 +493,7 @@ function ItemScreen() {
                     </label>
                   </div>
                   <div className="stats shadow">
-                    {item.type === 'event' ? (
+                    {item.type === "event" ? (
                       <div className="stat place-items-center">
                         <div className="stat-title">Events Hosted</div>
                         <div className="stat-value">
@@ -465,7 +510,7 @@ function ItemScreen() {
                         <div className="stat-desc">100% of Transactions</div>
                       </div>
                     )}
-                    {item.type === 'event' ? (
+                    {item.type === "event" ? (
                       <div className="stat place-items-center">
                         <div className="stat-title">People Hosted</div>
                         <div className="stat-value text-secondary">
@@ -545,8 +590,8 @@ function ItemScreen() {
                       <div className="col-span-1">
                         <h2 className="card-title">
                           <span className="text-gray-500">
-                            {item.type === 'event' ? 'Join for' : 'Listed for'}
-                          </span>{' '}
+                            {item.type === "event" ? "Join for" : "Listed for"}
+                          </span>{" "}
                           {Number(item.price) === 0 ? (
                             <div className="badge badge-info badge-outline">
                               Free
@@ -557,7 +602,7 @@ function ItemScreen() {
                         </h2>
                       </div>
                       <div className="col-span-1 flex justify-end">
-                        {item.type === 'event' ? (
+                        {item.type === "event" ? (
                           item.negotiability ? (
                             <div className="badge badge-info">Open House</div>
                           ) : (
@@ -577,21 +622,21 @@ function ItemScreen() {
                     <div className="card-actions justify-stretch">
                       <Link
                         to={
-                          item.type === 'event'
+                          item.type === "event"
                             ? `/event/signup/${item._id}`
-                            : '/messages/chatId'
+                            : "/messages/chatId"
                         }
                         className="w-full"
                       >
                         <button className="btn btn-primary w-full">
-                          {item.type === 'event' ? 'Join' : 'Chat & Buy'}
+                          {item.type === "event" ? "Join" : "Chat & Buy"}
                         </button>
                       </Link>
                     </div>
                     <div className="grid grid-cols-5 border-b border-gray-300">
                       <div className="col-span-3">
                         <p className="underline">
-                          {item.type === 'event' ? 'Ticket' : 'Item'}
+                          {item.type === "event" ? "Ticket" : "Item"}
                         </p>
                       </div>
                       <div className="col-span-2 justify-self-end">
@@ -668,7 +713,7 @@ function ItemScreen() {
       </div>
       <Footer active="explore" />
     </>
-  )
+  );
 }
 
-export default ItemScreen
+export default ItemScreen;

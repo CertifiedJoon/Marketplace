@@ -103,4 +103,4 @@ class EventGuest(models.Model):
 class Like(models.Model):
   _id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
   item = models.ForeignKey(Item, on_delete=models.CASCADE, null=False, related_name='like_item')
-  profile = models.ManyToManyField(UserProfile, null=False, related_name='like_profile')
+  profiles = models.ManyToManyField(UserProfile, related_name='like_profile')

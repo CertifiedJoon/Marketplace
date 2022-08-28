@@ -8,8 +8,11 @@ class MembershipInline(admin.TabularInline):
   model = Membership
   extra = 1
 
+class UserWishlistAdmin(admin.ModelAdmin):
+  filter_horizontal = ('profiles',)
+
 class UserProfileAdmin(admin.ModelAdmin):
-  inlines=[MembershipInline,]
+  inlines=[MembershipInline]
   list_display = ('nickname','createdAt')
   list_filter = ['createdAt', 'communities']
   search_fields = ['nickname']
@@ -39,4 +42,5 @@ admin.site.register(Community)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Badge, BadgeAdmin)
 admin.site.register(EventForm)
+admin.site.register(Like, UserWishlistAdmin)
 # Register your models here.

@@ -12,6 +12,7 @@ urlpatterns = [
   path('unlike/<str:pk>/', views.unlikeItem, name='unlike-item'),
   path('isliked/<str:pk>/', views.isLiked, name='is-liked'),
   path('getliked/', views.getLiked, name='get-liked'),
+  path('get-wishlist-items/', views.getWishlistItems, name='get-wishlist-items'),
   path('create/', views.createItem, name='create-item'),
   path('delete/<str:pk>/', views.deleteItem, name='delete-item'),
   path('<str:pk>/',  views.getItem, name='item'),

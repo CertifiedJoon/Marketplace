@@ -1,96 +1,106 @@
-import React, { useEffect } from 'react'
-import { FaApple } from 'react-icons/fa'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useForm, SubmitHandler } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
+import React, { useEffect, useState } from "react";
+import { FaApple } from "react-icons/fa";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
-import googleIcon from '../static/images/google.png'
-import { useAppSelector, useAppDispatch } from '../app/hook'
+import googleIcon from "../static/images/google.png";
+import { useAppSelector, useAppDispatch } from "../app/hook";
 import {
   selectUser,
   selectUserStatus,
   selectUserError,
   signup,
   resetUserStatus,
-} from '../features/user/userSlice'
-import { toast } from 'react-toastify'
+} from "../features/user/userSlice";
+import { toast } from "react-toastify";
+import { GridLoader } from "react-spinners";
 
 interface IFormInput {
-  name: string
-  email: string
-  password: string
-  confirmPassword: string
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
 }
 
 const signupSchema = yup.object({
   name: yup
     .string()
-    .required('Name is a required field.')
-    .min(10, 'Name must be at least 3 characters long.')
-    .max(30, 'Name must be at least 30 characters long.'),
+    .required("Name is a required field.")
+    .min(3, "Name must be at least 3 characters long.")
+    .max(30, "Name must be at least 30 characters long."),
   email: yup
     .string()
-    .email('Incorrent email format.')
-    .required('Email is a required field.'),
+    .email("Incorrent email format.")
+    .required("Email is a required field."),
   password: yup
     .string()
-    .min(8, 'Password must be at least 8 characters long.')
-    .max(30, 'Password must be at most 30 characters long.')
+    .min(8, "Password must be at least 8 characters long.")
+    .max(30, "Password must be at most 30 characters long.")
     .matches(
       /^[ A-Za-z0-9_@./#&+-]*$/,
-      'Password must only include alphanumerics and special letters.'
+      "Password must only include alphanumerics and special letters."
     )
-    .required('Password is a required field.'),
+    .required("Password is a required field."),
   confirmPassword: yup
     .string()
-    .oneOf([yup.ref('password'), null], 'Passwords must match'),
-})
+    .oneOf([yup.ref("password"), null], "Passwords must match"),
+});
 
 function SignupScreen() {
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const user = useAppSelector(selectUser)
-  const userStatus = useAppSelector(selectUserStatus)
-  const userError = useAppSelector(selectUserError)
-  const redirect = location.search ? location.search.split('=')[1] : '/'
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [loading, setLoading] = useState(false);
+  const user = useAppSelector(selectUser);
+  const userStatus = useAppSelector(selectUserStatus);
+  const userError = useAppSelector(selectUserError);
+  const redirect = location.search ? location.search.split("=")[1] : "/";
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInput>({
     resolver: yupResolver(signupSchema),
-  })
+  });
 
   useEffect(() => {
     if (user) {
-      navigate(redirect)
+      navigate(redirect);
     }
-  }, [user, redirect, navigate])
+  }, [user, redirect, navigate]);
 
   useEffect(() => {
-    if (userStatus === 'failed') {
-      toast.error(userError)
-      dispatch(resetUserStatus())
-    } else if (userStatus === 'succeeded') {
-      dispatch(resetUserStatus())
-      navigate('/')
+    if (userStatus === "failed") {
+      toast.error(userError);
+      setLoading(false);
+      dispatch(resetUserStatus());
+    } else if (userStatus === "succeeded") {
+      setLoading(false);
+      dispatch(resetUserStatus());
+      navigate("/");
     }
-  }, [userStatus, dispatch, navigate])
+  }, [userStatus, dispatch, navigate]);
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    setLoading(true);
     dispatch(
       signup({
         name: data.name,
         email: data.email,
         password: data.password,
       })
-    )
-  }
+    );
+  };
 
   return (
-    <>
+    <div className="relative">
+      {loading && (
+        <div className="h-screen flex justify-center items-center bg-base-content opacity-40 fixed top-0 right-0 left-0 z-100">
+          <GridLoader color="#54bab9" size={30} />
+        </div>
+      )}
       <div className="lg:mx-auto lg:w-1/2 xl:w-1/3">
         <div className="grid grid-rows-6 justify-items-stretch">
           <div></div>
@@ -107,7 +117,7 @@ function SignupScreen() {
                   type="text"
                   placeholder="Name"
                   className="input input-bordered input-accent input-md rounded-t-xl rounded-b-none w-2/3 focus:outline-none"
-                  {...register('name', { required: true })}
+                  {...register("name", { required: true })}
                 />
                 <p className="text-error text-xs">{errors.name?.message}</p>
               </div>
@@ -116,7 +126,7 @@ function SignupScreen() {
                   type="email"
                   placeholder="Email"
                   className="input input-bordered border-t-0 input-accent input-md rounded-none w-2/3 focus:outline-none"
-                  {...register('email', { required: true })}
+                  {...register("email", { required: true })}
                 />
                 <p className="text-error text-xs">{errors.email?.message}</p>
               </div>
@@ -125,7 +135,7 @@ function SignupScreen() {
                   type="password"
                   placeholder="Password"
                   className="input input-bordered border-t-0 input-accent input-md rounded-none w-2/3 focus:outline-none"
-                  {...register('password', { required: true })}
+                  {...register("password", { required: true })}
                 />
                 <p className="text-error text-xs">{errors.password?.message}</p>
               </div>
@@ -134,7 +144,7 @@ function SignupScreen() {
                   type="password"
                   placeholder="Confirm Password"
                   className="input input-bordered border-t-0 input-accent input-md rounded-b-xl rounded-t-none w-2/3 focus:outline-none"
-                  {...register('confirmPassword', { required: true })}
+                  {...register("confirmPassword", { required: true })}
                 />
                 <p className="text-error text-xs">
                   {errors.confirmPassword?.message}
@@ -177,8 +187,8 @@ function SignupScreen() {
           </div>
         </div>
       </div>
-    </>
-  )
+    </div>
+  );
 }
 
-export default SignupScreen
+export default SignupScreen;

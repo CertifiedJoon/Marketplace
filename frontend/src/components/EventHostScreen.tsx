@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   FaHandSparkles,
   FaHeart,
@@ -6,21 +6,14 @@ import {
   FaShare,
   FaInfoCircle,
   FaUpload,
-} from 'react-icons/fa'
-import PhotoGallery from '../components/PhotoGallery'
-import profile from '../static/images/profile.png'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import { Link } from 'react-router-dom'
+} from "react-icons/fa";
+import PhotoGallery from "../components/PhotoGallery";
+import profile from "../static/images/profile.png";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import { Link } from "react-router-dom";
 
 function EventHostScreen() {
-  /*
-    Frontend Worklist
-    1. Set up react-useState for the input values (useState)
-    1. Create async logic for upload (async)
-    2. Set up state management for upload (redux)
-    3. Set up Fee Calculation from state (redux)
-  */
   return (
     <>
       <Header sell />
@@ -32,7 +25,7 @@ function EventHostScreen() {
               <span>
                 <span className="underline">
                   This page is exactly what the buyers will see!
-                </span>{' '}
+                </span>{" "}
                 Upload your item by filling out the details instead of yellow
                 texts and buttons.
               </span>
@@ -52,7 +45,7 @@ function EventHostScreen() {
                   <button className="btn rounded btn-primary rounded-full text-xs px-3">
                     <FaUpload
                       style={{
-                        backgroundColor: 'rgba(0, 0, 0, 0)',
+                        backgroundColor: "rgba(0, 0, 0, 0)",
                       }}
                     />
                     &nbsp;Host
@@ -392,7 +385,7 @@ function EventHostScreen() {
                 <span>
                   <span className="underline">
                     This page is exactly what the buyers will see!
-                  </span>{' '}
+                  </span>{" "}
                   Upload your item by filling out the details instead of yellow
                   texts and buttons.
                 </span>
@@ -554,8 +547,8 @@ function EventHostScreen() {
               <button className="btn btn-xs rounded btn-ghost text-sm">
                 <FaHeart
                   style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0)',
-                    color: 'hsl(var(--sf))',
+                    backgroundColor: "rgba(0, 0, 0, 0)",
+                    color: "hsl(var(--sf))",
                   }}
                 />
               </button>
@@ -563,7 +556,7 @@ function EventHostScreen() {
               <button className="btn btn-xs rounded btn-ghost text-sm">
                 <FaShare
                   style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    backgroundColor: "rgba(0, 0, 0, 0)",
                   }}
                 />
               </button>
@@ -574,7 +567,7 @@ function EventHostScreen() {
               <button className="btn btn-primary btn-md w-full">
                 <FaUpload
                   style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    backgroundColor: "rgba(0, 0, 0, 0)",
                   }}
                 />
                 &nbsp;Host
@@ -585,7 +578,7 @@ function EventHostScreen() {
       </div>
       <Footer active="explore" />
     </>
-  )
+  );
 }
 
-export default EventHostScreen
+export default EventHostScreen;

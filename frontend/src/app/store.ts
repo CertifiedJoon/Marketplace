@@ -1,4 +1,4 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import {
   persistStore,
   persistReducer,
@@ -8,23 +8,25 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
-} from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
-import membershipSlice from '../features/community/membershipSlice'
-import headerReducer from '../features/header/headerSlice'
-import itemListSlice from '../features/item/itemListSlice'
-import itemSlice from '../features/item/itemSlice'
-import userProfileSlice from '../features/user/userProfileSlice'
-import userSlice from '../features/user/userSlice'
-import eventFormSlice from '../features/event/eventFormSlice'
-import eventGuestSlice from '../features/event/eventGuestSlice'
-import eventManageSlice from '../features/event/eventManageSlice'
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import membershipSlice from "../features/community/membershipSlice";
+import headerReducer from "../features/header/headerSlice";
+import itemListSlice from "../features/item/itemListSlice";
+import itemSlice from "../features/item/itemSlice";
+import userProfileSlice from "../features/user/userProfileSlice";
+import userSlice from "../features/user/userSlice";
+import eventFormSlice from "../features/event/eventFormSlice";
+import eventGuestSlice from "../features/event/eventGuestSlice";
+import eventManageSlice from "../features/event/eventManageSlice";
+import wishlistSlice from "../features/user/userWishlistSlice";
+
 const persistConfig = {
-  key: 'root',
+  key: "root",
   version: 1,
   storage,
-  whitelist: ['header', 'user', 'userProfile', 'membership'],
-}
+  whitelist: ["header", "user", "userProfile", "membership", "wishlist"],
+};
 
 export const rootReducer = combineReducers({
   header: headerReducer,
@@ -32,13 +34,14 @@ export const rootReducer = combineReducers({
   item: itemSlice,
   user: userSlice,
   userProfile: userProfileSlice,
+  wishlist: wishlistSlice,
   membership: membershipSlice,
   eventForm: eventFormSlice,
   eventGuest: eventGuestSlice,
   eventManage: eventManageSlice,
-})
+});
 
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
@@ -48,11 +51,11 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
-})
+});
 
-export let persistor = persistStore(store)
+export let persistor = persistStore(store);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch
+export type AppDispatch = typeof store.dispatch;

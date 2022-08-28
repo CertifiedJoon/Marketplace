@@ -125,6 +125,12 @@ class LikeSerializer(serializers.ModelSerializer):
     model = Like
     fields= ('item',)
 
+class LikedItemSerializer(serializers.ModelSerializer):
+  item = ItemBriefSerializer(many=False)
+  class Meta:
+    model = Like
+    fields = ('item',)
+
 # Event
 class EventFormSerializer(serializers.ModelSerializer):
   class Meta:

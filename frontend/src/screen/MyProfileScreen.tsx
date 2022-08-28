@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { FaArrowLeft, FaMedal, FaPencilAlt } from 'react-icons/fa'
-import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { FaArrowLeft, FaMedal, FaPencilAlt } from "react-icons/fa";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { HashLoader, PacmanLoader } from "react-spinners";
 
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import { useAppSelector, useAppDispatch } from '../app/hook'
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import { useAppSelector, useAppDispatch } from "../app/hook";
 import {
   resetUserProfileStatus,
   selectUserProfile,
@@ -15,58 +16,60 @@ import {
   selectUserProfileStatus,
   updateUserProfile,
   uploadProfileImage,
-} from '../features/user/userProfileSlice'
-import { selectUser } from '../features/user/userSlice'
-import ProfileBadge from '../components/ProfileBadge'
-import { ProfileUpdate } from '../interface/userProfileInterface'
-import { toast } from 'react-toastify'
+} from "../features/user/userProfileSlice";
+import { selectUser } from "../features/user/userSlice";
+import ProfileBadge from "../components/ProfileBadge";
+import { ProfileUpdate } from "../interface/userProfileInterface";
+import { toast } from "react-toastify";
 
 const imageSchema = yup.object().shape({
   image: yup
     .mixed()
-    .required('You must provide a profile picture.')
-    .test('fileSize', 'The file must be smaller than 1MB', (value) => {
-      return value && value.size <= 1000000
+    .required("You must provide a profile picture.")
+    .test("fileSize", "The file must be smaller than 1MB", (value) => {
+      return value && value.size <= 1000000;
     })
-    .test('type', 'File must be either .jpeg or .png', (value) => {
-      return value && ['image/jpeg', 'image/png'].includes(value.type)
+    .test("type", "File must be either .jpeg or .png", (value) => {
+      return value && ["image/jpeg", "image/png"].includes(value.type);
     }),
-})
+});
 
 export const profileUpdateSchema = yup
   .object({
     name: yup
       .string()
-      .required('Name is a required field.')
-      .min(3, 'Name must be at least 3 characters long.')
-      .max(30, 'Name must be at most 30 characters long.'),
+      .required("Name is a required field.")
+      .min(3, "Name must be at least 3 characters long.")
+      .max(30, "Name must be at most 30 characters long."),
     email: yup
       .string()
-      .email('Incorrent email format.')
-      .required('Email is a required field.'),
+      .email("Incorrent email format.")
+      .required("Email is a required field."),
     nickname: yup
       .string()
-      .min(2, 'Nickname must be at least two characters.')
-      .max(10, 'Nickname can be at most 10 characters.')
-      .required('nickname is required'),
+      .min(2, "Nickname must be at least two characters.")
+      .max(10, "Nickname can be at most 10 characters.")
+      .required("nickname is required"),
     introduction: yup
       .string()
-      .min(50, 'Introduction must be at least 50 characters.')
-      .max(300, 'Introduction can be at most 300 characters.')
-      .required('Introduction helps your community better recognize you.'),
+      .min(50, "Introduction must be at least 50 characters.")
+      .max(300, "Introduction can be at most 300 characters.")
+      .required("Introduction helps your community better recognize you."),
   })
-  .required()
+  .required();
 
 function ProfileScreen() {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const dispatch = useAppDispatch()
-  const [editStatus, setEditStatus] = useState(false)
-  const user = useAppSelector(selectUser)
-  const profile = useAppSelector(selectUserProfile)
-  const profileStatus = useAppSelector(selectUserProfileStatus)
-  const profileError = useAppSelector(selectUserProfileError)
-  const redirect = location.search ? location.search.split('=')[1] : '/'
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useAppDispatch();
+  const [editStatus, setEditStatus] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const user = useAppSelector(selectUser);
+  const profile = useAppSelector(selectUserProfile);
+  const profileStatus = useAppSelector(selectUserProfileStatus);
+  const profileError = useAppSelector(selectUserProfileError);
+  const redirect = location.search ? location.search.split("=")[1] : "/";
 
   const {
     register,
@@ -75,55 +78,72 @@ function ProfileScreen() {
     reset,
   } = useForm<ProfileUpdate>({
     resolver: yupResolver(profileUpdateSchema),
-  })
+  });
 
   const onSubmit = (data: ProfileUpdate) => {
-    dispatch(updateUserProfile(data))
-    setEditStatus(false)
-  }
+    setSaving(true);
+    dispatch(updateUserProfile(data));
+    setEditStatus(false);
+  };
 
   useEffect(() => {
     if (!user) {
-      navigate(redirect)
+      navigate(redirect);
     } else {
       reset({
         name: user.name,
         email: user.email,
         nickname: profile.nickname,
         introduction: profile.introduction,
-      })
+      });
     }
-  }, [user, redirect, navigate, reset])
+  }, [user, redirect, navigate, reset]);
 
   useEffect(() => {
-    if (profileStatus === 'failed') {
-      toast.error(profileError)
-      dispatch(resetUserProfileStatus)
+    if (profileStatus === "failed") {
+      toast.error(profileError);
+      setUploading(false);
+      setSaving(false);
+      dispatch(resetUserProfileStatus());
+    } else if (profileStatus === "succeeded") {
+      if (saving) {
+        setSaving(false);
+      } else if (uploading) {
+        setUploading(false);
+      }
+      dispatch(resetUserProfileStatus());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profileStatus, dispatch])
+  }, [profileStatus, dispatch]);
 
   const handleClick = () => {
     if (editStatus === false) {
-      setEditStatus(true)
+      setEditStatus(true);
     }
-  }
+  };
 
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUploading(true);
     if (event.target.files) {
       try {
-        await imageSchema.validate({ image: event.target.files[0] })
+        await imageSchema.validate({ image: event.target.files[0] });
       } catch (err) {
-        if (err instanceof yup.ValidationError) toast.error(err.message)
-        return
+        if (err instanceof yup.ValidationError) toast.error(err.message);
+        setUploading(false);
+        return;
       }
-      dispatch(uploadProfileImage(event.target.files[0]))
+      dispatch(uploadProfileImage(event.target.files[0]));
     }
-  }
+  };
 
   return (
-    <>
+    <div className="relative">
       {/* Tablet or bigger */}
+      {saving && (
+        <div className="h-screen flex justify-center items-center bg-base-content opacity-40 fixed top-0 right-0 left-0 z-100">
+          <HashLoader color="#54bab9" size={25} />
+        </div>
+      )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="hidden md:block">
           <Header />
@@ -146,7 +166,7 @@ function ProfileScreen() {
                 className="btn btn-ghost rounded-sm btn-xs"
                 onClick={handleClick}
               >
-                {' '}
+                {" "}
                 EDIT
               </button>
             )}
@@ -177,7 +197,7 @@ function ProfileScreen() {
                         >
                           <FaPencilAlt
                             style={{
-                              backgroundColor: 'rgba(0, 0, 0, 0)',
+                              backgroundColor: "rgba(0, 0, 0, 0)",
                             }}
                           />
                           &nbsp; EDIT
@@ -210,7 +230,7 @@ function ProfileScreen() {
                         defaultValue={user?.name}
                         className="p-0 w-full rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent item-input-2xl w-full disabled:text-black disabled:input-ghost disabled:border-none"
                         disabled={!editStatus}
-                        {...register('name')}
+                        {...register("name")}
                       />
                       <p className="text-error text-xs">
                         {errors.name?.message}
@@ -224,7 +244,7 @@ function ProfileScreen() {
                           defaultValue={user?.email}
                           className="p-0 w-full rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent item-input-lg w-full disabled:text-black disabled:input-ghost disabled:border-none"
                           disabled={!editStatus}
-                          {...register('email')}
+                          {...register("email")}
                         />
                         <p className="text-error text-xs">
                           {errors.email?.message}
@@ -240,13 +260,16 @@ function ProfileScreen() {
                     </div>
                   </div>
                 </div>
-                {editStatus && (
-                  <input
-                    type="file"
-                    className="my-1 col-span-3 text-black file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-white-50 file:text-accent"
-                    onChange={handleUpload}
-                  />
-                )}
+                {editStatus &&
+                  (uploading ? (
+                    <PacmanLoader color="#54bab9" margin={5} size={15} />
+                  ) : (
+                    <input
+                      type="file"
+                      className="my-1 col-span-3 text-black file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-white-50 file:text-accent"
+                      onChange={handleUpload}
+                    />
+                  ))}
               </div>
 
               <div className="border-b border-gray-300 py-5">
@@ -261,7 +284,7 @@ function ProfileScreen() {
                       defaultValue={profile.nickname}
                       className="p-0 rounded-none input input-ghost text-accent input-sm mb-2 placeholder-accent text-lg w-full disabled:text-black disabled:input-ghost disabled:border-none"
                       disabled={!editStatus}
-                      {...register('nickname')}
+                      {...register("nickname")}
                     />
                     <p className="text-error text-xs">
                       {errors.nickname?.message}
@@ -284,7 +307,7 @@ function ProfileScreen() {
                   defaultValue={profile.introduction}
                   placeholder="Describe your listing."
                   disabled={!editStatus}
-                  {...register('introduction')}
+                  {...register("introduction")}
                 ></textarea>
                 <p className="text-error text-xs">
                   {errors.introduction?.message}
@@ -394,8 +417,8 @@ function ProfileScreen() {
         </div>
       </form>
       <Footer active="mypage" />
-    </>
-  )
+    </div>
+  );
 }
 
-export default ProfileScreen
+export default ProfileScreen;

@@ -1,99 +1,101 @@
-import React, { useEffect, useState } from 'react'
-import { FaHeart, FaShare, FaInfoCircle, FaUpload } from 'react-icons/fa'
-import { useForm, useFieldArray } from 'react-hook-form'
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
-import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { toast } from 'react-toastify'
+import React, { useEffect, useState } from "react";
+import { FaHeart, FaShare, FaInfoCircle, FaUpload } from "react-icons/fa";
+import { useForm, useFieldArray } from "react-hook-form";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-toastify";
 
-import { useAppSelector, useAppDispatch } from '../app/hook'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import PhotoGallery from '../components/PhotoGallery'
+import { useAppSelector, useAppDispatch } from "../app/hook";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import PhotoGallery from "../components/PhotoGallery";
 import {
   selectItemStatus,
   selectItemError,
   uploadItem,
   selectItem,
   resetItemStatus,
-} from '../features/item/itemSlice'
-import { selectUserProfile } from '../features/user/userProfileSlice'
-import ProfileBadge from '../components/ProfileBadge'
-import { selectCommunity } from '../features/header/headerSlice'
-import SearchBarMultiple from '../components/SearchBarMultiple'
-import { Labels, labels } from '../static/docs/labels'
-import placeholder from '../static/images/placeholder.png'
+} from "../features/item/itemSlice";
+import { selectUserProfile } from "../features/user/userProfileSlice";
+import ProfileBadge from "../components/ProfileBadge";
+import { selectCommunity } from "../features/header/headerSlice";
+import SearchBarMultiple from "../components/SearchBarMultiple";
+import { Labels, labels } from "../static/docs/labels";
+import placeholder from "../static/images/placeholder.png";
+import { HashLoader, PacmanLoader } from "react-spinners";
 
 type FormInput = {
-  heading: string
-  sub_heading: string
-  reason: string
-  description: string
-  negotiability: boolean
-  details: Array<{ label: string; value: string }>
-}
+  heading: string;
+  sub_heading: string;
+  reason: string;
+  description: string;
+  negotiability: boolean;
+  details: Array<{ label: string; value: string }>;
+};
 
 const imagesSchema = yup.object().shape({
   images: yup
     .mixed()
-    .required('Images are required.')
-    .test('fileSize', 'The file must be smaller than 1MB', (value) => {
-      let total = 0
+    .required("Images are required.")
+    .test("fileSize", "The file must be smaller than 1MB", (value) => {
+      let total = 0;
       for (let i = 0; i < value.length; i += 1) {
-        total += value[i].size
+        total += value[i].size;
       }
-      return total <= 10000000
+      return total <= 10000000;
     })
-    .test('type', 'File must be either .jpeg or .png', (value) => {
+    .test("type", "File must be either .jpeg or .png", (value) => {
       for (let i = 0; i < value.length; i += 1) {
-        if (value[i].type !== ('image/jpeg' || 'image/png')) return false
+        if (value[i].type !== ("image/jpeg" || "image/png")) return false;
       }
-      return true
+      return true;
     }),
-})
+});
 
 export const InputSchema = yup
   .object({
     heading: yup
       .string()
-      .required('Heading is a required field.')
-      .min(3, 'Heading must be at least 3 characters long.')
-      .max(50, 'Name must be at most 30 characters long.'),
+      .required("Heading is a required field.")
+      .min(3, "Heading must be at least 3 characters long.")
+      .max(50, "Name must be at most 30 characters long."),
     sub_heading: yup
       .string()
-      .required('Subheading is a required field.')
-      .min(3, 'Subheading must be at least 3 characters long.')
-      .max(50, 'Subheading must be at most 30 characters long.'),
+      .required("Subheading is a required field.")
+      .min(3, "Subheading must be at least 3 characters long.")
+      .max(50, "Subheading must be at most 30 characters long."),
     reason: yup
       .string()
-      .required('Reason is a required field.')
-      .min(3, 'Reason must be at least 3 characters long.')
-      .max(50, 'Reason must be at most 30 characters long.'),
-    negotiability: yup.boolean().required('Select Negotiablity'),
+      .required("Reason is a required field.")
+      .min(3, "Reason must be at least 3 characters long.")
+      .max(50, "Reason must be at most 30 characters long."),
+    negotiability: yup.boolean().required("Select Negotiablity"),
     description: yup
       .string()
-      .max(500, 'Description cannot exceed 500 characters.')
-      .required('Description is required.'),
+      .max(500, "Description cannot exceed 500 characters.")
+      .required("Description is required."),
     details: yup.mixed(),
   })
-  .required()
+  .required();
 
 function ItemUploadScreen() {
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
-  const params = useParams()
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const params = useParams();
   const [selectedCommunities, setSelectedCommunities] = useState<Array<string>>(
     []
-  )
-  const [itemThumbnail, setItemThumbnail] = useState<Array<string>>()
-  const [files, setFiles] = useState<FileList>()
-  const [price, setPrice] = useState<number>(0)
-  const uploadedItem = useAppSelector(selectItem)
-  const itemStatus = useAppSelector(selectItemStatus)
-  const itemError = useAppSelector(selectItemError)
-  const community = useAppSelector(selectCommunity)
-  const profile = useAppSelector(selectUserProfile)
-  const type = params.type ?? ''
+  );
+  const [itemThumbnail, setItemThumbnail] = useState<Array<string>>();
+  const [files, setFiles] = useState<FileList>();
+  const [price, setPrice] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
+  const uploadedItem = useAppSelector(selectItem);
+  const itemStatus = useAppSelector(selectItemStatus);
+  const itemError = useAppSelector(selectItemError);
+  const community = useAppSelector(selectCommunity);
+  const profile = useAppSelector(selectUserProfile);
+  const type = params.type ?? "";
   const {
     control: controlLaptop,
     register: registerLaptop,
@@ -102,47 +104,50 @@ function ItemUploadScreen() {
     reset: resetLaptop,
   } = useForm<FormInput>({
     resolver: yupResolver(InputSchema),
-  })
+  });
   const { fields: fieldsLaptop, append: appendLaptop } = useFieldArray({
     control: controlLaptop,
-    name: 'details',
-  })
+    name: "details",
+  });
 
   useEffect(() => {
-    if (itemStatus === 'succeeded') {
-      if (type === 'event') {
-        dispatch(resetItemStatus)
-        navigate(`/event/create-signup/${uploadedItem._id}`)
+    if (itemStatus === "succeeded") {
+      setLoading(false);
+      if (type === "event") {
+        dispatch(resetItemStatus);
+        navigate(`/event/create-signup/${uploadedItem._id}`);
       } else {
-        dispatch(resetItemStatus())
-        navigate(`/item/${uploadedItem._id}`)
+        dispatch(resetItemStatus());
+        navigate(`/item/${uploadedItem._id}`);
       }
-    } else if (itemStatus === 'failed') {
-      dispatch(resetItemStatus())
-      toast(itemError)
+    } else if (itemStatus === "failed") {
+      setLoading(false);
+      dispatch(resetItemStatus());
+      toast(itemError);
     }
-  }, [itemStatus, itemError])
+  }, [itemStatus, itemError]);
 
   useEffect(() => {
     // Lock Orientation
-    const myScreenOrientation = window.screen.orientation
-    myScreenOrientation.lock('portrait')
+    const myScreenOrientation = window.screen.orientation;
+    myScreenOrientation.lock("portrait");
 
     // Reset Default Values
     resetLaptop({
-      heading: '',
-      sub_heading: '',
-      reason: '',
-      description: '',
+      heading: "",
+      sub_heading: "",
+      reason: "",
+      description: "",
       negotiability: false,
       details: labels[type as keyof Labels].map((label) => ({
         label: label,
-        value: '',
+        value: "",
       })),
-    })
-  }, [dispatch])
+    });
+  }, [dispatch]);
 
   const onSubmitLaptop = (data: FormInput) => {
+    setLoading(true);
     if (selectedCommunities.length !== 0) {
       const newItem = {
         type: params.type as string,
@@ -155,37 +160,41 @@ function ItemUploadScreen() {
         description: data.description,
         details: data.details,
         images: files as FileList,
-      }
-      dispatch(uploadItem(newItem))
-      console.log(newItem)
+      };
+      dispatch(uploadItem(newItem));
     } else {
-      toast.error('Community fields are must!')
+      toast.error("Community fields are must!");
     }
-  }
+  };
 
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       try {
-        await imagesSchema.validate({ images: event.target.files })
+        await imagesSchema.validate({ images: event.target.files });
       } catch (err) {
-        if (err instanceof yup.ValidationError) toast.error(err.message)
-        return
+        if (err instanceof yup.ValidationError) toast.error(err.message);
+        return;
       }
-      setFiles(event.target.files)
+      setFiles(event.target.files);
       setItemThumbnail(
         Array.from(event.target.files).map((file) => URL.createObjectURL(file))
-      )
+      );
     }
-  }
+  };
 
   const handleCommunitySelect = (
     communities: ReadonlyArray<{ key: string; _id: string }>
   ) => {
-    setSelectedCommunities(communities.map((community) => community._id))
-  }
+    setSelectedCommunities(communities.map((community) => community._id));
+  };
 
   return (
-    <>
+    <div className="relative">
+      {loading && (
+        <div className="h-screen flex justify-center items-center bg-base-content opacity-40 fixed top-0 right-0 left-0 z-100">
+          <HashLoader color="#54bab9" size={40} />
+        </div>
+      )}
       <Header sell />
       <form onSubmit={handleSubmitLaptop(onSubmitLaptop)}>
         <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3">
@@ -195,7 +204,7 @@ function ItemUploadScreen() {
               <span>
                 <span className="underline">
                   This page is replica of what others will see!
-                </span>{' '}
+                </span>{" "}
                 Edit your item by filling out the details instead of yellow
                 texts and buttons.
               </span>
@@ -208,7 +217,7 @@ function ItemUploadScreen() {
                   type="text"
                   placeholder="Fill In Item Heading"
                   className="input input-ghost text-accent input-md placeholder-accent item-input-lg lg:item-input-2xl w-full"
-                  {...registerLaptop('heading')}
+                  {...registerLaptop("heading")}
                 />
                 <p className="text-error text-xs">
                   {errorsLaptop.heading?.message}
@@ -222,11 +231,11 @@ function ItemUploadScreen() {
                   >
                     <FaUpload
                       style={{
-                        backgroundColor: 'rgba(0, 0, 0, 0)',
+                        backgroundColor: "rgba(0, 0, 0, 0)",
                       }}
                     />
                     &nbsp;Save&nbsp;
-                    {params.type === 'event' && '& Create Signup Form'}
+                    {params.type === "event" && "& Create Signup Form"}
                   </button>
                 </div>
               </div>
@@ -339,7 +348,7 @@ function ItemUploadScreen() {
                           type="text"
                           placeholder="Fill In Item SubHeading"
                           className="input input-ghost input-md text-accent text-right placeholder-accent item-input-sm w-full lg:item-input-lg"
-                          {...registerLaptop('sub_heading')}
+                          {...registerLaptop("sub_heading")}
                         />
                         <p className="text-error text-xs">
                           {errorsLaptop.sub_heading?.message}
@@ -348,9 +357,13 @@ function ItemUploadScreen() {
                       <div className="w-full flex justify-end">
                         <input
                           type="text"
-                          placeholder="Fill In Your Reason For Sale"
+                          placeholder={
+                            params.type === "event"
+                              ? "What is the occasion of the event?"
+                              : "Fill In Your Reason For Sale"
+                          }
                           className="input input-ghost input-sm text-accent text-right placeholder-accent item-input-sm w-full mb-1 ml-3 lg:item-input-lg"
-                          {...registerLaptop('reason')}
+                          {...registerLaptop("reason")}
                         />
                         <p className="text-error text-xs">
                           {errorsLaptop.reason?.message}
@@ -386,7 +399,7 @@ function ItemUploadScreen() {
                   <textarea
                     className="textarea textarea-ghost placeholder-accent w-full h-40 text-accent text-lg lg:text-md"
                     placeholder="Describe your listing."
-                    {...registerLaptop('description')}
+                    {...registerLaptop("description")}
                   ></textarea>
                   <p className="text-error text-xs">
                     {errorsLaptop.description?.message}
@@ -410,7 +423,7 @@ function ItemUploadScreen() {
                     ))}
                   </div>
                   <div className="flex stats shadow">
-                    {type === 'event' ? (
+                    {type === "event" ? (
                       <div className="stat place-items-center">
                         <div className="stat-title">Events Hosted</div>
                         <div className="stat-value">
@@ -425,7 +438,7 @@ function ItemUploadScreen() {
                         <div className="stat-desc">100% of Transactions</div>
                       </div>
                     )}
-                    {type === 'event' ? (
+                    {type === "event" ? (
                       <div className="stat place-items-center">
                         <div className="stat-title">People Hosted</div>
                         <div className="stat-value text-secondary">
@@ -457,56 +470,62 @@ function ItemUploadScreen() {
                       <div className="col-span-1">
                         <h2 className="card-title">
                           <span className="text-gray-500">
-                            {type === 'event' ? 'Join for' : 'Listed for'}
+                            {type === "event" ? "Join for" : "Listed for"}
                           </span>
                           <input
                             type="number"
                             step={1}
                             placeholder="Price"
-                            className="input input-ghost text-accent input-xs placeholder-lg placeholder-accent font-bold item-input-base w-5/12"
+                            className="inline input input-ghost text-accent input-xs placeholder-lg placeholder-accent font-bold item-input-base w-5/12"
                             onChange={(e) => setPrice(Number(e.target.value))}
                           />
+                          <span className="text-gray-500">$ (HKD)</span>
                         </h2>
                       </div>
                       <div className="col-span-1 w-full">
-                        <label className="swap pl-full">
-                          <input
-                            type="checkbox"
-                            {...registerLaptop('negotiability')}
-                          />
-                          <p className="text-error text-xs">
-                            {errorsLaptop.negotiability?.message}
-                          </p>
-                          {type === 'event' ? (
-                            <div className="swap-on badge badge-accent ">
-                              Open House
-                            </div>
-                          ) : (
-                            <div className="swap-on badge badge-accent ">
-                              Negotiable
-                            </div>
-                          )}
-                          {type === 'event' ? (
-                            <div className="swap-off badge badge-accent ">
-                              Private Hosting
-                            </div>
-                          ) : (
-                            <div className="swap-off badge badge-accent ">
-                              Unnegotiable
-                            </div>
-                          )}
-                        </label>
+                        <div
+                          className="tooltip tooltip-info"
+                          data-tip="Click to Change"
+                        >
+                          <label className="swap pl-full">
+                            <input
+                              type="checkbox"
+                              {...registerLaptop("negotiability")}
+                            />
+                            <p className="text-error text-xs">
+                              {errorsLaptop.negotiability?.message}
+                            </p>
+                            {type === "event" ? (
+                              <div className="swap-on badge badge-accent ">
+                                Open House
+                              </div>
+                            ) : (
+                              <div className="swap-on badge badge-accent ">
+                                Negotiable
+                              </div>
+                            )}
+                            {type === "event" ? (
+                              <div className="swap-off badge badge-accent ">
+                                Private Hosting
+                              </div>
+                            ) : (
+                              <div className="swap-off badge badge-accent ">
+                                Unnegotiable
+                              </div>
+                            )}
+                          </label>
+                        </div>
                       </div>
                     </div>
                     <div className="card-actions justify-stretch">
                       <button className="btn btn-primary w-full">
-                        {type === 'event' ? 'Join' : 'Chat & Buy'}
+                        {type === "event" ? "Join" : "Chat & Buy"}
                       </button>
                     </div>
                     <div className="grid grid-cols-5 border-b border-gray-300">
                       <div className="col-span-3">
                         <p className="underline">
-                          {type === 'event' ? 'Ticket' : 'Item'}
+                          {type === "event" ? "Ticket" : "Item"}
                         </p>
                       </div>
                       <div className="col-span-2 justify-self-end">
@@ -604,8 +623,8 @@ function ItemUploadScreen() {
                 <button className="btn btn-xs rounded btn-ghost text-sm">
                   <FaHeart
                     style={{
-                      backgroundColor: 'rgba(0, 0, 0, 0)',
-                      color: 'hsl(var(--sf))',
+                      backgroundColor: "rgba(0, 0, 0, 0)",
+                      color: "hsl(var(--sf))",
                     }}
                   />
                 </button>
@@ -613,7 +632,7 @@ function ItemUploadScreen() {
                 <button className="btn btn-xs rounded btn-ghost text-sm">
                   <FaShare
                     style={{
-                      backgroundColor: 'rgba(0, 0, 0, 0)',
+                      backgroundColor: "rgba(0, 0, 0, 0)",
                     }}
                   />
                 </button>
@@ -622,15 +641,15 @@ function ItemUploadScreen() {
             <div className="col-span-1">
               <button className="btn btn-primary btn-md w-full" type="submit">
                 &nbsp;Save
-                {params.type === 'event' && ' & Create Signup'}
+                {params.type === "event" && " & Create Signup"}
               </button>
             </div>
           </div>
         </div>
       </form>
       <Footer active="explore" />
-    </>
-  )
+    </div>
+  );
 }
 
-export default ItemUploadScreen
+export default ItemUploadScreen;

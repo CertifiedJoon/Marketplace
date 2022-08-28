@@ -1,37 +1,37 @@
-import React, { useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-import { persistor } from '../app/store'
-import { useAppSelector, useAppDispatch } from '../app/hook'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
-import { selectUser, logout } from '../features/user/userSlice'
+import { persistor } from "../app/store";
+import { useAppSelector, useAppDispatch } from "../app/hook";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import { selectUser, logout } from "../features/user/userSlice";
 import {
   selectUserProfile,
   profileout,
-} from '../features/user/userProfileSlice'
-import ProfileBadge from '../components/ProfileBadge'
-import { membershipout } from '../features/community/membershipSlice'
+} from "../features/user/userProfileSlice";
+import ProfileBadge from "../components/ProfileBadge";
+import { membershipout } from "../features/community/membershipSlice";
 
 function MyPageScreen() {
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
-  const user = useAppSelector(selectUser)
-  const profile = useAppSelector(selectUserProfile)
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const user = useAppSelector(selectUser);
+  const profile = useAppSelector(selectUserProfile);
 
   useEffect(() => {
     if (!user) {
-      navigate('/login')
+      navigate("/login");
     }
-  }, [navigate, user])
+  }, [navigate, user]);
 
   const handleLogout = () => {
-    dispatch(logout())
-    dispatch(profileout())
-    dispatch(membershipout())
-    persistor.purge()
-    navigate('/')
-  }
+    dispatch(logout());
+    dispatch(profileout());
+    dispatch(membershipout());
+    persistor.purge();
+    navigate("/");
+  };
   return (
     <>
       <div className="hidden lg:block">
@@ -94,7 +94,7 @@ function MyPageScreen() {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/wishlist/userId">
+                    <Link to="/wishlist">
                       <div>Wishlist</div>
                     </Link>
                   </li>
@@ -139,7 +139,7 @@ function MyPageScreen() {
       </div>
       <Footer active="mypage" />
     </>
-  )
+  );
 }
 
-export default MyPageScreen
+export default MyPageScreen;
