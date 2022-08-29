@@ -147,7 +147,6 @@ function ItemUploadScreen() {
   }, [dispatch]);
 
   const onSubmitLaptop = (data: FormInput) => {
-    setLoading(true);
     if (selectedCommunities.length !== 0) {
       const newItem = {
         type: params.type as string,
@@ -161,6 +160,7 @@ function ItemUploadScreen() {
         details: data.details,
         images: files as FileList,
       };
+      setLoading(true);
       dispatch(uploadItem(newItem));
     } else {
       toast.error("Community fields are must!");

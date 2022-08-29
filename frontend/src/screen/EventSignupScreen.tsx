@@ -43,6 +43,9 @@ function EventSignupScreen() {
   useEffect(() => {
     if (status === "succeeded") {
       setInputs(JSON.parse(form.inputs));
+    } else if (status === "failed") {
+      toast.error(error);
+      navigate("/item/" + params.eventId);
     }
   }, [status, error]);
 

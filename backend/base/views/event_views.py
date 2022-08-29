@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied, ValidationError
+from rest_framework import serializers
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -11,7 +12,7 @@ from base.models import Item, UserProfile, EventForm, EventGuest
 def getForm(request, pk):
   try:
     event = Item.objects.get(pk=pk)
-    if event.type != 'event': raise ValidationError
+    if event.type != 'event': raise ValidationError('Event Does Not Exist')
     form, defaultForm = EventForm.objects.get_or_create(
       event=event,
       defaults={
@@ -26,11 +27,9 @@ def getForm(request, pk):
     )
     serializer = EventFormSerializer(form if form else defaultForm)
     return Response(serializer.data)
-  except ValidationError or ObjectDoesNotExist:
-    if ValidationError:
-      raise ValidationError('Event does not exist.')
-    elif ObjectDoesNotExist:
-      raise ObjectDoesNotExist('Event doesn\'t have a sign-up form')
+  except ValidationError as e:
+    if type(e) is ValidationError:
+      raise serializers.ValidationError(e.message)
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -38,7 +37,7 @@ def updateForm(request, pk):
   data = request.data
   try:
     event = Item.objects.get(pk=pk)
-    if event.type != 'event' : raise ValidationError
+    if event.type != 'event' : raise ValidationError('Item is not an event.')
     form = EventForm.objects.get(event=event)
     form.heading = data['heading']
     form.description = data['description']
@@ -47,11 +46,11 @@ def updateForm(request, pk):
     form.save()
     serializer = EventFormSerializer(form)
     return Response(serializer.data)
-  except ValidationError or ObjectDoesNotExist:
-    if ValidationError:
-      raise ValidationError('Item is not an event.')
-    elif ObjectDoesNotExist:
-      raise ObjectDoesNotExist('Event doesn\'t exist.')
+  except ValidationError or ObjectDoesNotExist as e:
+    if type(e) is ValidationError:
+      raise serializers.ValidationError(e.message)
+    elif type(e) is ObjectDoesNotExist:
+      raise serializers.ValidationError('Event doesn\'t exist.')
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -59,7 +58,7 @@ def createForm(request, pk):
   data = request.data
   try:
     event = Item.objects.get(pk=pk)
-    if event.type != 'event' : raise ValidationError
+    if event.type != 'event' : raise ValidationError('Item is not an event')
     form = EventForm.objects.create(
       event = event,
       heading = data['heading'],
@@ -69,11 +68,11 @@ def createForm(request, pk):
     )
     serializer = EventFormSerializer(form)
     return Response(serializer.data)
-  except ValidationError or ObjectDoesNotExist:
-    if ValidationError: 
-      raise ValidationError('Item is not an event.')
-    elif ObjectDoesNotExist:
-      raise ObjectDoesNotExist('Event doesn\'t exist.')
+  except ValidationError or ObjectDoesNotExist as e:
+    if type(e) is ValidationError: 
+      raise serializers.ValidationError(e.message)
+    elif type(e) is ObjectDoesNotExist:
+      raise serializers.ValidationError('Event doesn\'t exist.')
 
 @api_view(['POST'])
 def signup(request, pk):
@@ -83,7 +82,11 @@ def signup(request, pk):
     profile = UserProfile.objects.get(user=request.user)
   try:
     event = Item.objects.get(pk=pk)
-    if event.type != 'event' : raise ValidationError
+    if event.type != 'event' : raise ValidationError('Event does not exist.')
+    if (event.negotiability == False and profile == None):
+      raise ValidationError('This is a private hosting, join community to signup.')
+    if (profile and EventGuest.objects.filter(profile=profile)[0]):
+      raise ValidationError('You have already signed up.')
     guest = EventGuest.objects.create(
       event = event,
       details = data['details']
@@ -93,11 +96,14 @@ def signup(request, pk):
       guest.save()
     serializer = EventGuestSerializer(guest)
     return Response(serializer.data)
-  except ValidationError or ObjectDoesNotExist:
-    if ValidationError:
-      raise ValidationError('Item is not an events')
-    elif ObjectDoesNotExist:
-      raise ObjectDoesNotExist('Event no longer exists.')
+  except ValidationError or ObjectDoesNotExist or PermissionDenied as e:
+    if type(e) is ValidationError:
+      raise serializers.ValidationError(e.message)
+    elif type(e) is ObjectDoesNotExist:
+      raise serializers.ValidationError('Event no longer exists.')
+    elif type(e) is PermissionDenied:
+      raise serializers.ValidationError(e.message)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -106,13 +112,13 @@ def getGuests(request, pk):
   try:
     event = Item.objects.get(pk=pk)
     profile = UserProfile.objects.get(user=user)
-    if event.type != 'event': raise ValidationError
-    if event.user != profile: raise PermissionDenied
+    if event.type != 'event': raise ValidationError('Item is not an event')
+    if event.user != profile: raise PermissionDenied('Event is not yours.')
     guests = event.event_guest.all()
     serializer = EventGuestSerializer(guests, many=True)
     return Response(serializer.data)
-  except ValidationError or PermissionDenied:
-    if ValidationError:
-      raise('Item is not an event.')
-    elif PermissionDenied:
-      raise('Item is not yours.')
+  except ValidationError or PermissionDenied as e:
+    if type(e) is ValidationError:
+      raise serializers.ValidationError(e.message)
+    elif type(e) is PermissionDenied:
+      raise serializers.ValidationError(e.message)

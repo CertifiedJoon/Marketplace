@@ -1,96 +1,95 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import {
   FaInfoCircle,
   FaPlusCircle,
   FaSave,
   FaTimesCircle,
   FaUpload,
-} from 'react-icons/fa'
-import { useForm } from 'react-hook-form'
-import * as yup from 'yup'
+} from "react-icons/fa";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
 
-import CustomInput from '../components/CustomInput'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
-import { toast } from 'react-toastify'
-import placeholder from '../static/images/placeholder.png'
-import { useAppDispatch, useAppSelector } from '../app/hook'
+import CustomInput from "../components/CustomInput";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import { toast } from "react-toastify";
+import placeholder from "../static/images/placeholder.png";
+import { useAppDispatch, useAppSelector } from "../app/hook";
 import {
   createForm,
   selectEventForm,
   selectEventFormError,
   selectEventFormStatus,
-} from '../features/event/eventFormSlice'
-import { useNavigate, useParams } from 'react-router-dom'
-import { Input } from '../interface/eventInterface'
+} from "../features/event/eventFormSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import { Input } from "../interface/eventInterface";
+import { HashLoader } from "react-spinners";
 
 interface IFormInput {
-  [key: string]: any
+  [key: string]: any;
 }
 
 const imageSchema = yup.object().shape({
   image: yup
     .mixed()
-    .required('Background image required.')
-    .test('fileSize', 'The file must be smaller than 1MB.', (value) => {
-      return value[0].size < 1000000
+    .required("Background image required.")
+    .test("fileSize", "The file must be smaller than 1MB.", (value) => {
+      return value[0].size < 1000000;
     })
-    .test('type', 'File must be either .jpeg or .png', (value) => {
-      return value[0].type == ('image/jpeg' || 'image/png')
+    .test("type", "File must be either .jpeg or .png", (value) => {
+      return value[0].type == ("image/jpeg" || "image/png");
     }),
-})
+});
 
 function CreateSignupScreen() {
-  const dispatch = useAppDispatch()
-  const status = useAppSelector(selectEventFormStatus)
-  const error = useAppSelector(selectEventFormError)
-  const params = useParams()
-  const navigate = useNavigate()
-  const [createMode, setCreateMode] = useState(false)
-  const [inputList, setInputList] = useState<Array<Input>>([])
-  const [heading, setHeading] = useState('')
-  const [description, setDescription] = useState('')
-  const [thumbnail, setThumbnail] = useState<string>()
-  const [inputType, setInputType] = useState('Text')
-  const [quantity, setQuantity] = useState(0)
-  const [label, setLabel] = useState('')
-  const [info, setInfo] = useState('')
-  const [minLength, setMinLength] = useState(0)
-  const [maxLength, setMaxLength] = useState(100)
-  const [min, setMin] = useState(0)
-  const [max, setMax] = useState(1000)
-  const [pattern, setPattern] = useState('')
-  const [checkboxOptions, setCheckboxOptions] = useState<Array<string>>([])
-  const [radioOptions, setRadioOptions] = useState<Array<string>>(['', ''])
-  const [selectOptions, setSelectOptions] = useState<Array<string>>([])
-  const [files, setFiles] = useState<FileList>()
-  const { register } = useForm<IFormInput>()
+  const dispatch = useAppDispatch();
+  const status = useAppSelector(selectEventFormStatus);
+  const error = useAppSelector(selectEventFormError);
+  const params = useParams();
+  const navigate = useNavigate();
+  const [createMode, setCreateMode] = useState(false);
+  const [inputList, setInputList] = useState<Array<Input>>([]);
+  const [heading, setHeading] = useState("");
+  const [description, setDescription] = useState("");
+  const [thumbnail, setThumbnail] = useState<string>();
+  const [inputType, setInputType] = useState("Text");
+  const [quantity, setQuantity] = useState(0);
+  const [label, setLabel] = useState("");
+  const [info, setInfo] = useState("");
+  const [minLength, setMinLength] = useState(0);
+  const [maxLength, setMaxLength] = useState(100);
+  const [min, setMin] = useState(0);
+  const [max, setMax] = useState(1000);
+  const [pattern, setPattern] = useState("");
+  const [checkboxOptions, setCheckboxOptions] = useState<Array<string>>([]);
+  const [radioOptions, setRadioOptions] = useState<Array<string>>(["", ""]);
+  const [selectOptions, setSelectOptions] = useState<Array<string>>([]);
+  const [files, setFiles] = useState<FileList>();
+  const [loading, setLoading] = useState(false);
+  const { register } = useForm<IFormInput>();
 
   useEffect(() => {
-    if (status === 'succeeded') {
-      navigate(`/event/manage/${params.eventId}`)
-    } else if (status === 'failed') {
-      toast.error(error)
+    if (status === "succeeded") {
+      setLoading(false);
+      navigate(`/event/manage/${params.eventId}`);
+    } else if (status === "failed") {
+      setLoading(false);
+      toast.error(error);
     }
-  }, [params, navigate, status, error])
+  }, [params, navigate, status, error]);
 
   const handleCreate = () => {
-    console.log({
-      heading,
-      description,
-      files,
-      inputList,
-    })
-    if (!heading || heading === '') {
-      toast.error('Heading is required.')
-    } else if (!description || description === '') {
-      toast.error('Description is required.')
+    if (!heading || heading === "") {
+      toast.error("Heading is required.");
+    } else if (!description || description === "") {
+      toast.error("Description is required.");
     } else if (!files) {
-      toast.error('Background Image is required.')
+      toast.error("Background Image is required.");
     } else if (!inputList || inputList.length === 0) {
-      toast.error('At least one input is required.')
+      toast.error("At least one input is required.");
     }
     if (files && params.eventId) {
+      setLoading(true);
       dispatch(
         createForm({
           _id: params.eventId,
@@ -99,15 +98,15 @@ function CreateSignupScreen() {
           thumbnail: files,
           inputs: inputList,
         })
-      )
+      );
     }
-  }
+  };
 
   const handleCheck = (checked: boolean) => {
     if (checked === false) {
       const newInput: Input = {
         inputType,
-        label: label === '' ? '_' : label,
+        label: label === "" ? "_" : label,
         info,
         lengthRange: [Math.floor(minLength), Math.ceil(maxLength)],
         range: [Math.floor(min), Math.ceil(max)],
@@ -115,71 +114,76 @@ function CreateSignupScreen() {
         checkboxOptions,
         radioOptions,
         selectOptions,
-      }
-      setInputList(inputList.concat([newInput]))
-      setCreateMode(false)
-      setInputType('Text')
-      setQuantity(0)
-      setLabel('')
-      setInfo('')
-      setMinLength(0)
-      setMaxLength(100)
-      setMin(0)
-      setMax(1000)
-      setPattern('')
-      setCheckboxOptions([])
-      setRadioOptions(['', ''])
-      setSelectOptions([])
+      };
+      setInputList(inputList.concat([newInput]));
+      setCreateMode(false);
+      setInputType("Text");
+      setQuantity(0);
+      setLabel("");
+      setInfo("");
+      setMinLength(0);
+      setMaxLength(100);
+      setMin(0);
+      setMax(1000);
+      setPattern("");
+      setCheckboxOptions([]);
+      setRadioOptions(["", ""]);
+      setSelectOptions([]);
     } else if (checked === true) {
-      setCreateMode(true)
+      setCreateMode(true);
     }
-  }
+  };
 
   const handleCheckboxOptionChange = (value: string, index: number) => {
     const newOptionList = checkboxOptions.map((e, i) => {
-      if (i === index) return value
-      else return e
-    })
-    setCheckboxOptions(newOptionList)
-    console.log(newOptionList)
-  }
+      if (i === index) return value;
+      else return e;
+    });
+    setCheckboxOptions(newOptionList);
+    console.log(newOptionList);
+  };
 
   const handleRadioOptionChange = (value: string, index: number) => {
     const newOptionList = radioOptions.map((e, i) => {
-      if (i === index) return value
-      else return e
-    })
-    setRadioOptions(newOptionList)
-  }
+      if (i === index) return value;
+      else return e;
+    });
+    setRadioOptions(newOptionList);
+  };
 
   const handleSelectOptionChange = (value: string, index: number) => {
     const newOptionList = selectOptions.map((e, i) => {
-      if (i === index) return value
-      else return e
-    })
-    setSelectOptions(newOptionList)
-  }
+      if (i === index) return value;
+      else return e;
+    });
+    setSelectOptions(newOptionList);
+  };
 
   const handleRemove = (index: number) => {
-    setInputList((currentImg) => currentImg.filter((img, i) => i !== index))
-  }
+    setInputList((currentImg) => currentImg.filter((img, i) => i !== index));
+  };
 
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     try {
-      await imageSchema.validate({ image: event.target.files })
+      await imageSchema.validate({ image: event.target.files });
     } catch (error) {
-      if (error instanceof yup.ValidationError) toast.error(error.message)
-      return
+      if (error instanceof yup.ValidationError) toast.error(error.message);
+      return;
     }
-    event.target.files && setFiles(event.target.files)
+    event.target.files && setFiles(event.target.files);
     event.target.files &&
-      setThumbnail(URL.createObjectURL(event.target.files[0]))
-  }
+      setThumbnail(URL.createObjectURL(event.target.files[0]));
+  };
 
   return (
-    <>
+    <div className="relative">
+      {loading && (
+        <div className="h-screen flex justify-center items-center bg-base-content opacity-40 fixed top-0 right-0 left-0 z-100">
+          <HashLoader color="#54bab9" size={40} />
+        </div>
+      )}
       <Header />
       <form>
         <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3">
@@ -245,7 +249,7 @@ function CreateSignupScreen() {
       hover:file:bg-violet-100
     "
                 onChange={(e) => {
-                  handleImageUpload(e)
+                  handleImageUpload(e);
                 }}
               />
             </div>
@@ -340,7 +344,7 @@ function CreateSignupScreen() {
                     </div>
                   </div>
 
-                  {inputType === 'Text' && (
+                  {inputType === "Text" && (
                     <div>
                       <div className="flex justify-center">
                         <label htmlFor="minLength">Minimum Length:</label>
@@ -348,12 +352,12 @@ function CreateSignupScreen() {
                           type="number"
                           value={minLength}
                           onChange={(e) => {
-                            let { value, min, max } = e.target
+                            let { value, min, max } = e.target;
                             const newVal = Math.max(
                               Number(min),
                               Math.min(Number(max), Number(value))
-                            )
-                            setMinLength(newVal)
+                            );
+                            setMinLength(newVal);
                           }}
                           className="mx-2 px-2"
                           name="minLength"
@@ -368,12 +372,12 @@ function CreateSignupScreen() {
                           type="number"
                           value={maxLength}
                           onChange={(e) => {
-                            let { value, min, max } = e.target
+                            let { value, min, max } = e.target;
                             const newVal = Math.max(
                               Number(min),
                               Math.min(Number(max), Number(value))
-                            )
-                            setMaxLength(newVal)
+                            );
+                            setMaxLength(newVal);
                           }}
                           className="mx-2 px-2"
                           name="maxLength"
@@ -385,7 +389,7 @@ function CreateSignupScreen() {
                     </div>
                   )}
 
-                  {inputType === 'Number' && (
+                  {inputType === "Number" && (
                     <div>
                       <div className="flex justify-center">
                         <label htmlFor="in">Minimum:</label>
@@ -393,12 +397,12 @@ function CreateSignupScreen() {
                           type="number"
                           value={min}
                           onChange={(e) => {
-                            let { value, min, max } = e.target
+                            let { value, min, max } = e.target;
                             const newVal = Math.max(
                               Number(min),
                               Math.min(Number(max), Number(value))
-                            )
-                            setMin(newVal)
+                            );
+                            setMin(newVal);
                           }}
                           className="mx-2 px-2"
                           name="min"
@@ -413,12 +417,12 @@ function CreateSignupScreen() {
                           type="number"
                           value={max}
                           onChange={(e) => {
-                            let { value, min, max } = e.target
+                            let { value, min, max } = e.target;
                             const newVal = Math.max(
                               Number(min),
                               Math.min(Number(max), Number(value))
-                            )
-                            setMax(newVal)
+                            );
+                            setMax(newVal);
                           }}
                           className="mx-2 px-2"
                           name="max"
@@ -429,7 +433,7 @@ function CreateSignupScreen() {
                       </div>
                     </div>
                   )}
-                  {inputType === 'Textarea' && (
+                  {inputType === "Textarea" && (
                     <div>
                       <div className="flex justify-center">
                         <label htmlFor="minLength">Minimum Length:</label>
@@ -437,12 +441,12 @@ function CreateSignupScreen() {
                           type="number"
                           value={minLength}
                           onChange={(e) => {
-                            let { value, min, max } = e.target
+                            let { value, min, max } = e.target;
                             const newVal = Math.max(
                               Number(min),
                               Math.min(Number(max), Number(value))
-                            )
-                            setMinLength(newVal)
+                            );
+                            setMinLength(newVal);
                           }}
                           className="mx-2 px-2"
                           name="minLength"
@@ -457,12 +461,12 @@ function CreateSignupScreen() {
                           type="number"
                           value={maxLength}
                           onChange={(e) => {
-                            let { value, min, max } = e.target
+                            let { value, min, max } = e.target;
                             const newVal = Math.max(
                               Number(min),
                               Math.min(Number(max), Number(value))
-                            )
-                            setMaxLength(newVal)
+                            );
+                            setMaxLength(newVal);
                           }}
                           className="mx-2 px-2"
                           name="maxLength"
@@ -474,7 +478,7 @@ function CreateSignupScreen() {
                     </div>
                   )}
 
-                  {inputType === 'PassCode' && (
+                  {inputType === "PassCode" && (
                     <div className="flex justify-center">
                       <label htmlFor="passcode">
                         Enter The Correct Passcode (8 ~ 16 characters)
@@ -484,7 +488,7 @@ function CreateSignupScreen() {
                         value={pattern}
                         className="border border-black px-2 mx-2"
                         onChange={(e) => {
-                          setPattern(e.target.value)
+                          setPattern(e.target.value);
                         }}
                         name="passcode"
                         minLength={8}
@@ -493,7 +497,7 @@ function CreateSignupScreen() {
                     </div>
                   )}
 
-                  {inputType === 'Checkbox' && (
+                  {inputType === "Checkbox" && (
                     <div>
                       <div className="flex flex-wrap sm:justify-center">
                         <div className="max-w-xs mx-2">
@@ -502,19 +506,19 @@ function CreateSignupScreen() {
                             type="number"
                             value={quantity}
                             onChange={(e) => {
-                              let { value, min, max } = e.target
+                              let { value, min, max } = e.target;
                               const newVal = Math.max(
                                 Number(min),
                                 Math.min(Number(max), Number(value))
-                              )
-                              setQuantity(Number(newVal))
+                              );
+                              setQuantity(Number(newVal));
                               const extendby =
-                                Number(newVal) - checkboxOptions.length
+                                Number(newVal) - checkboxOptions.length;
                               setCheckboxOptions(
                                 checkboxOptions.concat(
-                                  Array.from({ length: extendby }, () => '')
+                                  Array.from({ length: extendby }, () => "")
                                 )
-                              )
+                              );
                             }}
                             className="mx-2 px-2"
                             name="quantity"
@@ -529,12 +533,12 @@ function CreateSignupScreen() {
                             type="number"
                             value={min}
                             onChange={(e) => {
-                              let { value, min, max } = e.target
+                              let { value, min, max } = e.target;
                               const newVal = Math.max(
                                 Number(min),
                                 Math.min(Number(max), Number(value))
-                              )
-                              setMin(newVal)
+                              );
+                              setMin(newVal);
                             }}
                             className="mx-2 px-2"
                             name="min"
@@ -549,12 +553,12 @@ function CreateSignupScreen() {
                             type="number"
                             value={max}
                             onChange={(e) => {
-                              let { value, min, max } = e.target
+                              let { value, min, max } = e.target;
                               const newVal = Math.max(
                                 Number(min),
                                 Math.min(Number(max), Number(value))
-                              )
-                              setMax(Number(newVal))
+                              );
+                              setMax(Number(newVal));
                             }}
                             className="mx-2 px-2"
                             name="max"
@@ -582,13 +586,13 @@ function CreateSignupScreen() {
                                   }
                                 />
                               </li>
-                            )
+                            );
                           })}
                         </ul>
                       </div>
                     </div>
                   )}
-                  {inputType === 'Radio' && (
+                  {inputType === "Radio" && (
                     <div className="flex justify-center">
                       <div className="w-full max-w-xs">
                         <div className="form-control">
@@ -598,7 +602,7 @@ function CreateSignupScreen() {
                               placeholder="Enter Option Title"
                               value={radioOptions[0]}
                               onChange={(e) => {
-                                handleRadioOptionChange(e.target.value, 0)
+                                handleRadioOptionChange(e.target.value, 0);
                               }}
                               className="input w-2/3 input-xs"
                             />
@@ -616,7 +620,7 @@ function CreateSignupScreen() {
                               placeholder="Enter Option Title"
                               value={radioOptions[1]}
                               onChange={(e) => {
-                                handleRadioOptionChange(e.target.value, 1)
+                                handleRadioOptionChange(e.target.value, 1);
                               }}
                               className="input w-2/3 input-xs"
                             />
@@ -630,7 +634,7 @@ function CreateSignupScreen() {
                       </div>
                     </div>
                   )}
-                  {inputType === 'Select' && (
+                  {inputType === "Select" && (
                     <div>
                       <div className="flex justify-center">
                         <label htmlFor="quantity">Number of Options:</label>
@@ -638,14 +642,14 @@ function CreateSignupScreen() {
                           type="number"
                           value={quantity}
                           onChange={(e) => {
-                            setQuantity(Number(e.target.value))
+                            setQuantity(Number(e.target.value));
                             const extendby =
-                              Number(e.target.value) - selectOptions.length
+                              Number(e.target.value) - selectOptions.length;
                             setSelectOptions(
                               selectOptions.concat(
-                                Array.from({ length: extendby }, () => '')
+                                Array.from({ length: extendby }, () => "")
                               )
-                            )
+                            );
                           }}
                           name="quantity"
                           min="0"
@@ -668,7 +672,7 @@ function CreateSignupScreen() {
                                   className="input w-full input-md my-1"
                                 />
                               </li>
-                            )
+                            );
                           })}
                         </ul>
                       </div>
@@ -686,7 +690,7 @@ function CreateSignupScreen() {
           >
             <FaUpload
               style={{
-                backgroundColor: 'rgba(0, 0, 0, 0)',
+                backgroundColor: "rgba(0, 0, 0, 0)",
               }}
             />
             &nbsp;Create
@@ -696,8 +700,8 @@ function CreateSignupScreen() {
       <div className="hidden md:block">
         <Footer active="explore" />
       </div>
-    </>
-  )
+    </div>
+  );
 }
 
-export default CreateSignupScreen
+export default CreateSignupScreen;

@@ -3,6 +3,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework import serializers
 import json
 
 from base.serializers import ItemBriefSerializer, ItemSerializer, LiveEventSerializer, ItemImageSerializer, LikeSerializer, LikedItemSerializer
@@ -55,7 +56,7 @@ def getItem(request, pk):
   try:
     item = Item.objects.prefetch_related('item_detail', 'item_image').select_related('user').get(pk=pk)
   except ObjectDoesNotExist:
-    raise NotFound("Item does not exist.", 404) 
+    raise serializers.ValidationError("Item does not exist.", 404) 
   serializer = ItemSerializer(item)
   return Response(serializer.data)
 
@@ -87,11 +88,11 @@ def uploadImages(request, pk):
     serializer = ItemImageSerializer(savedImages, many=True)
     return Response(serializer.data)
   
-  except ObjectDoesNotExist or PermissionDenied:
-    if ObjectDoesNotExist:
-      raise NotFound('Item Not Found.')
-    elif PermissionDenied:
-      raise PermissionDenied('Item is not yours.')
+  except ObjectDoesNotExist or PermissionDenied as e:
+    if type(e) is ObjectDoesNotExist:
+      raise serializers.ValidationError('Item Not Found.')
+    elif type(e) is PermissionDenied:
+      raise serializers.ValidationError('Item is not yours.')
   
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -123,11 +124,11 @@ def updateItem(request, pk):
     item.save()
     serializer = ItemSerializer(item)
     return Response(serializer.data)
-  except PermissionDenied or ObjectDoesNotExist:
-    if PermissionDenied:
-      raise PermissionDenied('Item is not yours.')
-    elif ObjectDoesNotExist:
-      raise ObjectDoesNotExist('Item does not exist.')
+  except PermissionDenied or ObjectDoesNotExist as e:
+    if type(e) is PermissionDenied:
+      raise serializers.ValidationError('Item is not yours.')
+    elif type(e) is ObjectDoesNotExist:
+      raise serializers.ValidationError('Item does not exist.')
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -167,7 +168,7 @@ def createItem(request):
     serializer = ItemSerializer(item)
     return Response(serializer.data)
   except ValidationError:
-    raise ValidationError('Data is in wrong format.')
+    raise serializers.ValidationError('Data is in wrong format.')
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -180,11 +181,11 @@ def deleteItem(request, pk):
       raise PermissionDenied
     item.delete()
     return Response()
-  except PermissionDenied or ObjectDoesNotExist:
-    if PermissionDenied:
-      raise PermissionDenied('This item does not belong to you.')
-    elif ObjectDoesNotExist:
-      raise ObjectDoesNotExist('Object Deleted Already.')
+  except PermissionDenied or ObjectDoesNotExist as e:
+    if type(e) is PermissionDenied:
+      raise serializers.ValidationError('This item does not belong to you.')
+    elif type(e) is ObjectDoesNotExist:
+      raise serializers.ValidationError('Object Deleted Already.')
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -198,11 +199,11 @@ def likeItem(request, pk):
     like.save()
     serializer = LikeSerializer(like)
     return Response(serializer.data)
-  except PermissionDenied or ObjectDoesNotExist:
-    if PermissionDenied:
-      raise PermissionDenied('Login First')
-    elif ObjectDoesNotExist:
-      raise ObjectDoesNotExist('Object Does Not Exist.')
+  except PermissionDenied or ObjectDoesNotExist as e:
+    if type(e) is PermissionDenied:
+      raise serializers.ValidationError('Login First')
+    elif type(e) is ObjectDoesNotExist:
+      raise serializers.ValidationError('Object Does Not Exist.')
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -213,11 +214,11 @@ def unlikeItem(request, pk):
     like = pf.like_profile.get(item=pk)
     like.profiles.remove(pf)
     return Response(True)
-  except PermissionDenied or ObjectDoesNotExist:
-    if PermissionDenied:
-      raise PermissionDenied('Login First')
-    elif ObjectDoesNotExist:
-      raise ObjectDoesNotExist('Object Does Not Exist.')
+  except PermissionDenied or ObjectDoesNotExist as e:
+    if type(e) is PermissionDenied:
+      raise serializers.ValidationError('Login First')
+    elif type(e) is ObjectDoesNotExist:
+      raise serializers.ValidationError('Object Does Not Exist.')
   
 @api_view(['GET'])
 def isLiked(request, pk):
@@ -230,11 +231,11 @@ def isLiked(request, pk):
     if profile.like_profile.all().filter(item=item):
       return Response(True)
     return Response(False)
-  except PermissionDenied or ObjectDoesNotExist:
-    if PermissionDenied:
-      raise PermissionDenied('You must sign up to wishlist.')
-    elif ObjectDoesNotExist:
-      raise ObjectDoesNotExist('Object Does not Exist.')
+  except PermissionDenied or ObjectDoesNotExist as e:
+    if type(e) is PermissionDenied:
+      raise serializers.ValidationError('You must sign up to wishlist.')
+    elif type(e) is ObjectDoesNotExist:
+      raise serializers.ValidationError('Object Does not Exist.')
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -247,11 +248,11 @@ def getLiked(request):
     wishlist = profile.like_profile.all()
     serializer = LikeSerializer(wishlist, many=True)
     return Response(serializer.data)
-  except PermissionDenied or ObjectDoesNotExist:
-    if PermissionDenied:
-      raise PermissionDenied('You must sign up to wishlist.')
-    elif ObjectDoesNotExist:
-      raise ObjectDoesNotExist('Object Does not Exist.')
+  except PermissionDenied or ObjectDoesNotExist as e:
+    if type(e) is PermissionDenied:
+      raise serializers.ValidationError('You must sign up to wishlist.')
+    elif type(e) is ObjectDoesNotExist:
+      raise serializers.ValidationError('Object Does not Exist.')
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -264,10 +265,10 @@ def getWishlistItems(request):
     wishlist = profile.like_profile.all()
     serializer = LikedItemSerializer(wishlist, many=True)
     return Response(serializer.data)
-  except PermissionDenied or ObjectDoesNotExist:
-    if PermissionDenied:
-      raise PermissionDenied('You must sign up to wishlist.')
-    elif ObjectDoesNotExist:
-      raise ObjectDoesNotExist('Object Does not Exist.')
+  except PermissionDenied or ObjectDoesNotExist as e:
+    if type(e) is PermissionDenied:
+      raise serializers.ValidationError('You must sign up to wishlist.')
+    elif type(e) is ObjectDoesNotExist:
+      raise serializers.ValidationError('Object Does not Exist.')
 
     
