@@ -149,7 +149,7 @@ const eventFormSlice = createSlice({
       .addCase(createForm.rejected, (state, action) => {
         state.status = "failed";
         if (action.payload) {
-          state.error = action.payload.error.details.detail;
+          state.error = action.payload.error.details[0];
         } else {
           state.error = action.error.message;
         }
@@ -164,7 +164,7 @@ const eventFormSlice = createSlice({
       .addCase(getForm.rejected, (state, action) => {
         state.status = "failed";
         if (action.payload) {
-          state.error = action.payload.error.details.detail;
+          state.error = action.payload.error.details[0];
         } else {
           state.error = action.error.message;
         }
@@ -179,7 +179,7 @@ const eventFormSlice = createSlice({
       .addCase(editForm.rejected, (state, action) => {
         state.status = "failed";
         if (action.payload) {
-          state.error = action.payload.error.details.detail;
+          state.error = action.payload.error.details[0];
         } else {
           state.error = action.error.message;
         }

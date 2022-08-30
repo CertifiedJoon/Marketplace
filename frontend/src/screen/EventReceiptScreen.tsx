@@ -1,41 +1,41 @@
-import React, { useEffect, useRef } from 'react'
-import { useAppDispatch, useAppSelector } from '../app/hook'
-import { selectItem } from '../features/item/itemSlice'
+import React, { useEffect, useRef } from "react";
+import { useAppDispatch, useAppSelector } from "../app/hook";
+import { selectItem } from "../features/item/itemSlice";
 import {
   resetEventGuest,
   resetEventGuestStatus,
   selectEventGuestDetails,
   selectEventGuestStatus,
-} from '../features/event/eventGuestSlice'
-import { FaSave, FaShare } from 'react-icons/fa'
-import { toast } from 'react-toastify'
-import { QRCodeCanvas } from 'qrcode.react'
+} from "../features/event/eventGuestSlice";
+import { FaSave, FaShare } from "react-icons/fa";
+import { toast } from "react-toastify";
+import { QRCodeCanvas } from "qrcode.react";
 
-import Footer from '../components/Footer'
-import Header from '../components/Header'
-import { useNavigate } from 'react-router-dom'
-import { useReactToPrint } from 'react-to-print'
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import { useNavigate } from "react-router-dom";
+import { useReactToPrint } from "react-to-print";
 
 function EventReceiptScreen() {
   const guestDetails = JSON.parse(
     JSON.parse(useAppSelector(selectEventGuestDetails).details)
-  )
-  const guestStatus = useAppSelector(selectEventGuestStatus)
-  const event = useAppSelector(selectItem)
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
-  const componentRef = useRef(null)
+  );
+  const guestStatus = useAppSelector(selectEventGuestStatus);
+  const event = useAppSelector(selectItem);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const componentRef = useRef(null);
 
   const handleSavePDF = useReactToPrint({
     content: () => componentRef.current,
-  })
+  });
 
   useEffect(() => {
-    if (!event || event.type !== 'event' || !guestDetails) {
-      toast.error('Session Expired')
-      navigate('/')
+    if (!event || event.type !== "event" || !guestDetails) {
+      toast.error("Session Expired");
+      navigate("/");
     }
-  }, [event, guestDetails, navigate])
+  }, [event, guestDetails, navigate]);
 
   return (
     <>
@@ -74,7 +74,7 @@ function EventReceiptScreen() {
                       >
                         <FaShare
                           style={{
-                            backgroundColor: 'rgba(0, 0, 0, 0)',
+                            backgroundColor: "rgba(0, 0, 0, 0)",
                           }}
                         />
                         &nbsp;Save PDF
@@ -88,7 +88,7 @@ function EventReceiptScreen() {
               className="col-span-3 md:col-span-2 flex flex-col md:justify-center my-2 items-center"
               ref={componentRef}
             >
-              <div className="mb-4 flex flex-col">
+              <div className="py-10 mb-4 flex flex-col">
                 <div className="flex justify-center">
                   <div className="flex flex-col justify-center">
                     <div className="w-60 h-60 bg-base-200">
@@ -103,14 +103,14 @@ function EventReceiptScreen() {
                   <h1 className="font-bold text-center">Event Details</h1>
                   <ul>
                     <li>
-                      <strong>Event Name</strong> :{' '}
-                      {event.heading + ': ' + event.sub_heading}
+                      <strong>Event Name</strong> :{" "}
+                      {event.heading + ": " + event.sub_heading}
                     </li>
                     <li>
                       <strong>Event Host</strong> : {event.user.nickname}
                     </li>
                     <li>
-                      <strong>Ticket Price</strong> : {event.price}{' '}
+                      <strong>Ticket Price</strong> : {event.price}{" "}
                     </li>
                     {event.details.map((detail, i) => (
                       <li key={i}>
@@ -138,7 +138,7 @@ function EventReceiptScreen() {
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default EventReceiptScreen
+export default EventReceiptScreen;

@@ -85,7 +85,7 @@ def signup(request, pk):
     if event.type != 'event' : raise ValidationError('Event does not exist.')
     if (event.negotiability == False and profile == None):
       raise ValidationError('This is a private hosting, join community to signup.')
-    if (profile and EventGuest.objects.filter(profile=profile)[0]):
+    if (profile and profile.profile_guest.filter(event=event).exists()):
       raise ValidationError('You have already signed up.')
     guest = EventGuest.objects.create(
       event = event,
@@ -96,13 +96,11 @@ def signup(request, pk):
       guest.save()
     serializer = EventGuestSerializer(guest)
     return Response(serializer.data)
-  except ValidationError or ObjectDoesNotExist or PermissionDenied as e:
+  except ValidationError or ObjectDoesNotExist as e:
     if type(e) is ValidationError:
       raise serializers.ValidationError(e.message)
     elif type(e) is ObjectDoesNotExist:
       raise serializers.ValidationError('Event no longer exists.')
-    elif type(e) is PermissionDenied:
-      raise serializers.ValidationError(e.message)
 
 
 @api_view(['GET'])
@@ -113,12 +111,10 @@ def getGuests(request, pk):
     event = Item.objects.get(pk=pk)
     profile = UserProfile.objects.get(user=user)
     if event.type != 'event': raise ValidationError('Item is not an event')
-    if event.user != profile: raise PermissionDenied('Event is not yours.')
-    guests = event.event_guest.all()
+    if event.user != profile: raise ValidationError('Event is not yours.')
+    guests = event.event_guest.prefetch_related('profile').all()
     serializer = EventGuestSerializer(guests, many=True)
     return Response(serializer.data)
   except ValidationError or PermissionDenied as e:
     if type(e) is ValidationError:
-      raise serializers.ValidationError(e.message)
-    elif type(e) is PermissionDenied:
       raise serializers.ValidationError(e.message)

@@ -39,7 +39,7 @@ function SavedScreen() {
       if (axios.isAxiosError(error)) {
         if (error.response) {
           const response = error.response.data as KnownError;
-          toast.error(response.error.details.detail);
+          toast.error(response.error.details[0]);
         }
       }
     }

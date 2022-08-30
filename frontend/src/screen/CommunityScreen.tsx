@@ -1,62 +1,62 @@
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import axios from 'axios'
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
-import Footer from '../components/Footer'
-import Header from '../components/Header'
-import EventSwiper from '../components/EventSwiper'
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import EventSwiper from "../components/EventSwiper";
 import {
   Community,
   CommunityPlaceholder,
-} from '../interface/communityInterface'
-import ProfileBadge from '../components/ProfileBadge'
-import { LiveEvent, LiveEventPlaceholder } from '../interface/itemInterface'
-import { toast } from 'react-toastify'
-import { KnownError } from '../interface/exceptionInterface'
+} from "../interface/communityInterface";
+import ProfileBadge from "../components/ProfileBadge";
+import { LiveEvent, LiveEventPlaceholder } from "../interface/itemInterface";
+import { toast } from "react-toastify";
+import { KnownError } from "../interface/exceptionInterface";
 
 function CommunityScreen() {
   //eslint-disable-next-line
-  const params = useParams()
-  const [community, setCommunity] = useState<Community>(CommunityPlaceholder)
+  const params = useParams();
+  const [community, setCommunity] = useState<Community>(CommunityPlaceholder);
   const [liveEvents, setLiveEvents] = useState<Array<LiveEvent>>([
     LiveEventPlaceholder,
-  ])
+  ]);
 
   useEffect(() => {
     const fetchCommunity = async () => {
       try {
         const { data } = await axios.get(
           `/api/community/${params.communityId}/`
-        )
-        setCommunity(data)
-        return true
+        );
+        setCommunity(data);
+        return true;
       } catch (error) {
         if (axios.isAxiosError(error)) {
           if (error.response) {
-            const response = error.response.data as KnownError
-            toast.error(response.error.details.detail)
+            const response = error.response.data as KnownError;
+            toast.error(response.error.details[0]);
           }
         }
-        return false
+        return false;
       }
-    }
+    };
     const fetchLiveEvents = async () => {
       const { data } = await axios.get(
         `/api/items/live-events/${params.communityId}/`
-      )
-      if (data) setLiveEvents(data)
-    }
-    fetchCommunity()
-    fetchLiveEvents()
-  }, [params])
+      );
+      if (data) setLiveEvents(data);
+    };
+    fetchCommunity();
+    fetchLiveEvents();
+  }, [params]);
 
   const followEvent = () => {
-    console.log('Event followed')
-  }
+    console.log("Event followed");
+  };
 
   const followItem = () => {
-    console.log('Item followed')
-  }
+    console.log("Item followed");
+  };
 
   return (
     <>
@@ -157,7 +157,7 @@ function CommunityScreen() {
       </div>
       <Footer active="mypage" />
     </>
-  )
+  );
 }
 
-export default CommunityScreen
+export default CommunityScreen;

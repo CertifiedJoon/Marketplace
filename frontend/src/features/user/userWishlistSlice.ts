@@ -138,7 +138,7 @@ const wishlistSlice = createSlice({
       .addCase(getWishlist.rejected, (state, action) => {
         state.status = "failed";
         if (action.payload) {
-          state.error = action.payload.error.details.detail;
+          state.error = action.payload.error.details[0];
         } else {
           state.error = action.error.message;
         }
@@ -153,7 +153,7 @@ const wishlistSlice = createSlice({
       .addCase(saveToWishlist.rejected, (state, action) => {
         state.status = "failed";
         if (action.payload) {
-          state.error = action.payload.error.details.detail;
+          state.error = action.payload.error.details[0];
         } else {
           state.error = action.error.message;
         }
@@ -170,7 +170,7 @@ const wishlistSlice = createSlice({
       .addCase(unlike.rejected, (state, action) => {
         state.status = "failed";
         if (action.payload) {
-          state.error = action.payload.error.details.detail;
+          state.error = action.payload.error.details[0];
         } else {
           state.error = action.error.message;
         }

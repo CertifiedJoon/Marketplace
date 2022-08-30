@@ -15,6 +15,7 @@ import {
   selectItems,
   getItemsFiltered,
   getMyItems,
+  getMoreItemsFiltered,
 } from "../features/item/itemListSlice";
 import { ItemBrief } from "../interface/itemInterface";
 import { selectUser } from "../features/user/userSlice";
@@ -58,15 +59,53 @@ function HomeScreen({ sell = false }: Props) {
     }
   }, [dispatch, params, community, saleMode]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const bottom =
+        Math.ceil(window.innerHeight + window.scrollY) >=
+        document.documentElement.scrollHeight;
+
+      if (bottom) {
+        if (saleMode) {
+          if (params.itemType && community === "0")
+            dispatch(getMyItems({ type: params.itemType, community: "all" }));
+          else if (params.itemType && community !== "0")
+            dispatch(getMyItems({ type: params.itemType, community }));
+          else if (community !== "0")
+            dispatch(getMyItems({ type: "all", community }));
+          else dispatch(getMyItems({ type: "all", community: "all" }));
+        } else {
+          if (params.itemType && community === "0")
+            dispatch(
+              getMoreItemsFiltered({ type: params.itemType, community: "all" })
+            );
+          else if (params.itemType && community !== "0")
+            dispatch(
+              getMoreItemsFiltered({ type: params.itemType, community })
+            );
+          else if (community !== "0")
+            dispatch(getMoreItemsFiltered({ type: "all", community }));
+          else
+            dispatch(getMoreItemsFiltered({ type: "all", community: "all" }));
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <>
+    <div>
       <Header sell={sell} />
       {params.itemType !== undefined ? (
         <CategoryMenu activeType={params.itemType} />
       ) : (
         <CategoryMenu activeType="all" />
       )}
-
       <div className="2xl:container 2xl:mx-auto lg:mx-10 mx-3 min-h-screen">
         {saleMode && (
           <div className="grid grid-cols-2 gap-4 mb-7">
@@ -108,7 +147,7 @@ function HomeScreen({ sell = false }: Props) {
         </div>
       </div>
       <Footer active="explore" />
-    </>
+    </div>
   );
 }
 

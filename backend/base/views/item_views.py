@@ -1,5 +1,4 @@
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied, ValidationError
-from rest_framework.exceptions import NotFound
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -12,10 +11,11 @@ from base.models import Item, UserProfile, ItemImage, Community, ItemDetail, Lik
 
 @api_view(['GET'])
 def getItems(request):
-  queryset = Item.objects.prefetch_related('item_image', 'communities').select_related('user').filter(live=True)
+  queryset = Item.objects.prefetch_related('item_image', 'communities').select_related('user').filter(live=True).defer('reason', 'negotiability', 'description')
   sell = request.query_params.get('sell')
   type = request.query_params.get('type')
   community = request.query_params.get('community')
+  last = request.query_params.get('last')
   
   if sell:
     user = request.user
@@ -25,7 +25,12 @@ def getItems(request):
     queryset = queryset.filter(type=type)
   if community and community != 'all':
     queryset = queryset.filter(communities__pk = community)
-  
+  if last:
+    lastItem = Item.objects.get(pk=last)
+    queryset = queryset.filter(createdAt__lt=lastItem.createdAt)
+
+  queryset = queryset.reverse[:12]
+
   serializer = ItemBriefSerializer(queryset, many=True)
   return Response(serializer.data)
 
@@ -34,7 +39,7 @@ def getItems(request):
 def getMyItems(request):
   user = request.user
   profile = UserProfile.objects.get(user=user)
-  queryset = Item.objects.prefetch_related('item_image', 'communities').select_related('user').filter(user=profile).filter(live=True)
+  queryset = Item.objects.prefetch_related('item_image', 'communities').select_related('user').filter(user=profile).filter(live=True).defer('reason', 'negotiability', 'description')
   type = request.query_params.get('type')
   community = request.query_params.get('community')
   if type and type != 'all':
@@ -46,7 +51,7 @@ def getMyItems(request):
 
 @api_view(['GET'])
 def getLiveEvents(request, community):
-  events = Item.objects.prefetch_related('item_image', 'communities').filter(communities__pk = community).filter(type='event').filter(live=True)
+  events = Item.objects.prefetch_related('item_image', 'communities').filter(communities__pk = community).filter(type='event').filter(live=True).order_by('-createdAt').only('images', 'heading', '_id')
   serializer = LiveEventSerializer(events, many=True)
   return Response(serializer.data)
 
@@ -224,16 +229,16 @@ def unlikeItem(request, pk):
 def isLiked(request, pk):
   try:
     if not request.user:
-      raise PermissionDenied
+      raise ValidationError('You must signup to wishlist.')
     user = request.user
     profile = UserProfile.objects.get(user=user)
     item = Item.objects.get(pk=pk)
     if profile.like_profile.all().filter(item=item):
       return Response(True)
     return Response(False)
-  except PermissionDenied or ObjectDoesNotExist as e:
-    if type(e) is PermissionDenied:
-      raise serializers.ValidationError('You must sign up to wishlist.')
+  except ValidationError or ObjectDoesNotExist as e:
+    if type(e) is ValidationError:
+      raise serializers.ValidationError(e.message)
     elif type(e) is ObjectDoesNotExist:
       raise serializers.ValidationError('Object Does not Exist.')
 
@@ -259,15 +264,15 @@ def getLiked(request):
 def getWishlistItems(request):
   try:
     if not request.user:
-      raise PermissionDenied
+      raise ValidationError('You must sign up to wishlist.')
     user = request.user
     profile = UserProfile.objects.get(user=user)
     wishlist = profile.like_profile.all()
     serializer = LikedItemSerializer(wishlist, many=True)
     return Response(serializer.data)
-  except PermissionDenied or ObjectDoesNotExist as e:
-    if type(e) is PermissionDenied:
-      raise serializers.ValidationError('You must sign up to wishlist.')
+  except ValidationError or ObjectDoesNotExist as e:
+    if type(e) is ValidationError:
+      raise serializers.ValidationError(e.message)
     elif type(e) is ObjectDoesNotExist:
       raise serializers.ValidationError('Object Does not Exist.')
 

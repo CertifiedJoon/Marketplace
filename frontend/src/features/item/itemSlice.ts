@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../../app/store";
+import { KnownError } from "../../interface/exceptionInterface";
 
 import {
   Item,
@@ -28,16 +29,6 @@ const initialState = {
   status: "idle",
   error: "",
 } as ItemState;
-
-interface KnownError {
-  error: {
-    status_code: number;
-    message: string;
-    details: {
-      detail: string;
-    };
-  };
-}
 
 export const getItemById = createAsyncThunk<
   Item,
@@ -215,7 +206,7 @@ const ItemSlice = createSlice({
       .addCase(getItemById.rejected, (state, action) => {
         state.status = "failed";
         if (action.payload) {
-          state.error = action.payload.error.details.detail;
+          state.error = action.payload.error.details[0];
         } else {
           state.error = action.error.message;
         }
@@ -230,7 +221,7 @@ const ItemSlice = createSlice({
       .addCase(uploadImages.rejected, (state, action) => {
         state.status = "failed";
         if (action.payload) {
-          state.error = action.payload.error.details.detail;
+          state.error = action.payload.error.details[0];
         } else {
           state.error = action.error.message;
         }
@@ -245,7 +236,7 @@ const ItemSlice = createSlice({
       .addCase(updateItem.rejected, (state, action) => {
         state.status = "failed";
         if (action.payload) {
-          state.error = action.payload.error.details.detail;
+          state.error = action.payload.error.details[0];
         } else {
           state.error = action.error.message;
         }
@@ -260,7 +251,7 @@ const ItemSlice = createSlice({
       .addCase(uploadItem.rejected, (state, action) => {
         state.status = "failed";
         if (action.payload) {
-          state.error = action.payload.error.details.detail;
+          state.error = action.payload.error.details[0];
         } else {
           state.error = action.error.message;
         }

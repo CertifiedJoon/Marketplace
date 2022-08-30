@@ -4,7 +4,11 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import CustomInput from "../components/CustomInput";
-import { getForm, selectEventForm } from "../features/event/eventFormSlice";
+import {
+  getForm,
+  resetEventFormStatus,
+  selectEventForm,
+} from "../features/event/eventFormSlice";
 import { useAppDispatch, useAppSelector } from "../app/hook";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -44,6 +48,7 @@ function EventSignupScreen() {
     if (status === "succeeded") {
       setInputs(JSON.parse(form.inputs));
     } else if (status === "failed") {
+      dispatch(resetEventFormStatus());
       toast.error(error);
       navigate("/item/" + params.eventId);
     }

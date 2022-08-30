@@ -1,60 +1,60 @@
-import { RootState } from '../../app/store'
+import { RootState } from "../../app/store";
 import {
   createSlice,
   createAsyncThunk,
   isRejectedWithValue,
-} from '@reduxjs/toolkit'
-import axios from 'axios'
-import { KnownError } from '../../interface/exceptionInterface'
+} from "@reduxjs/toolkit";
+import axios from "axios";
+import { KnownError } from "../../interface/exceptionInterface";
 
 interface EventGuestState {
-  signupDetail: SignupDetail
-  status: 'idle' | 'pending' | 'succeeded' | 'failed'
-  error: string | undefined
+  signupDetail: SignupDetail;
+  status: "idle" | "pending" | "succeeded" | "failed";
+  error: string | undefined;
 }
 
 interface SignupDetail {
-  details: string
+  details: string;
 }
 
 const initialState: EventGuestState = {
   signupDetail: {
-    details: '',
+    details: "",
   },
-  status: 'idle',
-  error: '',
-}
+  status: "idle",
+  error: "",
+};
 
 export const eventSignup = createAsyncThunk<
   SignupDetail,
   {
-    details: string
-    _id: string
+    details: string;
+    _id: string;
   },
   {
-    state: RootState
-    rejectValue: KnownError
+    state: RootState;
+    rejectValue: KnownError;
   }
->('eventGuest/signup', async (details, thunkApi) => {
-  let config
+>("eventGuest/signup", async (details, thunkApi) => {
+  let config;
   let token = thunkApi.getState().user.user
     ? thunkApi.getState().user.user?.token
-    : ''
-  if (token !== '') {
+    : "";
+  if (token !== "") {
     config = {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-    }
+    };
   } else {
     config = {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-    }
+    };
   }
-  let data: SignupDetail | null = null
+  let data: SignupDetail | null = null;
   try {
     const response = await axios.post(
       `/api/events/signup/${details._id}/`,
@@ -62,59 +62,60 @@ export const eventSignup = createAsyncThunk<
         details: JSON.stringify(details.details),
       },
       config
-    )
-    data = response.data
+    );
+    data = response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      if (error.response)
-        return thunkApi.rejectWithValue(error.response.data as KnownError)
+      if (error.response) {
+        return thunkApi.rejectWithValue(error.response.data as KnownError);
+      }
     }
   }
-  return data as SignupDetail
-})
+  return data as SignupDetail;
+});
 
 const eventGuestSlice = createSlice({
-  name: 'eventGuest',
+  name: "eventGuest",
   initialState,
   reducers: {
     resetEventGuestStatus: (state: EventGuestState) => {
-      state.status = 'idle'
-      state.error = ''
+      state.status = "idle";
+      state.error = "";
     },
     resetEventGuest: (state: EventGuestState) => {
-      state.signupDetail = { details: '' }
-      state.status = 'idle'
-      state.error = ''
+      state.signupDetail = { details: "" };
+      state.status = "idle";
+      state.error = "";
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(eventSignup.pending, (state, action) => {
-        state.status = 'pending'
+        state.status = "pending";
       })
       .addCase(eventSignup.fulfilled, (state, action) => {
-        state.status = 'succeeded'
-        state.signupDetail = action.payload
+        state.status = "succeeded";
+        state.signupDetail = action.payload;
       })
       .addCase(eventSignup.rejected, (state, action) => {
-        state.status = 'failed'
+        state.status = "failed";
         if (action.payload) {
-          state.error = action.payload.error.details.detail
+          state.error = action.payload.error.details[0];
         } else {
-          state.error = action.error.message
+          state.error = action.error.message;
         }
-      })
+      });
   },
-})
+});
 
 export const { resetEventGuestStatus, resetEventGuest } =
-  eventGuestSlice.actions
-export const selectEventGuest = (state: RootState) => state.eventGuest
+  eventGuestSlice.actions;
+export const selectEventGuest = (state: RootState) => state.eventGuest;
 export const selectEventGuestDetails = (state: RootState) =>
-  state.eventGuest.signupDetail
+  state.eventGuest.signupDetail;
 export const selectEventGuestStatus = (state: RootState) =>
-  state.eventGuest.status
+  state.eventGuest.status;
 export const selectEventGuestError = (state: RootState) =>
-  state.eventGuest.error
+  state.eventGuest.error;
 
-export default eventGuestSlice.reducer
+export default eventGuestSlice.reducer;
