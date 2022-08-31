@@ -66,15 +66,7 @@ function HomeScreen({ sell = false }: Props) {
         document.documentElement.scrollHeight;
 
       if (bottom) {
-        if (saleMode) {
-          if (params.itemType && community === "0")
-            dispatch(getMyItems({ type: params.itemType, community: "all" }));
-          else if (params.itemType && community !== "0")
-            dispatch(getMyItems({ type: params.itemType, community }));
-          else if (community !== "0")
-            dispatch(getMyItems({ type: "all", community }));
-          else dispatch(getMyItems({ type: "all", community: "all" }));
-        } else {
+        if (!saleMode) {
           if (params.itemType && community === "0")
             dispatch(
               getMoreItemsFiltered({ type: params.itemType, community: "all" })
@@ -96,7 +88,7 @@ function HomeScreen({ sell = false }: Props) {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [saleMode]);
 
   return (
     <div>

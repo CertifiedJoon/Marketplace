@@ -29,7 +29,7 @@ def getItems(request):
     lastItem = Item.objects.get(pk=last)
     queryset = queryset.filter(createdAt__lt=lastItem.createdAt)
 
-  queryset = queryset.reverse[:12]
+  queryset = queryset.reverse()[:12]
 
   serializer = ItemBriefSerializer(queryset, many=True)
   return Response(serializer.data)

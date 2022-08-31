@@ -66,6 +66,8 @@ function ItemScreen() {
     if (itemStatus === "failed") {
       toast.error(itemError);
       dispatch(resetItemStatus());
+    } else if (itemStatus === "succeeded") {
+      dispatch(resetItemStatus());
     }
   }, [itemStatus, itemError, dispatch]);
 

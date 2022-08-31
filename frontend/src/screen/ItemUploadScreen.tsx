@@ -47,7 +47,8 @@ const imagesSchema = yup.object().shape({
     })
     .test("type", "File must be either .jpeg or .png", (value) => {
       for (let i = 0; i < value.length; i += 1) {
-        if (value[i].type !== ("image/jpeg" || "image/png")) return false;
+        if (value[i].type !== "image/jpeg" && value[i].type !== "image/png")
+          return false;
       }
       return true;
     }),
@@ -114,7 +115,7 @@ function ItemUploadScreen() {
     if (itemStatus === "succeeded") {
       setLoading(false);
       if (type === "event") {
-        dispatch(resetItemStatus);
+        dispatch(resetItemStatus());
         navigate(`/event/create-signup/${uploadedItem._id}`);
       } else {
         dispatch(resetItemStatus());

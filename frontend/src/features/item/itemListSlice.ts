@@ -46,12 +46,14 @@ export const getMoreItemsFiltered = createAsyncThunk<
     state: RootState;
     rejectValue: KnownError;
   }
->("itemList/getItemsFiltered", async (args, thunkApi) => {
+>("itemList/getMoreItemsFiltered", async (args, thunkApi) => {
   let data: Array<ItemBrief> = [];
   try {
     const response = await axios.get(
       `/api/items/?community=${args.community}&type=${args.type}&last=${
-        thunkApi.getState().items.itemList[-1]._id
+        thunkApi.getState().items.itemList[
+          thunkApi.getState().items.itemList.length - 1
+        ]._id
       }`
     );
     data = response.data;
@@ -141,7 +143,7 @@ const itemListSlice = createSlice({
       })
       .addCase(getMoreItemsFiltered.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.itemList.concat(action.payload);
+        state.itemList = state.itemList.concat(action.payload);
       })
       .addCase(getMoreItemsFiltered.rejected, (state, action) => {
         state.status = "failed";
