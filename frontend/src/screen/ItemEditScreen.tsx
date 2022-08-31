@@ -385,7 +385,9 @@ function ItemEditScreen() {
                 />
                 <div className="modal">
                   <div className="modal-box w-11/12 max-w-5xl">
-                    <PhotoGallery />
+                    <PhotoGallery
+                      images={item.images.map((image) => image.image)}
+                    />
                     <div className="modal-action bg-inherit">
                       <label
                         htmlFor="my-modal-5"

@@ -1,23 +1,23 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from "react";
+import { Link } from "react-router-dom";
 
-import profile from '../static/images/profile.png'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
-import PhotoGallery from '../components/PhotoGallery'
+import profile from "../static/images/profile.png";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import PhotoGallery from "../components/PhotoGallery";
 
 type Props = {
-  host?: boolean
-}
+  host?: boolean;
+};
 
 function EventDetail({ host = false }: Props) {
   const handleClick = () => {
     if (host) {
-      console.log('Rehost event')
+      console.log("Rehost event");
     } else {
-      console.log("Follow Host's Event")
+      console.log("Follow Host's Event");
     }
-  }
+  };
   return (
     <>
       <div className="min-h-screen">
@@ -95,7 +95,7 @@ function EventDetail({ host = false }: Props) {
                   />
                   <div className="modal">
                     <div className="modal-box w-11/12 max-w-5xl">
-                      <PhotoGallery />
+                      {/* <PhotoGallery images={item.imags}/> */}
                       <div className="modal-action bg-inherit">
                         <label
                           htmlFor="my-modal-5"
@@ -182,7 +182,7 @@ function EventDetail({ host = false }: Props) {
                         <div className="grid grid-cols-3">
                           <div className="col-span-2">
                             <h2 className="card-title">
-                              <span className="text-gray-500">Joining Fee</span>{' '}
+                              <span className="text-gray-500">Joining Fee</span>{" "}
                               $4
                             </h2>
                           </div>
@@ -192,7 +192,7 @@ function EventDetail({ host = false }: Props) {
                             className="btn btn-primary btn-md w-full"
                             onClick={handleClick}
                           >
-                            {host ? 'Rehost Event' : "Follow Host's Event"}
+                            {host ? "Rehost Event" : "Follow Host's Event"}
                           </button>
                         </div>
                         <div className="grid grid-cols-5 border-b border-gray-300">
@@ -556,7 +556,7 @@ function EventDetail({ host = false }: Props) {
                 className="btn btn-primary btn-md w-full"
                 onClick={handleClick}
               >
-                {host ? 'Rehost Event' : "Follow Host's Event"}
+                {host ? "Rehost Event" : "Follow Host's Event"}
               </button>
             </div>
           </div>
@@ -564,7 +564,7 @@ function EventDetail({ host = false }: Props) {
         <Footer active="mypage" />
       </div>
     </>
-  )
+  );
 }
 
-export default EventDetail
+export default EventDetail;

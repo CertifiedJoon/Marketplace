@@ -103,7 +103,7 @@ function ItemScreen() {
             <input type="checkbox" id="my-modal-2" className="modal-toggle" />
             <div className="modal">
               <div className="modal-box w-11/12 max-w-5xl">
-                <PhotoGallery />
+                <PhotoGallery images={item.images.map((img) => img.image)} />
                 <div className="modal-action bg-inherit">
                   <label
                     htmlFor="my-modal-2"
@@ -429,7 +429,7 @@ function ItemScreen() {
               <input type="checkbox" id="my-modal-5" className="modal-toggle" />
               <div className="modal">
                 <div className="modal-box w-11/12 max-w-5xl">
-                  <PhotoGallery />
+                  <PhotoGallery images={item.images.map((img) => img.image)} />
                   <div className="modal-action bg-inherit">
                     <label
                       htmlFor="my-modal-5"

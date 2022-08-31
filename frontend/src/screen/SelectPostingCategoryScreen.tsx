@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   FaBath,
   FaBook,
@@ -8,14 +8,15 @@ import {
   FaLaptop,
   FaPencilAlt,
   FaPlane,
+  FaQuidditch,
   FaRegAddressBook,
   FaShoePrints,
   FaTshirt,
   FaUserGraduate,
-} from 'react-icons/fa'
-import { Link } from 'react-router-dom'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
+} from "react-icons/fa";
+import { Link } from "react-router-dom";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
 
 function SelectPostingCategoryScreen() {
   return (
@@ -123,6 +124,18 @@ function SelectPostingCategoryScreen() {
                 </button>
               </Link>
             </li>
+            <li>
+              <Link to="/post/others">
+                <button className="btn btn-ghost rounded-t-none rounded-xl w-full flex justify-center">
+                  <div className="card card-side py-1">
+                    <figure className="text-lg">
+                      <FaQuidditch />
+                    </figure>
+                    <div className="card-body py-0 px-1">Others</div>
+                  </div>
+                </button>
+              </Link>
+            </li>
           </ul>
         </div>
 
@@ -131,7 +144,7 @@ function SelectPostingCategoryScreen() {
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default SelectPostingCategoryScreen
+export default SelectPostingCategoryScreen;

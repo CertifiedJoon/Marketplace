@@ -152,7 +152,7 @@ function EventHostScreen() {
               <input type="checkbox" id="my-modal-5" className="modal-toggle" />
               <div className="modal">
                 <div className="modal-box w-11/12 max-w-5xl">
-                  <PhotoGallery />
+                  {/* <PhotoGallery /> */}
                   <div className="modal-action bg-inherit">
                     <label
                       htmlFor="my-modal-5"
@@ -411,7 +411,7 @@ function EventHostScreen() {
             <input type="checkbox" id="my-modal-1" className="modal-toggle" />
             <div className="modal">
               <div className="modal-box w-11/12 max-w-5xl">
-                <PhotoGallery />
+                {/* <PhotoGallery /> */}
                 <div className="modal-action bg-inherit">
                   <label
                     htmlFor="my-modal-1"

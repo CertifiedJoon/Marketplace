@@ -1,44 +1,27 @@
-import React from 'react'
-import { useState } from 'react'
+import React from "react";
+import LightGallery from "lightgallery/react";
+import "lightgallery/css/lightgallery.css";
+import "lightgallery/css/lg-zoom.css";
+import "lightgallery/css/lg-thumbnail.css";
 
-import PhotoAlbum from 'react-photo-album'
-import Lightbox from 'yet-another-react-lightbox'
-import Fullscreen from 'yet-another-react-lightbox/plugins/fullscreen'
-import Slideshow from 'yet-another-react-lightbox/plugins/slideshow'
+import lgThumbnail from "lightgallery/plugins/thumbnail";
+import lgZoom from "lightgallery/plugins/zoom";
 
-import 'yet-another-react-lightbox/styles.css'
-import photos from '../static/images/photos'
-
-const slides = photos.map(({ src, width, height, images }) => ({
-  src,
-  aspectRatio: width / height,
-  srcSet: images.map((image) => ({
-    src: image.src,
-    width: image.width,
-  })),
-}))
-
-function PhotoGallery() {
-  const [index, setIndex] = useState(-1)
-
+function PhotoGallery({ images }: { images: Array<string> }) {
+  const onInit = () => {
+    console.log("lightGallery has been initialized");
+  };
   return (
-    <>
-      <PhotoAlbum
-        photos={photos}
-        layout="rows"
-        targetRowHeight={150}
-        onClick={(event, photo, index) => setIndex(index)}
-      />
-
-      <Lightbox
-        slides={slides}
-        open={index >= 0}
-        index={index}
-        close={() => setIndex(-1)}
-        plugins={[Fullscreen, Slideshow]}
-      />
-    </>
-  )
+    <div className="App">
+      <LightGallery onInit={onInit} speed={500} plugins={[lgThumbnail, lgZoom]}>
+        {images.map((img, i) => (
+          <a className="gallery-item" key={i} href={img}>
+            <img className="img-responsive" alt={`img${i}`} src={img} />
+          </a>
+        ))}
+      </LightGallery>
+    </div>
+  );
 }
 
-export default PhotoGallery
+export default PhotoGallery;

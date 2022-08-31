@@ -317,7 +317,7 @@ function ItemUploadScreen() {
                 />
                 <div className="modal">
                   <div className="modal-box w-11/12 max-w-5xl">
-                    <PhotoGallery />
+                    <PhotoGallery images={itemThumbnail ? itemThumbnail : []} />
                     <div className="modal-action bg-inherit">
                       <label
                         htmlFor="my-modal-5"
