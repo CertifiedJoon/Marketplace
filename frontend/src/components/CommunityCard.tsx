@@ -1,22 +1,24 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from "react";
+import { Link } from "react-router-dom";
 
 interface Community {
-  _id: string
-  key: string
-  name: string
-  thumbnail_image: string
+  _id: string;
+  key: string;
+  name: string;
+  thumbnail_image: string;
 }
 
 type Props = {
-  community: Community
-  join?: boolean
-}
+  community: Community;
+  handleJoin?: (id: string) => void;
+  join?: boolean;
+};
 
-function CommunityCard({ community, join = true }: Props) {
-  const handleJoin = () => {
-    console.log('Join Community')
-  }
+function CommunityCard({
+  community,
+  handleJoin = () => {},
+  join = true,
+}: Props) {
   return (
     <>
       <div
@@ -38,20 +40,18 @@ function CommunityCard({ community, join = true }: Props) {
               </button>
             </Link>
             {join && (
-              <Link to={`/community/join/${community._id}`}>
-                <button
-                  className="btn glass btn-sm text-secondary mx-2"
-                  onClick={handleJoin}
-                >
-                  Join
-                </button>
-              </Link>
+              <button
+                className="btn glass btn-sm text-secondary mx-2"
+                onClick={() => handleJoin(community._id)}
+              >
+                Join
+              </button>
             )}
           </div>
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default CommunityCard
+export default CommunityCard;
