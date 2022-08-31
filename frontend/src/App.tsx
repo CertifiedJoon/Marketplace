@@ -29,6 +29,7 @@ import MyEventScreen from "./screen/MyEventScreen";
 import EventDetail from "./screen/EventDetailScreen";
 import EventEditSignupScreen from "./screen/EventEditSignupScreen";
 import EventReceiptScreen from "./screen/EventReceiptScreen";
+import ChangePasswordScreen from "./screen/ChangePasswordScreen";
 
 function App() {
   return (
@@ -48,6 +49,10 @@ function App() {
           <Route path="/edit/:itemId" element={<ItemEditScreen />}></Route>
           <Route path="/login" element={<LoginScreen />}></Route>
           <Route path="/signup" element={<SignupScreen />}></Route>
+          <Route
+            path="/change-password"
+            element={<ChangePasswordScreen />}
+          ></Route>
           <Route path="/wishlist" element={<SavedScreen />}></Route>
           <Route
             path="/event/signup/:eventId"

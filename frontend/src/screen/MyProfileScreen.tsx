@@ -251,7 +251,7 @@ function ProfileScreen() {
                         </p>
                       </div>
                       <div>
-                        <Link to="/edit-password">
+                        <Link to="/change-password">
                           <h3 className="btn btn-ghost btn-xs rounded-sm px-0">
                             Edit Password
                           </h3>

@@ -95,6 +95,52 @@ export const signup = createAsyncThunk<
   return data as UserInfo;
 });
 
+export const changePassword = createAsyncThunk<
+  undefined,
+  { currentPassword: string; newPassword: string },
+  {
+    state: RootState;
+    rejectValue: {
+      error: {
+        status_code: number;
+        message: string;
+        details: Array<string>;
+      };
+    };
+  }
+>("user/changePassword", async (args, thunkApi) => {
+  let token = thunkApi.getState().user.user
+    ? thunkApi.getState().user.user?.token
+    : "";
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    const response = await axios.put(
+      "/api/users/change-password/",
+      args,
+      config
+    );
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        return thunkApi.rejectWithValue(
+          error.response.data as {
+            error: {
+              status_code: number;
+              message: string;
+              details: Array<string>;
+            };
+          }
+        );
+      }
+    }
+  }
+});
+
 const userSlice = createSlice({
   name: "userLogin",
   initialState,
@@ -139,6 +185,18 @@ const userSlice = createSlice({
           state.error = action.payload.error.details.detail;
         } else {
           state.error = action.error.message;
+        }
+      })
+      .addCase(changePassword.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(changePassword.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(changePassword.rejected, (state, action) => {
+        state.status = "failed";
+        if (action.payload) {
+          state.error = action.payload.error.details[0];
         }
       });
   },
