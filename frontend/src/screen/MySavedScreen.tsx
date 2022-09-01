@@ -70,7 +70,7 @@ function SavedScreen() {
           <div key={i} className="card w-full my-10">
             <figure>
               <img
-                src={item.item.images[0].image}
+                src={item.item.thumbnail_image[0].thumbnail_image}
                 alt="Saved"
                 className="mask mask-hexagon"
               />
@@ -122,7 +122,7 @@ function SavedScreen() {
                   }`}
                 >
                   <img
-                    src={item.item.images[0].image}
+                    src={item.item.thumbnail_image[0].thumbnail_image}
                     className="mask mask-hexagon min-w-xs max-w-xs rounded-lg shadow-2xl"
                     alt="img"
                   />

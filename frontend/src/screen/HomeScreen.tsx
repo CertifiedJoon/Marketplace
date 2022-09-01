@@ -126,9 +126,9 @@ function HomeScreen({ sell = false }: Props) {
                 type: item.type,
                 heading: item.heading,
                 sub_heading: item.sub_heading,
-                thumbnail: item.images
+                thumbnail: item.thumbnail_image
                   .filter((img) => img.thumbnail)
-                  .map((item) => item.image),
+                  .map((item) => item.thumbnail_image),
                 price: item.price,
                 profile: item.user.profile_image,
                 badges: item.user.badges,

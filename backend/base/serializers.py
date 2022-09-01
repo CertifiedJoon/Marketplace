@@ -9,9 +9,16 @@ class ItemDetailSerializer(serializers.ModelSerializer):
     fields = ('label', 'value')
 
 class ItemImageSerializer(serializers.ModelSerializer):
+  thumbnail_image = serializers.ReadOnlyField(source="thumbnail_image.url")
   class Meta:
     model = ItemImage
-    fields = ('image', 'thumbnail')
+    fields = ('image', 'thumbnail_image','thumbnail')
+
+class ItemBriefImageSerializer(serializers.ModelSerializer):
+  thumbnail_image = serializers.ReadOnlyField(source="thumbnail_image.url")
+  class Meta:
+    model = ItemImage
+    fields = ('thumbnail_image', 'thumbnail')
 
 class BadgeSerializer(serializers.ModelSerializer):
   class Meta:
@@ -103,12 +110,12 @@ class LiveEventSerializer(serializers.ModelSerializer):
     fields = ('_id', 'heading', 'images')
 
 class ItemBriefSerializer(serializers.ModelSerializer):
-  images = ItemImageSerializer(source="item_image", many=True)
+  thumbnail_image = ItemBriefImageSerializer(source="item_image", many=True)
   user = UserProfileBriefSerializer(read_only=True)
 
   class Meta:
     model = Item
-    fields = ('_id', 'type', 'communities', 'heading', 'sub_heading', 'price', 'images', 'user')
+    fields = ('_id', 'type', 'communities', 'heading', 'sub_heading', 'price', 'thumbnail_image', 'user')
 
 class ItemSerializer(serializers.ModelSerializer):
   details = ItemDetailSerializer(source="item_detail", many=True)

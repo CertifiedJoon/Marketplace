@@ -24,6 +24,7 @@ import SearchBarMultiple from "../components/SearchBarMultiple";
 import { Labels, labels } from "../static/docs/labels";
 import placeholder from "../static/images/placeholder.png";
 import { HashLoader, PacmanLoader } from "react-spinners";
+import { ItemImage } from "../interface/itemInterface";
 
 type FormInput = {
   heading: string;
@@ -317,7 +318,21 @@ function ItemUploadScreen() {
                 />
                 <div className="modal">
                   <div className="modal-box w-11/12 max-w-5xl">
-                    <PhotoGallery images={itemThumbnail ? itemThumbnail : []} />
+                    <PhotoGallery
+                      images={
+                        itemThumbnail
+                          ? itemThumbnail?.map(
+                              (img, i) =>
+                                ({
+                                  _id: `${i}`,
+                                  image: img,
+                                  thumbnail_image: img,
+                                  thumbnail: i < 5,
+                                } as ItemImage)
+                            )
+                          : []
+                      }
+                    />
                     <div className="modal-action bg-inherit">
                       <label
                         htmlFor="my-modal-5"

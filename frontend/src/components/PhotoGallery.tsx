@@ -6,8 +6,13 @@ import "lightgallery/css/lg-thumbnail.css";
 
 import lgThumbnail from "lightgallery/plugins/thumbnail";
 import lgZoom from "lightgallery/plugins/zoom";
+import { ItemImage } from "../interface/itemInterface";
 
-function PhotoGallery({ images }: { images: Array<string> }) {
+type Props = {
+  images: Array<ItemImage>;
+};
+
+function PhotoGallery({ images }: Props) {
   const onInit = () => {
     console.log("lightGallery has been initialized");
   };
@@ -15,8 +20,13 @@ function PhotoGallery({ images }: { images: Array<string> }) {
     <div className="App">
       <LightGallery onInit={onInit} speed={500} plugins={[lgThumbnail, lgZoom]}>
         {images.map((img, i) => (
-          <a className="gallery-item" key={i} href={img}>
-            <img className="img-responsive" alt={`img${i}`} src={img} />
+          <a
+            data-lg-size="300-300"
+            className="gallery-item"
+            key={i}
+            href={img.image}
+          >
+            <img alt={`img${i}`} src={img.thumbnail_image} />
           </a>
         ))}
       </LightGallery>

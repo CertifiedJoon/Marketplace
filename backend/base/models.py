@@ -1,6 +1,8 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import User
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 # Create your models here.
 
 class Community(models.Model):
@@ -69,6 +71,10 @@ class Item(models.Model):
 class ItemImage(models.Model):
   item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='item_image')
   image = models.ImageField(upload_to='item')
+  thumbnail_image = ImageSpecField(source='image',
+                                  processors=[ResizeToFill(300, 300)],
+                                  format='JPEG',
+                                  options={'quality': 60})
   thumbnail = models.BooleanField(default=False)
 
   def __str__(self):
