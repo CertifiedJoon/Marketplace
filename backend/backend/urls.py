@@ -16,7 +16,7 @@ Including another URLconf
 from rest_framework.views import exception_handler
 from rest_framework.views import Response
 from http import HTTPStatus
-from typing import Any
+from typing import Any, Dict
 
 from django.contrib import admin
 from django.urls import path, include
@@ -35,7 +35,7 @@ urlpatterns = [
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
-def api_exception_handler(exc: Exception, context: dict[str, Any]) -> Response:
+def api_exception_handler(exc: Exception, context: Dict[str, Any]) -> Response:
     """Custom API Exception Handler"""
     response = exception_handler(exc, context)
     if response is not None:
